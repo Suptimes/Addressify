@@ -6,18 +6,18 @@ import "./navbar.scss"
 const Navbar = () => {
   const [open, setOpen] = useState(false)
 
-  const user = true;
+  const user = false;
 
   return (
     <nav>
         <div className="left">
           <Link to="" className="logo">
             <img className="address" src="/logo-addressify.png" alt="" />
-            <span>Addressify</span>
+            <span>addressify</span>
           </Link>
           <div className="links">
             <Link to="/">Home</Link>
-            <Link to="/list">About</Link>
+            <Link to="/list">eServices</Link>
             <Link to="/1">Contact</Link>
             <Link to="/">Pricing</Link>
           </div>
@@ -37,8 +37,8 @@ const Navbar = () => {
               )
             : (
               <div className="Sign">
-                <Link to="/">Sign in</Link>
-                <Link to="/" className="register">Sign up</Link>
+                <Link to="/signin">Sign in</Link>
+                <Link to="/signup" className="register">Sign up</Link>
               </div>
             )
             
@@ -49,10 +49,10 @@ const Navbar = () => {
           </div>
           <div className={open ? "menu active" : "menu"}>
             <Link to="/">Home</Link>
-            <Link to="/">About</Link>
+            <Link to="/">eServices</Link>
             <Link to="/">Pricing</Link>
             <Link to="/">Sign in</Link>
-            <Link to="/">Sign up</Link>
+            <Link to="/signup">Sign up</Link>
           </div>
 
         </div>

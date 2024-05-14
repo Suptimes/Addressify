@@ -7,7 +7,7 @@ const HomePage = () => {
       <div className="textContainer">
         <div className="wrapper">
           {/* <h1 className="title">Find Your New Address & Save On Comissions</h1> */}
-          <h1 className="title">no middlemen. <br />no comission. <br/>no hassle.</h1>
+          <h1 className="title">no middle-men. <br />no commission. <br/>no hassle.</h1>
           <p>
             Revolutionizing real estate: Own or rent your dream property directly. Experience real estate on your terms.
           </p>
