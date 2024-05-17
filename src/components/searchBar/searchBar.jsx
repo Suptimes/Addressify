@@ -32,8 +32,8 @@ const switchType = (val) => {
         </div>
         <form>
             <input  type="text" name="location" placeholder="City or Region"/>
-            <input  type="number" min={0} max={99999999} name="minPrice" placeholder="Min Price"/>
-            <input  type="number" min={0} max={99999999} name="maxPrice" placeholder="Max Price"/>
+            {/* <input  type="number" min={0} max={99999999} name="minPrice" placeholder="Min Price"/>
+            <input  type="number" min={0} max={99999999} name="maxPrice" placeholder="Max Price"/> */}
             <button>
                 <img src="/search.png" alt="" />
             </button>

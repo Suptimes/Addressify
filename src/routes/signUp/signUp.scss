@@ -1,0 +1,71 @@
+.page{
+    display: flex;
+}
+
+.form{
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    height: 100%;
+
+    form{
+        min-width: 300px;
+    }
+
+    img{
+        width: 130px;
+        height: 130px;
+        margin-bottom: -20px;
+    }
+    h2{
+        margin-bottom: -15px;
+    }
+    p{
+        font-size: 15px;
+    }
+
+    button{
+        width: 100%;
+        padding: 15px 20px;
+        background-color: #7209cb;
+        color: white;
+        font-size: 16px;
+        font-weight: 500;
+        border-radius: 5px;
+        border: none;
+        margin-top: 12px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+    }
+    .already{
+        display: flex;
+        justify-content: center;
+        gap: 5px;
+        padding: 10px 0px;
+        span{
+            color: #7209cb;
+            font-weight: 500;
+            cursor: pointer;
+            display: block;
+        }
+    }
+}
+
+
+
+.background{
+    flex: 2;
+    background-color: #7209cb14;
+    height: calc(100vh - 100px);
+    position: relative;
+
+    img{
+        height: 750px;
+        position: absolute;
+        right: 0;
+        top: -40px;
+    }
+}
