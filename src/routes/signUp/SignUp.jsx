@@ -2,6 +2,7 @@ import { useState } from "react"
 import FormInput from "../../components/formInput/FormInput"
 import "./signUp.scss"
 import { Link } from "react-router-dom"
+import { createUserAccount } from "../../lib/appwrite/api"
 
 
 const SignUp = () => {
@@ -17,24 +18,24 @@ const SignUp = () => {
   const inputs = [
     {
       id:1,
-      name: "firstName",
+      name: "name",
       type: "text",
-      placeholder: "First Name",
+      placeholder: "Name",
       errorMessage: "Name should be 2-16 characters & shouldn't include special characters!",
       label: "First Name",
       pattern: "^[A-Za-z0-9]{2,30}$",
       required: true
     },
-    {
-      id:2,
-      name: "lastName",
-      type: "text",
-      placeholder: "Last Name",
-      errorMessage: "Name should be 2-16 characters & shouldn't include special characters!",
-      label: "Last Name",
-      pattern: "^[A-Za-z0-9]{2,30}$",
-      required: true
-    },
+    // {
+    //   id:2,
+    //   name: "lastName",
+    //   type: "text",
+    //   placeholder: "Last Name",
+    //   errorMessage: "Name should be 2-16 characters & shouldn't include special characters!",
+    //   label: "Last Name",
+    //   pattern: "^[A-Za-z0-9]{2,30}$",
+    //   // required: true
+    // },
     {
       id:3,
       name: "email",
@@ -63,18 +64,22 @@ const SignUp = () => {
       errorMessage: "Passwords don't match!",
       label: "Confirm Password",
       pattern: values.password,
-      required: true
+      // required: true
     },
   ]
 
 
-  const handleSubmit = (e) => {
+  async function handleSubmit (e) {
     e.preventDefault()
+    const newUser = await createUserAccount(values)
+
+    console.log(newUser)
   }
 
   const onChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value })
   }
+
 
   return (
     <div className="page">
@@ -91,7 +96,7 @@ const SignUp = () => {
               onChange={onChange} 
             />
           ))}
-          <button>Sign up</button>
+          <button onSubmit={handleSubmit}>Sign up</button>
           <p className="already">Already have an account? <Link to="/signin"><span>Log in</span></Link></p>
         </form>
       </div>

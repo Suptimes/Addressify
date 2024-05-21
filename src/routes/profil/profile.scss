@@ -99,7 +99,7 @@
         height: 100%;
         
         @include md{
-            height: calc(100vh - 100px);
+            // height: calc(100vh - 100px);
             border-top-left-radius: 15px;
             border-top-right-radius: 15px;
             padding-top: 15px;

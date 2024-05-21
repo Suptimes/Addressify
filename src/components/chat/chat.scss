@@ -134,6 +134,9 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            @include md{
+                margin-bottom: 15px;
+            }
 
             textarea{
                 flex: 3;
@@ -141,6 +144,10 @@
                 border: none;
                 outline: none;
                 padding: 10px;
+                resize: none;
+                font-size: 16px;
+                font-family: "Montsserat", sans-serif;
+                padding-left: 15px;
             }
             button{
                 flex: 1;

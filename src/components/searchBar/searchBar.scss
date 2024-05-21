@@ -4,8 +4,9 @@
     .choice{
         @include sm{
             display: flex;
-            justify-content: space-evenly;
+            justify-content: flex-start;
             width: 100%;
+            margin-bottom: 15px;
         }
     }
 
@@ -52,6 +53,14 @@
             border: none;
         }
 
+        .inputContainer{
+            display: flex;
+            flex: 1;
+            @include sm{
+                position: relative;
+            }
+        }
+
         input{
             border: 1px solid #0000001f;
             flex: 5;
@@ -92,7 +101,17 @@
                 padding: 20px;
                 // background-color: rgb(1,1,1,0.03);
                 border-radius: 10px;
-                margin-bottom: 20px;
+                // margin-bottom: 20px;
+            }
+        }
+
+        .btnSmall{
+            display: none;
+            @include sm{
+                display: block;
+                position: absolute;
+                right: 20px;
+                top: 15px;
             }
         }
 
@@ -112,6 +131,7 @@
                 border-radius: 10px;
                 width: 150px;
                 margin-bottom: 50px;
+                display: none;
             }
 
             img{
