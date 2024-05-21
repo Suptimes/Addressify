@@ -3,10 +3,12 @@ import FormInput from "../../components/formInput/FormInput"
 import "./signUp.scss"
 import { Link } from "react-router-dom"
 import { createUserAccount } from "../../lib/appwrite/api"
-import { Button } from "@/components/ui/button"
+import { useToast } from "@/components/ui/use-toast"
+
 
 
 const SignUp = () => {
+  const { toast } = useToast()
 
   const [ values, setValues ] = useState({
     firstName: "",
@@ -75,8 +77,11 @@ const SignUp = () => {
     const newUser = await createUserAccount(values)
 
     if(!newUser) {
-      return
+      return toast({ title: "Sign up failed. Please try again."})
     }
+
+    // const session = await signInAccount()
+    
   }
 
   const onChange = (e) => {

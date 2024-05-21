@@ -9,6 +9,7 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom"
+import { Toaster } from "@/components/ui/toaster"
 
 
 function App() {
@@ -45,7 +46,11 @@ function App() {
   ]);
 
   return (
-    <RouterProvider router={router}/>
+    <>
+      <RouterProvider router={router}/>
+
+      <Toaster/>
+    </>
   )
 }
 
