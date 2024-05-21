@@ -3,6 +3,7 @@ import FormInput from "../../components/formInput/FormInput"
 import "./signUp.scss"
 import { Link } from "react-router-dom"
 import { createUserAccount } from "../../lib/appwrite/api"
+import { Button } from "@/components/ui/button"
 
 
 const SignUp = () => {
@@ -73,7 +74,9 @@ const SignUp = () => {
     e.preventDefault()
     const newUser = await createUserAccount(values)
 
-    console.log(newUser)
+    if(!newUser) {
+      return
+    }
   }
 
   const onChange = (e) => {

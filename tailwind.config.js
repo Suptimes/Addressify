@@ -3,6 +3,8 @@ module.exports = {
   corePlugins: {
     preflight: false,
   },
+
+  
   darkMode: ["class"],
   content: [
     './pages/**/*.{ts,tsx}',
