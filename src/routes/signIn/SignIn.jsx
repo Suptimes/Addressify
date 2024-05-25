@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom"
 import FormInput from "../../components/formInput/FormInput"
-import "./signIn.scss"
+import "../signUp/signUp.scss"
 
 const SignIn = () => {
   return (
     <div className="page">
       <div className="form">
-        <img src="logo-addressify.png" />
+        <img className="logoForm" src="logo-addressify.png" />
         <h2>Log in to your account</h2>
         <p>Please enter your details to continue</p>
         <form >

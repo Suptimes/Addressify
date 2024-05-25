@@ -1,0 +1,13 @@
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38 38" width="38" height="38">
+	<title>loader-svg</title>
+	<style>
+		.s0 { opacity: .5;fill: none;stroke: #ffffff;stroke-width: 2 } 
+		.s1 { fill: none;stroke: #ffffff;stroke-width: 2 } 
+	</style>
+	<g id="Layer">
+		<g id="Layer">
+			<path id="Layer" class="s0" d="m19 37c-10 0-18-8-18-18 0-10 8-18 18-18 10 0 18 8 18 18 0 10-8 18-18 18z"/>
+			<path id="Layer" fill-rule="evenodd" class="s1" d="m37 19c0-9.9-8.1-18-18-18"/>
+		</g>
+	</g>
+</svg>
