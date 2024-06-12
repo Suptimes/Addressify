@@ -27,7 +27,7 @@ const Filter = () => {
             <option value="">Any</option>
             <option value="appartments">Appartment</option>
             <option value="house">House</option>
-            <option value="Condo">Condo</option>
+            <option value="Condo">TownHouse</option>
             <option value="Land">Land</option>
           </select>
         </div>

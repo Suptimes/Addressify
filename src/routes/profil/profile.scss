@@ -35,6 +35,12 @@
                 h1{
                     font-weight: 400;
                 }
+                .butbut{
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 10px;
+                }
 
                 button{
                     padding: 12px 20px;
@@ -45,6 +51,10 @@
                     border: none;
                     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
                     display: flex;
+                }
+
+                .signout{
+                    background-color: rgb(253, 41, 41);
                 }
             }
 

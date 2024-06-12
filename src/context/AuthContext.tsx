@@ -50,7 +50,7 @@ const AuthProvider = ({ children }: {children: React.ReactNode }) => {
                 })
 
                 setIsAuthenticated(true)
-
+   
                 return true
             }
 
@@ -64,12 +64,22 @@ const AuthProvider = ({ children }: {children: React.ReactNode }) => {
     }
 
     useEffect(() => {
-        // localStorage.getItem("cookieFallback") === null
-        if( localStorage.getItem("cookieFallback") === '[]' ) window.location.href = '/signin'
-        {/*navigate("./signin")*/}
+        const cookieFallback = localStorage.getItem("cookieFallback");
+        if (cookieFallback === '[]') {
+          setIsAuthenticated(false);
+          setIsLoading(false);
+        } else {
+          checkAuthUser();
+        }
+      }, []);
+
+    // useEffect(() => {
+    //     // localStorage.getItem("cookieFallback") === null
+    //     if( localStorage.getItem("cookieFallback") === '[]' ) window.location.href = '/signin'
+    //     {/*navigate("./signin")*/}
         
-        checkAuthUser()
-    },[])
+    //     checkAuthUser()
+    // },[])
 
     
 

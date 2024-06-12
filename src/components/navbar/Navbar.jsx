@@ -6,11 +6,9 @@ import { useUserContext } from "../../context/AuthContext"
 
 const Navbar = () => {
   const [open, setOpen] = useState(false)
-  const { checkAuthUser } = useUserContext()
-  
-  // const isLoggedIn = await checkAuthUser();
+  const { checkAuthUser, isAuthenticated } = useUserContext()
 
-  const user = checkAuthUser
+  const user = isAuthenticated
 
   
 
