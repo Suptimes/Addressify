@@ -109,7 +109,7 @@ const SignUp = () => {
       const isLoggedIn = await checkAuthUser();
 
       if (isLoggedIn) {
-        setValues({ name: "", email: "", password: "", confirmPassword: "" });
+        // setValues({ name: "", email: "", password: "", confirmPassword: "" });
         window.location.href = './'
       } else {
         toast({ title: "Sign in failed. Please try again." });
@@ -169,7 +169,6 @@ const SignUp = () => {
         <form onSubmit={handleSubmit}>
           {inputs.map((input)=>(
             <FormInput 
-              // key={input.id}
               key={input.id}
               {...input} 
               value={values[input.name]} 

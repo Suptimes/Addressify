@@ -6,8 +6,8 @@ const Loader = () => {
         src="../../../public/loader.svg" 
         alt="loader"
         className="circleLoad"
-        height={24}
-        width={24}
+        height={21}
+        width={21}
       />
     </div>
   )

@@ -1,12 +1,18 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import "./navbar.scss"
+import { useUserContext } from "../../context/AuthContext"
 
 
 const Navbar = () => {
   const [open, setOpen] = useState(false)
+  const { checkAuthUser } = useUserContext()
+  
+  // const isLoggedIn = await checkAuthUser();
 
-  const user = false;
+  const user = checkAuthUser
+
+  
 
   return (
     <nav>
@@ -26,7 +32,7 @@ const Navbar = () => {
           {user 
             ? (
               <div className="user">
-                <img src="https://scontent.ffjr1-5.fna.fbcdn.net/v/t1.6435-1/67770793_10219891316415996_7156740147474595840_n.jpg?stp=dst-jpg_p200x200&_nc_cat=100&ccb=1-7&_nc_sid=5f2048&_nc_ohc=_bpabUbFbh4Q7kNvgFjC-bc&_nc_ht=scontent.ffjr1-5.fna&oh=00_AfAfRKaiF6jlsYgwRBp2e8WnhAgop6JNTMrei7fK8O8l-Q&oe=6662F7F4" alt="" />
+                <img src="https://scontent-fco2-1.xx.fbcdn.net/v/t1.6435-1/67770793_10219891316415996_7156740147474595840_n.jpg?stp=dst-jpg_p200x200&_nc_cat=100&ccb=1-7&_nc_sid=5f2048&_nc_ohc=BCUKApkklYgQ7kNvgHfDv67&_nc_ht=scontent-fco2-1.xx&oh=00_AYCKuYPaE6W4g0HapefaBFv9TXoLoyS3dpwc7YEbSNr--g&oe=6690E434" alt="" />
                 {/* REMEMBER ONLY FIRST NAME IN LG SCREENS */}
                 <span className="userName">Hassan Anibou</span>
                 <Link to="/profile" className="profile">
