@@ -5,7 +5,7 @@ const Loader = () => {
       <img 
         src="../../../public/loader.svg" 
         alt="loader"
-        className="circleLoad"
+        className="my-[-5px]"
         height={21}
         width={21}
       />

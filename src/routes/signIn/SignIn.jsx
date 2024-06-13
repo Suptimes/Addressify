@@ -67,7 +67,8 @@ const SignIn = () => {
           <button type="submit">
             {isSigningIn ? (
               <div className="loader"><Loader/> Loading...</div>
-            ) : "Log in"}</button>
+              ) : "Log in"}  
+            </button>
           <p className="already">Don't have an account? <Link to="/signup"><span>Sign up</span></Link></p>
         </form>
       </div>

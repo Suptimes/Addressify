@@ -36,7 +36,7 @@ const Profile = () => {
             </div>
           </div>
           <div className="info">
-            <div className="imgPro"><img src="https://scontent-fco2-1.xx.fbcdn.net/v/t1.6435-1/67770793_10219891316415996_7156740147474595840_n.jpg?stp=dst-jpg_p200x200&_nc_cat=100&ccb=1-7&_nc_sid=5f2048&_nc_ohc=BCUKApkklYgQ7kNvgHfDv67&_nc_ht=scontent-fco2-1.xx&oh=00_AYCKuYPaE6W4g0HapefaBFv9TXoLoyS3dpwc7YEbSNr--g&oe=6690E434" alt="" /></div>
+            <div className="imgPro"><img src="../../../public/accountImg.jpg" alt="" /></div>
             <div className="infoText">
               <span>Username: <b>Hassan Anibou</b></span>
               <span>Email: <b>Hassan@gmail.com</b></span>

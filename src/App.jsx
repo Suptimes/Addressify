@@ -10,6 +10,7 @@ import {
   RouterProvider,
 } from "react-router-dom"
 import { Toaster } from "@/components/ui/toaster"
+import Dashboard from "./routes/dashboard/Dashboard";
 
 
 function App() {
@@ -40,6 +41,11 @@ function App() {
         },{
           path:"/signin",
           element:<SignIn />
+        },{
+
+          // ======= THIS TO BE DELETED ========
+          path:"/dashboard",
+          element:<Dashboard />
         }
       ]
     },

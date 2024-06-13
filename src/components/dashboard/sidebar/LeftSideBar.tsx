@@ -1,0 +1,82 @@
+import { Link, NavLink, useLocation } from "react-router-dom"
+import { useSignOutAccount } from "@/lib/react-query/queriesAndMutations"
+import { useUserContext } from "../../../context/AuthContext"
+import "../sidebar/leftSideBar.scss"
+import { sidebarLinks } from "@/constants"
+import { INavLink } from "@/types"
+import { useEffect, useState } from "react"
+
+const LeftSideBar = () => {
+  const { user } = useUserContext()
+  const { pathname } = useLocation()
+  const { mutate: signOut, isSuccess } = useSignOutAccount()
+  const [redirect, setRedirect] = useState(false);
+  
+  useEffect(() => {
+    if (isSuccess) {
+      setRedirect(true);
+    }
+  }, [isSuccess]);
+
+  useEffect(() => {
+    if (redirect) {
+      window.location.href = "./";
+    }
+  }, [redirect]);
+
+  return (
+    <nav className="leftsidebarr hidden md:flex px-3 pt-10 pb-3 flex-col justify-between min-w-[270px]">
+      <div className="flex flex-col gap-11 w-full">
+        <Link to={`/profile/${user.id}`} className="flex gap-3 items-center ml-1">
+          <img 
+          src={user.imageUrl || "../../../public/accountImg.jpg"}
+          alt="profile"
+          className="h-14 w-14 rounded-full"
+          />
+          <div className="flex flex-col ml-4">
+            <p className="text-lg font-semibold">{user.name || "Hassan Anibou"}</p>
+            <p className="small-regular text-light-3">Owner</p>
+          </div>
+        </Link>
+
+        <ul className="list-none flex flex-col gap-3">
+          {sidebarLinks.map((link: INavLink) => {
+            const isActive = pathname === link.route
+
+            return(
+              <li key={link.label} className=
+              {`li group py-1 rounded-md text-black hover:text-white text-[16px] font-medium leading-[140%] bg-[#f4ecfb] hover:bg-purple-600 active:bg-purple-700 transition ${isActive && "bg-purple-600 text-white"}`}>
+                <NavLink 
+                to={link.route}
+                className="flex gap-4 items-center p-4"
+                >
+                  <img 
+                    src={link.imgURL}
+                    alt={link.label}
+                    className={`group-hover:brightness-200 ${isActive && "brightness-200"}`}
+                  />
+                  {link.label}
+                </NavLink>
+              </li>
+            )
+          })}
+        </ul>
+      </div>
+
+      <div className="w-full flex group">
+        <div 
+          className="p-4 w-full flex justify-start rounded-md text-black hover:text-white text-[16px] font-medium leading-[140%] bg-[#f4ecfb] hover:bg-red-500 active:bg-red-600 transition cursor-pointer"
+          onClick={() => signOut()}
+        >
+          <img 
+            src="./public/icons/logout.svg"
+            className="mr-4 group-hover:brightness-200 transition"
+          />
+          Logout
+        </div>
+      </div>
+    </nav>
+  )
+}
+
+export default LeftSideBar

@@ -7,17 +7,20 @@ nav{
     align-items: center;
     height: 100px;
 
-    a{
-        transition: all 0.3s ease;
+    .links{
+        a{
+            transition: all 0.3s ease;
+    
+            @include sm{
+                display: none;
+            }
+    
+            &:hover{
+                color: #7209cb;
+                // font-weight: 500;
+                // scale: 1.05;
+            }
 
-        @include sm{
-            display: none;
-        }
-
-        &:hover{
-            color: #7209cb;
-            // font-weight: 500;
-            // scale: 1.05;
         }
     }
 
