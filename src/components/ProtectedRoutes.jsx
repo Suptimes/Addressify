@@ -18,7 +18,7 @@ const ProtectedRoutes = ({ children }) => {
     
 
       if (isLoading) {
-        return <div><Loader/> Loading...</div>;
+        return <div className="flex items-center justify-center gap-2"><Loader/> Loading...</div>;
       }
 
   return children

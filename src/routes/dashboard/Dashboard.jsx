@@ -8,9 +8,8 @@ const Dashboard = () => {
   const isRegistered = false
 
   return (
-    <div>
-      <LeftSideBar/>
-
+    <div className="middlepage">
+      Dashboard
     </div>
   )
 }

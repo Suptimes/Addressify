@@ -8,6 +8,8 @@ import SignIn from "./routes/signIn/SignIn";
 import Dashboard from "./routes/dashboard/Dashboard";
 import Explore from "./routes/dashboard/explore/Explore.jsx"
 import Saved from "./routes/dashboard/saved/Saved.jsx"
+import Messages from "./routes/dashboard/messages/Messages.jsx"
+import Properties from "./routes/dashboard/properties/Properties.jsx"
 import CreatePost from "./routes/dashboard/createPost/CreatePost.jsx"
 import {
   createBrowserRouter,
@@ -33,7 +35,7 @@ function App() {
           element:<ListPage/>
         },
         {
-          path:"/:id",
+          path:"/property/:id",
           element:<SinglePage/>
         },
         ,{
@@ -68,10 +70,26 @@ function App() {
           ),
         },
         {
+          path: "/messages",
+          element: (
+            <ProtectedRoutes>
+              <Messages />
+            </ProtectedRoutes>
+          ),
+        },
+        {
           path: "/create-post",
           element: (
             <ProtectedRoutes>
               <CreatePost />
+            </ProtectedRoutes>
+          ),
+        },
+        {
+          path: "/properties",
+          element: (
+            <ProtectedRoutes>
+              <Properties />
             </ProtectedRoutes>
           ),
         },
