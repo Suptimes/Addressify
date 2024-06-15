@@ -13,6 +13,7 @@ export const INITIAL_USER: IUser = {
 const INITIAL_STATE = {
     user: INITIAL_USER,
     isLoading: false,
+    isAuthd: false,
     isAuthenticated: false,
     setUser: (() => {}) as React.Dispatch<React.SetStateAction<IUser>>,
     setIsAuthenticated: (() => {}) as React.Dispatch<React.SetStateAction<boolean>>,
@@ -34,7 +35,9 @@ const AuthProvider = ({ children }: {children: React.ReactNode }) => {
     const [user, setUser] = useState<IUser>(INITIAL_USER)
     const [isLoading, setIsLoading] = useState(false)
     const [isAuthenticated, setIsAuthenticated] = useState(false)
-
+    const [isAuthd, setIsAuthd] = useState(
+        localStorage.getItem('isAuthd') === 'true'
+      );
     // const navigate = useNavigate()
 
     const checkAuthUser = async () => {
@@ -50,13 +53,16 @@ const AuthProvider = ({ children }: {children: React.ReactNode }) => {
                 })
 
                 setIsAuthenticated(true)
-   
+                setIsAuthd(true)
+                localStorage.setItem('isAuthd', 'true')
                 return true
             }
 
             return false
         } catch (error) {
             console.log(error)
+            setIsAuthd(false)
+            localStorage.setItem('isAuthd', 'false')
             return false
         } finally {
             setIsLoading(false)
@@ -65,8 +71,9 @@ const AuthProvider = ({ children }: {children: React.ReactNode }) => {
 
     useEffect(() => {
         const cookieFallback = localStorage.getItem("cookieFallback");
-        if (cookieFallback === '[]') {
+        if (cookieFallback === '[]' || cookieFallback === null) {
           setIsAuthenticated(false);
+          localStorage.setItem('isAuthd', 'false')
           setIsLoading(false);
         } else {
           checkAuthUser();
@@ -87,6 +94,7 @@ const AuthProvider = ({ children }: {children: React.ReactNode }) => {
         user,
         setUser,
         isLoading,
+        isAuthd,
         isAuthenticated,
         setIsAuthenticated,
         checkAuthUser

@@ -5,12 +5,16 @@ import SinglePage from "./routes/singlePage/singlePage";
 import Profile from "./routes/profil/Profile";
 import SignUp from "./routes/signUp/SignUp";
 import SignIn from "./routes/signIn/SignIn";
+import Dashboard from "./routes/dashboard/Dashboard";
+import Explore from "./routes/dashboard/explore/Explore.jsx"
+import Saved from "./routes/dashboard/saved/Saved.jsx"
+import CreatePost from "./routes/dashboard/createPost/CreatePost.jsx"
 import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom"
 import { Toaster } from "@/components/ui/toaster"
-import Dashboard from "./routes/dashboard/Dashboard";
+import ProtectedRoutes from './components/ProtectedRoutes'
 
 
 function App() {
@@ -32,20 +36,52 @@ function App() {
           path:"/:id",
           element:<SinglePage/>
         },
-        {
-          path:"/profile",
-          element:<Profile />
-        },{
+        ,{
           path:"/signup",
           element:<SignUp />
         },{
           path:"/signin",
           element:<SignIn />
         },{
-
-          // ======= THIS TO BE DELETED ========
-          path:"/dashboard",
-          element:<Dashboard />
+          
+          path: "/profile",
+          element: (
+            <ProtectedRoutes>
+              <Profile />
+            </ProtectedRoutes>
+          ),
+        },
+        {
+          path: "/dashboard",
+          element: (
+            <ProtectedRoutes>
+              <Dashboard />
+            </ProtectedRoutes>
+          ),
+        },
+        {
+          path: "/explore",
+          element: (
+            <ProtectedRoutes>
+              <Explore />
+            </ProtectedRoutes>
+          ),
+        },
+        {
+          path: "/create-post",
+          element: (
+            <ProtectedRoutes>
+              <CreatePost />
+            </ProtectedRoutes>
+          ),
+        },
+        {
+          path: "/saved",
+          element: (
+            <ProtectedRoutes>
+              <Saved />
+            </ProtectedRoutes>
+          ),
         }
       ]
     },

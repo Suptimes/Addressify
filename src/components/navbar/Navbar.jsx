@@ -33,9 +33,9 @@ const Navbar = () => {
                 <img src="../../../public/accountImg.jpg" alt="" />
                 {/* REMEMBER ONLY FIRST NAME IN LG SCREENS */}
                 <span className="userName">Hassan Anibou</span>
-                <Link to="/profile" className="profile">
+                <Link to="/dashboard" className="profile">
                   <div className="notification">3</div>
-                  <span>Profile</span>
+                  <span>Dashboard</span>
                 </Link>
               </div>
               )

@@ -5,6 +5,7 @@ import "../sidebar/leftSideBar.scss"
 import { sidebarLinks } from "@/constants"
 import { INavLink } from "@/types"
 import { useEffect, useState } from "react"
+import { toast } from "@/components/ui/use-toast"
 
 const LeftSideBar = () => {
   const { user } = useUserContext()
@@ -21,6 +22,7 @@ const LeftSideBar = () => {
   useEffect(() => {
     if (redirect) {
       window.location.href = "./";
+      toast({ title: "Logged out." })
     }
   }, [redirect]);
 

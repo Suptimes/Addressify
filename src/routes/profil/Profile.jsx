@@ -3,6 +3,10 @@ import Chat from "../../components/chat/Chat"
 import "./profile.scss"
 import { useSignOutAccount } from "../../lib/react-query/queriesAndMutations"
 import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
+
+import { useUserContext } from "../../context/AuthContext"
+import Loader from "../../components/shared/Loader"
 
 
 const Profile = () => {
@@ -10,22 +14,41 @@ const Profile = () => {
 
   const { mutate: signOut, isSuccess } = useSignOutAccount()
   const [redirect, setRedirect] = useState(false);
-  
+  const { checkAuthUser, isLoading, isAuthd, isAuthenticated } = useUserContext()
+  const navigate = useNavigate()
+
+
   useEffect(() => {
     if (isSuccess) {
-      setRedirect(true);
+      setRedirect(true)
     }
-  }, [isSuccess]);
+  }, [isSuccess])
 
   useEffect(() => {
     if (redirect) {
-      window.location.href = "./";
+      navigate("./")
     }
-  }, [redirect]);
+  }, [redirect])
 
+
+  // Fetch authentication status on mount
+  // useEffect(() => {
+  //   const fetchAuth = async () => {
+  //     await checkAuthUser();
+  //     setLoading(false);
+  //   };
+  //   fetchAuth();
+  // }, [checkAuthUser]);
+
+  // Redirect to sign-in if not authenticated
+  // useEffect(() => {
+  //   if (!isLoading && !isAuthd) {
+  //     navigate("/signin");
+  //   }
+  // }, [isLoading, isAuthd, navigate]);
 
   return (
-    <div className="profilePage">
+      <div className="profilePage">
       <div className="details">
         <div className="wrapper">
           <div className="title">

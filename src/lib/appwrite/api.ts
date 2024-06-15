@@ -90,7 +90,7 @@ export async function getCurrentUser() {
 export async function signOutAccount (){
     try {
         const session = await account.deleteSession("current");
-        
+        localStorage.setItem('isAuthd', 'false')
         return session
     } catch (error) {
         console.log(error)

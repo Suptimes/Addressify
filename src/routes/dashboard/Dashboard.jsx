@@ -11,9 +11,6 @@ const Dashboard = () => {
     <div>
       <LeftSideBar/>
 
-      {/* {isRegistered 
-        ? <SignIn />
-        : <SignUp /> */}
     </div>
   )
 }
