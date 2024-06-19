@@ -15,20 +15,22 @@ export type INavLink = {
   
   export type INewPost = {
     userId: string;
-    caption: string;
+    title: string;
     file: File[];
     location?: string;
-    tags?: string;
+    price?: string;
+    description?: string;
   };
   
   export type IUpdatePost = {
     postId: string;
-    caption: string;
+    title: string;
     imageId: string;
     imageUrl: URL;
     file: File[];
     location?: string;
-    // tags?: string;
+    price?: number;
+    description?: string;
   };
   
   export type IUser = {

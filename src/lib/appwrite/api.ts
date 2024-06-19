@@ -1,6 +1,6 @@
-import {ID, Query} from "appwrite"
-import { account, appwriteConfig, avatars, databases } from "./config"
-import { INewUser } from "@/types"
+import {ID, ImageGravity, Query} from "appwrite"
+import { account, appwriteConfig, avatars, databases, storage } from "./config"
+import { INewPost, INewUser } from "@/types"
 
 
 export async function createUserAccount(user: INewUser){
@@ -92,6 +92,97 @@ export async function signOutAccount (){
         const session = await account.deleteSession("current");
         localStorage.setItem('isAuthd', 'false')
         return session
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export async function createPost (post: INewPost) {
+    try{
+        // Upload image to storage
+        const uploadedFile = await uploadFile(post.file[0])
+        // Quick check
+        if(!uploadedFile) throw new Error('File upload failed')
+
+        // Get file URL
+        const fileUrl = await getFilePreview(uploadedFile.$id)
+
+        if(!fileUrl) {
+            await deleteFile(uploadedFile.$id)
+            throw new Error('Failed to generate file URL')
+        }
+        if (typeof fileUrl !== 'string' || fileUrl.length > 2000) {
+            await deleteFile(uploadedFile.$id);
+            throw new Error('Invalid file URL');
+        }
+        // Save post to database
+        const newPost = await databases.createDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.propertyCollectionId,
+            ID.unique(),
+            {
+                owner: post.userId,
+                title: post.title,
+                imageUrl: fileUrl,
+                imageId: uploadedFile.$id,
+                location: post.location,
+                price: post.price,
+                description: post.description,
+            }
+        )
+
+        if(!newPost) {
+            await deleteFile(uploadedFile.$id)
+            throw new Error('Failed to create document')
+        }
+
+        return newPost
+    } catch (error) {
+        console.log('Error creating post:', error)
+    }
+}
+
+export async function uploadFile(file: File) {
+    try {
+        const uploadedFile = await storage.createFile(
+            appwriteConfig.storageId,
+            ID.unique(),
+            file
+        )
+
+        return uploadedFile
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export async function getFilePreview(fileId: string) {
+    try {
+        const fileObject = storage.getFilePreview(
+            appwriteConfig.storageId,
+            fileId,
+            2000,
+            2000,
+            ImageGravity.Center,
+            100,
+        )
+
+        if (!fileObject) throw new Error('Failed to generate file preview URL');
+        
+        // Convert URL object to string
+        const fileUrl = fileObject.toString()
+
+        return fileUrl
+    } catch (error) {
+        console.log('Error getting file preview:', error)
+    }
+}
+
+export async function deleteFile(fileId: string) {
+    try {
+        await storage.deleteFile(appwriteConfig.storageId, fileId)
+
+        return { status: "ok" }
     } catch (error) {
         console.log(error)
     }

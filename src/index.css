@@ -12,25 +12,26 @@ a {
 }
 
 body {
-    // font-family: "Lato", sans-serif;
+    /* // font-family: "Lato", sans-serif; */
     font-family: "Montserrat", sans-serif;
     overflow-x: hidden;
 
-    button{
-        font-family: "Montserrat", sans-serif;
-    }
+    
 }
-  
+
+button{
+    font-family: "Montserrat", sans-serif;
+    }
   
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
   
-  // @tailwind base;
-  // @tailwind components;
-  // @tailwind utilities;
+  @tailwind base;
+  @tailwind components;
+  @tailwind utilities;
 
-  // @layer base {
+  /* // @layer base {
   //   :root {
   //     --background: 0 0% 100%;
   //     --foreground: 222.2 84% 4.9%;
@@ -92,15 +93,15 @@ body {
   //     --input: 217.2 32.6% 17.5%;
   //     --ring: 212.7 26.8% 83.9%;
   //   }
-  // }
+  // } */
 
   @layer base {
     * {
-      @apply border-border scroll-smooth;
+      @apply box-border scroll-smooth;
       --radius: 0.5rem;
     }
     body {
-      @apply bg-background text-foreground;
+      
     }
     
   }
@@ -187,11 +188,11 @@ body {
     }
   
     .custom-scrollbar::-webkit-scrollbar-track {
-      background: #09090a;
+      background: #f4ecfb;
     }
   
     .custom-scrollbar::-webkit-scrollbar-thumb {
-      background: #5c5c7b;
+      background: #5c5c7b4e;
       border-radius: 50px;
     }
   
@@ -199,8 +200,11 @@ body {
       background: #7878a3;
     }
   
+    .common-container-noscroll {
+      @apply flex flex-col flex-1 items-center gap-8 py-10 px-5 md:p-8 lg:p-14 overflow-hidden;
+    }
     .common-container {
-      @apply flex flex-col flex-1 items-center gap-10 overflow-scroll py-10 px-5 md:px-8 lg:p-14 custom-scrollbar;
+      @apply flex flex-col flex-1 items-center gap-10 py-10 px-5 md:px-8 lg:p-14 overflow-scroll custom-scrollbar;
     }
   
     /* All Users */
@@ -292,7 +296,7 @@ body {
     }
   
     .file_uploader-box {
-      @apply flex-center flex-col p-7 h-80 lg:h-[612px];
+      @apply flex-center flex-col p-7 h-80;
     }
   
     /* Grid Post List */
@@ -349,20 +353,24 @@ body {
     }
   
     .shad-input {
-      @apply h-12 bg-dark-4 border-none placeholder:text-light-4 focus-visible:ring-1 focus-visible:ring-offset-1 ring-offset-light-3;
+      @apply h-12 bg-gray-50 border-none font-['Montserrat'] placeholder:italic  focus-visible:ring-1 focus-visible:ring-offset-1 ring-violet-800;
     }
   
     .shad-textarea {
-      @apply h-36 bg-dark-3 rounded-xl border-none focus-visible:ring-1 focus-visible:ring-offset-1 ring-offset-light-3;
+      @apply h-36 bg-gray-50 font-['Montserrat'] placeholder:italic rounded-xl border-none resize-none focus-visible:ring-1 focus-visible:ring-offset-1 ring-violet-800;
     }
   
     /* Button */
     .shad-button_primary {
-      @apply bg-primary-500 hover:bg-primary-500 text-light-1 flex gap-2;
+      @apply bg-primary-500 shadow-md cursor-pointer border-none shadow-black/20 hover:bg-primary-600 text-light-1 flex gap-2;
     }
   
     .shad-button_dark_4 {
-      @apply h-12 bg-dark-4 px-5 text-light-1 flex gap-2;
+      @apply h-12 bg-[#f61414] hover:bg-[#be1515] px-5 text-light-1 shadow-md shadow-black/20 cursor-pointer border-none flex gap-2;
+    }
+
+    .shad-button_dark_5 {
+      @apply h-12 bg-[#d9d9d9] hover:bg-[#c6c6c6] px-5 text-dark-1 shadow-md shadow-black/20 cursor-pointer border-none flex gap-2;
     }
   
     .shad-button_ghost {
