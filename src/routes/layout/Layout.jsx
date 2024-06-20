@@ -17,7 +17,7 @@ const Layout = () => {
           </div>
         )}
         {!hideNavbar && (
-          <div className="navbar">
+          <div className="navbar bg-white">
             <Navbar />
           </div>
         )}

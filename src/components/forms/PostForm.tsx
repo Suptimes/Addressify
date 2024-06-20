@@ -55,7 +55,8 @@ const PostForm = ({ post }: PostFormProps) => {
      toast({
       title: "Property successfully added."
     })
-     navigate(`../property/:${newPost.$id}`)
+    //  navigate(`../property/:${newPost.$id}`)
+     navigate(`../properties`)
      
   }
 
