@@ -1,4 +1,4 @@
-import { Link, NavLink, useLocation } from "react-router-dom"
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom"
 import { useSignOutAccount } from "@/lib/react-query/queriesAndMutations"
 import { useUserContext } from "../../../context/AuthContext"
 import "../sidebar/leftSideBar.scss"
@@ -6,12 +6,14 @@ import { sidebarLinks } from "@/constants"
 import { INavLink } from "@/types"
 import { useEffect, useState } from "react"
 import { toast } from "@/components/ui/use-toast"
+import Loader from "@/components/shared/Loader"
 
 const LeftSideBar = () => {
   const { user } = useUserContext()
   const { pathname } = useLocation()
-  const { mutate: signOut, isSuccess } = useSignOutAccount()
+  const { mutate: signOut, isSuccess, isPending: isLoggingOut } = useSignOutAccount()
   const [redirect, setRedirect] = useState(false);
+  const navigate = useNavigate()
   
   useEffect(() => {
     if (isSuccess) {
@@ -21,7 +23,7 @@ const LeftSideBar = () => {
 
   useEffect(() => {
     if (redirect) {
-      window.location.href = "./";
+      navigate("./")
       toast({ title: "Logged out." })
     }
   }, [redirect]);
@@ -35,7 +37,7 @@ const LeftSideBar = () => {
       </Link>
         <Link to={`/profile/${user.id}`} className="flex gap-3 items-center ml-1">
           <img 
-          src={user.imageUrl || "../../../public/accountImg.jpg"}
+          src={user.imageUrl || "/accountImg.jpg"}
           alt="profile"
           className="h-14 w-14 rounded-full"
           />
@@ -75,10 +77,12 @@ const LeftSideBar = () => {
           onClick={() => signOut()}
         >
           <img 
-            src="./public/icons/logout.svg"
+            src="/icons/logout.svg"
             className="mr-4 group-hover:brightness-200 transition"
           />
-          Logout
+          {isLoggingOut ?
+            <div className="flex brightness-50 group-hover:brightness-200 items-center justify-start gap-2"><Loader /> Signing out...</div> 
+            : "Sign out"}
         </div>
       </div>
     </nav>

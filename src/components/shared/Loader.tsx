@@ -3,7 +3,7 @@ const Loader = () => {
   return (
     <div className="justify-center items-center">
       <img 
-        src="../../../public/loader.svg" 
+        src="/loader.svg" 
         alt="loader"
         className="my-[-5px]"
         height={21}

@@ -1,7 +1,6 @@
 import { getCurrentUser } from '@/lib/appwrite/api'
 import { IUser } from '@/types'
 import { createContext, useContext, useEffect, useState} from 'react'
-// import { useNavigate } from 'react-router-dom'
 
 export const INITIAL_USER: IUser = {
     id: "", 
@@ -38,7 +37,6 @@ const AuthProvider = ({ children }: {children: React.ReactNode }) => {
     const [isAuthd, setIsAuthd] = useState(
         localStorage.getItem('isAuthd') === 'true'
       );
-    // const navigate = useNavigate()
 
     const checkAuthUser = async () => {
         try {
@@ -70,24 +68,15 @@ const AuthProvider = ({ children }: {children: React.ReactNode }) => {
     }
 
     useEffect(() => {
-        const cookieFallback = localStorage.getItem("cookieFallback");
+        const cookieFallback = localStorage.getItem("cookieFallback")
         if (cookieFallback === '[]' || cookieFallback === null) {
-          setIsAuthenticated(false);
+          setIsAuthenticated(false)
           localStorage.setItem('isAuthd', 'false')
-          setIsLoading(false);
+          setIsLoading(false)
         } else {
-          checkAuthUser();
+          checkAuthUser()
         }
-      }, []);
-
-    // useEffect(() => {
-    //     // localStorage.getItem("cookieFallback") === null
-    //     if( localStorage.getItem("cookieFallback") === '[]' ) window.location.href = '/signin'
-    //     {/*navigate("./signin")*/}
-        
-    //     checkAuthUser()
-    // },[])
-
+      }, [])
     
 
     const value = {

@@ -13,6 +13,7 @@ import { Models } from "appwrite"
 import { useCreatePost } from "@/lib/react-query/queriesAndMutations.tsx"
 import { useUserContext } from "@/context/AuthContext.tsx"
 import { useToast } from "../ui/use-toast.ts"
+import Loader from "../shared/Loader.tsx"
 
 
 type PostFormProps = {
@@ -161,8 +162,11 @@ const PostForm = ({ post }: PostFormProps) => {
           <Button 
           type="submit" 
           className="shad-button_primary whitespace-nowrap"
+          disabled={isLoadingCreate}
           >
-            Submit
+            {isLoadingCreate 
+            ? <div className="flex gap-3 p-1"><Loader /> Submitting...</div> 
+            : "Submit"}
           </Button>
         </div>
       </form>
