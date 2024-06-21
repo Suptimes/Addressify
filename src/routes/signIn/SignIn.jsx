@@ -13,7 +13,7 @@ import { useUserContext } from "../../context/AuthContext"
 const SignIn = () => {
   const { toast } = useToast()
   const { checkAuthUser, isLoading: isUserLoading } = useUserContext()
-  // const navigate = useNavigate()
+  const navigate = useNavigate()
 
   // Queries
   const { mutateAsync: signInAccount, isPending: isSigningIn } = useSignInAccount()
@@ -44,7 +44,8 @@ const SignIn = () => {
       const isLoggedIn = await checkAuthUser();
 
       if (isLoggedIn) {
-        window.location.href = './profile'
+        // window.location.href = './profile'
+        navigate("./dashboard")
       } else {
         toast({ title: "Sign up failed. Please try again." });
       }

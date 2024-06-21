@@ -71,7 +71,7 @@ const LeftSideBar = () => {
 
       <div className="w-full flex group">
         <div 
-          className="p-4 w-full flex justify-start rounded-md text-black hover:text-white text-[16px] font-medium leading-[140%] bg-[#f4ecfb] hover:bg-red-500 active:bg-red-600 transition cursor-pointer"
+          className="p-4 w-full flex justify-start rounded-md text-black hover:text-white text-[16px] font-medium leading-[140%] bg-[#f4ecfb] hover:bg-[#f61414] active:bg-[#be1515] transition cursor-pointer"
           onClick={() => signOut()}
         >
           <img 

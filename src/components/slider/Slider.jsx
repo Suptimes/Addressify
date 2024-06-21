@@ -1,5 +1,6 @@
 import { useState } from "react"
 import "./slider.scss"
+import { X } from "lucide-react"
 
 const Slider = ({ images }) => {
     const [imageIndex, setImageIndex] = useState(null)
@@ -32,7 +33,7 @@ const Slider = ({ images }) => {
                 <img src="/arrow.png" className="right" alt="arrow" />
             </div>
             <div className="close" onClick={()=>setImageIndex(null)}>
-                X
+                < X size={36} />
             </div>
         </div>
         }
