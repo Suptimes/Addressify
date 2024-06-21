@@ -17,6 +17,7 @@ import {
 } from "react-router-dom"
 import { Toaster } from "@/components/ui/toaster"
 import ProtectedRoutes from './components/ProtectedRoutes'
+import PublicRoutes from "./components/PublicRoutes.jsx";
 
 
 function App() {
@@ -37,13 +38,21 @@ function App() {
         {
           path:"/property/:id",
           element:<SinglePage/>
-        },
-        ,{
-          path:"/signup",
-          element:<SignUp />
         },{
-          path:"/signin",
-          element:<SignIn />
+          path: "/signup",
+          element: (
+            <PublicRoutes>
+              <SignUp />
+            </PublicRoutes>
+          ),
+        },
+        {
+          path: "/signin",
+          element: (
+            <PublicRoutes>
+              <SignIn />
+            </PublicRoutes>
+          ),
         },{
           
           path: "/profile",
@@ -109,10 +118,7 @@ function App() {
     <>
       <RouterProvider router={router}/>
 
-      <Toaster
-        position="top-center"
-        reverseOrder={false}
-      />
+      <Toaster />
     </>
   )
 }
