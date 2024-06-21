@@ -45,7 +45,7 @@ const SignIn = () => {
 
       if (isLoggedIn) {
         // window.location.href = './profile'
-        navigate("./dashboard")
+        navigate("/dashboard")
       } else {
         toast({ title: "Sign up failed. Please try again." });
       }
