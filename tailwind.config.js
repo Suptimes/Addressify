@@ -25,7 +25,7 @@ module.exports = {
     },
     extend: {
       filter: {
-        'coloredIcon': 'brightness(0) saturate(100%) invert(28%) sepia(86%) saturate(4466%) hue-rotate(263deg) brightness(93%) contrast(96%)',
+        'colored-icon': 'brightness(0) saturate(100%) invert(28%) sepia(86%) saturate(4466%) hue-rotate(263deg) brightness(93%) contrast(96%)',
       },
       colors: {
         'primary-500': '#9333EA',
@@ -76,5 +76,7 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"),
+            require('tailwindcss-filters')
+  ],
 }

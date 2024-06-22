@@ -3,6 +3,7 @@ import { Link } from "react-router-dom"
 import { Models } from "appwrite"
 // import { formatDateString, multiFormatDateString } from "@/lib/utils"
 import { useUserContext } from "@/context/AuthContext"
+import SaveBtn from "../shared/SaveBtn"
 
 
 type PostCardProps = {
@@ -59,7 +60,7 @@ const Card = ({item}: PostCardProps) => {
             </div>
 
             <div className="icon">
-              <img className="brightness-0" src="/icons/save.svg" alt="save" />
+              <SaveBtn post={item} userId={user.id} />
             </div>
 
             <div className="icon">

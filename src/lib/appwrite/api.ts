@@ -199,3 +199,61 @@ export async function getRecentPosts() {
 
     return posts
 }
+
+
+export async function likePost(postId: string, likesArray: string[]) {
+    try {
+        const updatedPost = await databases.updateDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.propertyCollectionId,
+            postId,
+            {
+                likes: likesArray
+            }
+        )
+
+        if(!updatedPost) throw new Error("Like did not register.")
+
+            return updatedPost
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+
+export async function savePost(postId: string, userId: string) {
+    try {
+        const updatedPost = await databases.createDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.savesCollectionId,
+            ID.unique(),
+            {
+                user: userId,
+                post: postId,
+            }
+        )
+
+        if(!updatedPost) throw new Error("Save did not register.")
+
+            return updatedPost
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+
+export async function deleteSavedPost(savedRecordId: string) {
+    try {
+        const statusCode = await databases.deleteDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.savesCollectionId,
+            savedRecordId,
+        )
+
+        if(!statusCode) throw new Error("Delete saved post did not register.")
+
+            return { status: "ok" }
+    } catch (error) {
+        console.log(error)
+    }
+}
