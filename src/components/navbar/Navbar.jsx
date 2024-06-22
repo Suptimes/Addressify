@@ -6,9 +6,9 @@ import { useUserContext } from "../../context/AuthContext"
 
 const Navbar = () => {
   const [open, setOpen] = useState(false)
-  const { checkAuthUser, isAuthenticated } = useUserContext()
+  const { checkAuthUser, isAuthd, isAuthenticated } = useUserContext()
 
-  const user = isAuthenticated
+  const user = isAuthd
 
   
 
@@ -30,7 +30,7 @@ const Navbar = () => {
           {user 
             ? (
               <div className="user">
-                <img src="../../../public/accountImg.jpg" alt="" />
+                <img src="/accountImg.jpg" alt="" />
                 {/* REMEMBER ONLY FIRST NAME IN LG SCREENS */}
                 <span className="userName">Hassan Anibou</span>
                 <Link to="/dashboard" className="profile">

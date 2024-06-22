@@ -2,6 +2,7 @@ import "./layout.scss"
 import Navbar from "../../components/navbar/Navbar"
 import { Outlet, useLocation } from "react-router-dom"
 import LeftSideBar from "../../components/dashboard/sidebar/LeftSideBar"
+import TopBar from "../../components/dashboard/topBar/TopBar"
 
 const Layout = () => {
   const location = useLocation()
@@ -13,7 +14,12 @@ const Layout = () => {
       <div className="layout">
         {hideNavbar && (
           <div>
-            <LeftSideBar />
+            <div>
+              <TopBar />
+            </div>
+            <div>
+              <LeftSideBar />
+            </div>
           </div>
         )}
         {!hideNavbar && (
