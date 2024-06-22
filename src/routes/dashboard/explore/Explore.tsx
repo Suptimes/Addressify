@@ -9,7 +9,7 @@ const Explore = () => {
   
   return (
     <div className="absolute flex flex-1 md:left-[270px] top-[60px] left-0 xs:w-[100vw] md:min-w-[500px] md:w-[calc(100vw-270px)]">
-      <div className='home-container'>
+      <div className='common-container-noscroll'>
         <div className='home-posts'>
           <h2 className='h3-bold lg:h2-bold text-left w-full'>Explore Feed</h2>
           {isPostLoading && !posts ? (
