@@ -6,7 +6,7 @@ import Profile from "./routes/profil/Profile";
 import SignUp from "./routes/signUp/SignUp";
 import SignIn from "./routes/signIn/SignIn";
 import Dashboard from "./routes/dashboard/Dashboard";
-import Explore from "./routes/dashboard/explore/Explore.jsx"
+import Explore from "./routes/dashboard/explore/Explore.tsx"
 import Saved from "./routes/dashboard/saved/Saved.jsx"
 import Messages from "./routes/dashboard/messages/Messages.jsx"
 import Properties from "./routes/dashboard/properties/Properties.jsx"
@@ -55,7 +55,7 @@ function App() {
           ),
         },{
           
-          path: "/profile",
+          path: "/profile/:id",
           element: (
             <ProtectedRoutes>
               <Profile />

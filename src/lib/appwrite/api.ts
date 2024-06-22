@@ -156,7 +156,7 @@ export async function uploadFile(file: File) {
     }
 }
 
-export async function getFilePreview(fileId: string) {
+export function getFilePreview(fileId: string) {
     try {
         const fileObject = storage.getFilePreview(
             appwriteConfig.storageId,
@@ -186,4 +186,16 @@ export async function deleteFile(fileId: string) {
     } catch (error) {
         console.log(error)
     }
+}
+
+export async function getRecentPosts() {
+    const posts = await databases.listDocuments(
+        appwriteConfig.databaseId,
+        appwriteConfig.propertyCollectionId,
+        [Query.orderDesc("$createdAt"), Query.limit(20)]
+    )
+
+    if(!posts) throw new Error("Failed to get recent posts.")
+
+    return posts
 }
