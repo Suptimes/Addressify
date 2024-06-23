@@ -217,7 +217,7 @@ button{
     }
     /* Dashboard Pages */
     .middlePage{
-      @apply absolute flex flex-1 md:left-[270px] top-[60px] left-0 xs:w-[100vw] w-[100vw] md:min-w-[500px] md:w-[calc(100vw-270px)] pb-[120px];
+      @apply absolute flex flex-1 md:left-[270px] top-[60px] left-0 xs:w-[100vw] w-[100vw] md:min-w-[500px] md:w-[calc(100vw-270px)] max-md:pb-[120px];
     }
   
     /* Explore */
