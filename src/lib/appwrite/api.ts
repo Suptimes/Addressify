@@ -290,16 +290,12 @@ export async function updatePost (post: IUpdatePost) {
             throw new Error("Unable to retrieve current user");
         }
 
-        console.log("CurrentUserr:", currentUser)
-
          // Fetch the existing post to validate the owner
          const existingPost = await databases.getDocument(
             appwriteConfig.databaseId,
             appwriteConfig.propertyCollectionId,
             post.postId
         );
-
-        console.log("Existing Postt:", existingPost)
 
         if (!existingPost) {
             throw new Error("Post not found");
