@@ -34,8 +34,8 @@ export const sidebarLinks = [
   export const bottombarLinks = [
     {
       imgURL: "/icons/home.svg",
-      route: "/",
-      label: "Home",
+      route: "/dashboard",
+      label: "Dashboard",
     },
     {
       imgURL: "/icons/wallpaper.svg",

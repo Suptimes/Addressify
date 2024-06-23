@@ -1,0 +1,8 @@
+.bottom-bar{
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 10px 0px inset;
+    // box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.coloredIcon{
+    filter: brightness(0) saturate(100%) invert(28%) sepia(86%) saturate(4466%) hue-rotate(263deg) brightness(93%) contrast(96%);        
+}

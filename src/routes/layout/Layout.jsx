@@ -3,6 +3,7 @@ import Navbar from "../../components/navbar/Navbar"
 import { Outlet, useLocation } from "react-router-dom"
 import LeftSideBar from "../../components/dashboard/sidebar/LeftSideBar"
 import TopBar from "../../components/dashboard/topBar/TopBar"
+import BottomBar from "../../components/dashboard/bottomBar/BottomBar"
 
 const Layout = () => {
   const location = useLocation()
@@ -20,7 +21,6 @@ const Layout = () => {
   // Check if the current path matches any of the noNavbarRoutes
   const hideNavbar = noNavbarRoutes.some(route => route.test(location.pathname));
 
-
   return (
     <>
       <div className="layout">
@@ -31,6 +31,9 @@ const Layout = () => {
             </div>
             <div>
               <LeftSideBar />
+            </div>
+            <div>
+              <BottomBar />
             </div>
           </div>
         )}

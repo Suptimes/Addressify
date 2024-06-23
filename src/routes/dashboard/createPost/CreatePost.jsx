@@ -3,7 +3,7 @@ import PostForm from "../../../components/forms/PostForm"
 
 const CreatePost = () => {
   return (
-    <div className="middlepage flex flex-1 md:left-[270px] top-[60px] left-0 xs:w-[100vw] md:min-w-[500px] md:w-[calc(100vw-270px)]">
+    <div className="middlePage">
       <div className="common-container-noscroll">
         <div className="max-w-5xl flex-start gap-3 justify-start w-full">
           <img 

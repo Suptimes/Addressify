@@ -215,6 +215,10 @@ button{
     .user-grid {
       @apply w-full grid grid-cols-1 xs:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-7 max-w-5xl;
     }
+    /* Dashboard Pages */
+    .middlePage{
+      @apply absolute flex flex-1 md:left-[270px] top-[60px] left-0 xs:w-[100vw] w-[100vw] md:min-w-[500px] md:w-[calc(100vw-270px)] pb-[120px];
+    }
   
     /* Explore */
     .explore-container {
@@ -283,7 +287,7 @@ button{
   
     /* Bottom bar */
     .bottom-bar {
-      @apply z-50 flex-between w-full sticky bottom-0 rounded-t-[20px]  px-5 py-4 md:hidden;
+      @apply z-50 bg-[#f4ecfb] flex justify-around w-full right-0 fixed bottom-0 rounded-t-[20px] py-3 px-7 md:hidden;
     }
   
     /* File uploader */

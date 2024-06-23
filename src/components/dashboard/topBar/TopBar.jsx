@@ -5,7 +5,7 @@ const TopBar = () => {
     const { user } = useUserContext()
 
     return (
-        <div className="absolute flex top-0 left-0 md:flex md:fixed items-center justify-between px-5 py-5 w-full h-[60px] z-10 bg-white shadow">
+        <div className="fixed flex top-0 left-0 md:flex md:fixed items-center justify-between px-5 py-5 w-full h-[60px] z-10 bg-white shadow">
             <div className="left flex gap-5 items-center justify-center">
             <Link to="" className="logo flex gap-5 items-center justify-center font-bold">
                 <img src="/logo-addressify.png" height={45} width={45} alt="addressify" />

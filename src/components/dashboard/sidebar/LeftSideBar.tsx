@@ -31,21 +31,7 @@ const LeftSideBar = () => {
   return (
     <nav className="leftsidebarr hidden md:flex px-3 pt-10 pb-3 flex-col justify-between min-w-[270px]">
       
-      <div className="flex mt-[-20px] flex-col gap-6 w-full">
-        {/* <Link to="./" className="flex items-center justify-center text-xl font-bold my-0">
-              <img className="address" src="/logo-addressify.png" alt="logo" height={80} width={80} />
-        </Link>
-        <Link to={`/profile/${user.id}`} className="flex gap-3 items-center ml-1">
-          <img 
-          src={user.imageUrl || "/accountImg.jpg"}
-          alt="profile"
-          className="h-14 w-14 rounded-full"
-          />
-          <div className="flex flex-col ml-4">
-            <p className="text-lg font-semibold">{user.name || "Hassan Anibou"}</p>
-            <p className="small-regular text-light-3">Owner</p>
-          </div>
-        </Link> */}
+      <div className="insidecont custom-scrollbar flex mt-[-20px] flex-col gap-6 w-full">
 
         <ul className="list-none flex flex-col gap-3">
           {sidebarLinks.map((link: INavLink) => {
