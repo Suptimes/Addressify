@@ -6,8 +6,20 @@ import TopBar from "../../components/dashboard/topBar/TopBar"
 
 const Layout = () => {
   const location = useLocation()
-  const noNavbarRoutes = ['/dashboard', "/explore", "/messages", "/saved", "/properties", "/create-post"]
-  const hideNavbar = noNavbarRoutes.includes(location.pathname)
+  const noNavbarRoutes = [
+    /^\/dashboard$/,
+    /^\/explore$/,
+    /^\/messages$/,
+    /^\/saved$/,
+    /^\/properties$/,
+    /^\/create-post$/,
+    /^\/edit-post\/[a-zA-Z0-9-]+$/, // For trailing slashes ^\/edit-post\/\d+\/?$
+    /^\/profile\/[a-zA-Z0-9-]+$/,
+  ];
+
+  // Check if the current path matches any of the noNavbarRoutes
+  const hideNavbar = noNavbarRoutes.some(route => route.test(location.pathname));
+
 
   return (
     <>

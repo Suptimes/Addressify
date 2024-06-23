@@ -65,7 +65,7 @@ const SignIn = () => {
         <form onSubmit={handleSubmit}>
           <FormInput placeholder="Email" name="email" onChange={onChange} />
           <FormInput placeholder="Password" name="password" onChange={onChange} />
-          <button type="submit">
+          <button type="submit" disabled={isSigningIn}>
             {isSigningIn ? (
               <div className="loader"><Loader/> Loading...</div>
               ) : "Log in"}  

@@ -54,7 +54,7 @@ const Card = ({item}: PostCardProps) => {
           <div className="icons">
           
             <div className="icon mb-[-2px]">
-              <Link className={`${user.id !== item.owner.$id && "hidden"}`} to={`/update-post/${item.$id}`}>
+              <Link className={`${user.id !== item.owner.$id && "hidden"}`} to={`/edit-post/${item.$id}`}>
                 <img className="brightness-0" src="/icons/edit.svg" alt="edit"/>
               </Link>
             </div>

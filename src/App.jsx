@@ -7,6 +7,7 @@ import SignUp from "./routes/signUp/SignUp";
 import SignIn from "./routes/signIn/SignIn";
 import Dashboard from "./routes/dashboard/Dashboard";
 import Explore from "./routes/dashboard/explore/Explore.tsx"
+import EditPost from "./routes/dashboard/editPost/EditPost.tsx"
 import Saved from "./routes/dashboard/saved/Saved.jsx"
 import Messages from "./routes/dashboard/messages/Messages.jsx"
 import Properties from "./routes/dashboard/properties/Properties.jsx"
@@ -109,7 +110,15 @@ function App() {
               <Saved />
             </ProtectedRoutes>
           ),
-        }
+        },
+        {
+          path: "/edit-post/:id",
+          element: (
+            <ProtectedRoutes>
+              <EditPost />
+            </ProtectedRoutes>
+          ),
+        },
       ]
     },
   ]);

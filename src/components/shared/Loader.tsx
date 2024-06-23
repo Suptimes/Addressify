@@ -1,13 +1,13 @@
 
-const Loader = ({ h, w }) => {
+const Loader = ({ h = 21, w = 21 }) => {
   return (
     <div className="justify-center items-center">
       <img 
         src="/loader.svg" 
         alt="loader"
         className="my-[-5px]"
-        height={h || 21}
-        width={w || 21}
+        height={h}
+        width={w}
       />
     </div>
   )

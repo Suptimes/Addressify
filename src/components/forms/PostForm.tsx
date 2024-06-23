@@ -10,20 +10,25 @@ import { Textarea } from "../ui/textarea"
 import FileUploader from "../shared/FileUploader.tsx"
 import { PostValidation } from "@/lib/validation/index.ts"
 import { Models } from "appwrite"
-import { useCreatePost } from "@/lib/react-query/queriesAndMutations.tsx"
+import { useCreatePost, useUpdatePost } from "@/lib/react-query/queriesAndMutations.tsx"
 import { useUserContext } from "@/context/AuthContext.tsx"
 import { useToast } from "../ui/use-toast.ts"
 import Loader from "../shared/Loader.tsx"
+import { IUpdatePost } from "@/types/index.ts"
 
 
 type PostFormProps = {
   post?: Models.Document
+  action: "Create" | "Update"
 }
 
 
 
-const PostForm = ({ post }: PostFormProps) => {
+const PostForm = ({ post, action }: PostFormProps) => {
     const { mutateAsync: createPost, isPending: isLoadingCreate } = useCreatePost()
+    const { mutateAsync: updatePost, isPending: isLoadingUpdate } = useUpdatePost()
+
+
     const { user } = useUserContext()
     const { toast } = useToast()
     const navigate = useNavigate()
@@ -32,16 +37,34 @@ const PostForm = ({ post }: PostFormProps) => {
   const form = useForm<z.infer<typeof PostValidation>>({
     resolver: zodResolver(PostValidation),
     defaultValues: {
-    title: post ? post?.title : "",
-    file: [],
-    location: post ? post?.location : "",
-    price: post ? post?.price : "",
-    description: post ? post?.description : ""
+      title: post ? post?.title : "",
+      file: [],
+      location: post ? post?.location : "",
+      price: post ? post?.price : "",
+      description: post ? post?.description : ""
     },
 })
     
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof PostValidation>) {
+
+    if(post && action === "Update") {
+      const updatedPost = await updatePost({
+        ...values,
+        postId: post.$id,
+        imageId: post?.imageId,
+        imageUrl: post?.imageUrl,
+      })
+
+      if(!updatedPost) {
+        toast({ title: "Please try again."})
+        throw new Error("Post could not update.")
+      }
+      return navigate(`/property/${post.$id}`)
+    }
+
+
+    // Create Post
     const newPost = await createPost({
           ...values,
           userId: user.id,
@@ -162,11 +185,12 @@ const PostForm = ({ post }: PostFormProps) => {
           <Button 
           type="submit" 
           className="shad-button_primary whitespace-nowrap"
-          disabled={isLoadingCreate}
+          disabled={isLoadingUpdate || isLoadingCreate}
           >
-            {isLoadingCreate 
-            ? <div className="flex gap-3 p-1"><Loader /> Submitting...</div> 
-            : "Submit"}
+            { isLoadingUpdate || isLoadingCreate 
+              ? <div className="flex gap-3 p-1"><Loader />Loading...</div>
+              : action
+            }
           </Button>
         </div>
       </form>

@@ -175,7 +175,7 @@ const SignUp = () => {
               onChange={onChange} 
             />
           ))}
-          <button type="submit">
+          <button type="submit" disabled={isCreatingAccount}>
             {isCreatingAccount ? (
               <div className="loader"><Loader/> Loading...</div>
             ) : "Sign up"}

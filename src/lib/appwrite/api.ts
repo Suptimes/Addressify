@@ -1,6 +1,6 @@
 import {ID, ImageGravity, Query} from "appwrite"
 import { account, appwriteConfig, avatars, databases, storage } from "./config"
-import { INewPost, INewUser } from "@/types"
+import { INewPost, INewUser, IUpdatePost } from "@/types"
 
 
 export async function createUserAccount(user: INewUser){
@@ -253,6 +253,111 @@ export async function deleteSavedPost(savedRecordId: string) {
         if(!statusCode) throw new Error("Delete saved post did not register.")
 
             return { status: "ok" }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+
+export async function getPostById(postId?: string) {
+    if (!postId) throw Error;
+
+    try {
+        const post = await databases.getDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.propertyCollectionId,
+            postId
+        )
+        if (!post || Object.keys(post).length === 0) {
+            throw new Error("Post not found.")
+        }
+        
+        return post
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+
+export async function updatePost (post: IUpdatePost) {
+    const hasFileToUpdate = post.file.length > 0
+    
+    try{
+        let image = {
+            imageUrl: post.imageUrl, //.toString()
+            imageId: post.imageId,
+        }
+
+        if(hasFileToUpdate) {
+            // Upload image to storage
+            const uploadedFile = await uploadFile(post.file[0])
+            // Quick check
+            if(!uploadedFile) throw new Error('File upload failed')
+
+            // Get file URL
+            const fileUrl = await getFilePreview(uploadedFile.$id)
+        
+            if(!fileUrl) {
+                await deleteFile(uploadedFile.$id)
+                throw new Error('Failed to generate file URL')
+            }
+
+            // Check the file URL validity
+            if (typeof fileUrl !== 'string' || fileUrl.length > 2000) {
+                await deleteFile(uploadedFile.$id);
+                throw new Error('Invalid file URL');
+            }
+
+            // Assign new image details
+            image = { ...image, imageUrl: fileUrl, imageId: uploadedFile.$id}
+
+        }
+
+
+        // Update post in the database
+        const updatedPost = await databases.updateDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.propertyCollectionId,
+            post.postId,
+            {
+                title: post.title,
+                imageUrl: image.imageUrl,
+                imageId: image.imageId,
+                location: post.location,
+                price: post.price,
+                description: post.description,
+            }
+        )
+
+        if(!updatedPost) {
+            await deleteFile(image.imageId)
+            throw new Error('Failed to update document')
+        }
+
+        // Delete the old image if a new one was uploaded successfully
+        if (hasFileToUpdate && post.imageId && post.imageId !== image.imageId) {
+            await deleteFile(post.imageId);
+        }
+
+        return updatedPost
+    } catch (error) {
+        console.log('Error updating post:', error)
+        throw error
+    }
+}
+
+
+export async function deletePost (postId: string, imageId: string) {
+    if(!postId || !imageId) throw new Error("Cannot find post to delete.")
+
+    try {
+        await databases.deleteDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.propertyCollectionId,
+            postId,
+        )
+
+        return { status: "ok" }
     } catch (error) {
         console.log(error)
     }
