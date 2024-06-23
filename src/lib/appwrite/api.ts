@@ -1,6 +1,7 @@
 import {ID, ImageGravity, Query} from "appwrite"
 import { account, appwriteConfig, avatars, databases, storage } from "./config"
 import { INewPost, INewUser, IUpdatePost } from "@/types"
+import { useUserContext } from "@/context/AuthContext"
 
 
 export async function createUserAccount(user: INewUser){
@@ -283,6 +284,33 @@ export async function updatePost (post: IUpdatePost) {
     const hasFileToUpdate = post.file.length > 0
     
     try{
+        // Fetch the current user to validate ownership
+        const currentUser = await getCurrentUser();
+        if (!currentUser) {
+            throw new Error("Unable to retrieve current user");
+        }
+
+        console.log("CurrentUserr:", currentUser)
+
+         // Fetch the existing post to validate the owner
+         const existingPost = await databases.getDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.propertyCollectionId,
+            post.postId
+        );
+
+        console.log("Existing Postt:", existingPost)
+
+        if (!existingPost) {
+            throw new Error("Post not found");
+        }
+
+        // Check if the logged-in user is the owner of the post
+        if (existingPost.owner.accountId !== currentUser.accountId) {
+            throw new Error("You are not authorized to edit this post");
+        }
+
+
         let image = {
             imageUrl: post.imageUrl, //.toString()
             imageId: post.imageId,
@@ -309,7 +337,7 @@ export async function updatePost (post: IUpdatePost) {
             }
 
             // Assign new image details
-            image = { ...image, imageUrl: fileUrl, imageId: uploadedFile.$id}
+            image = { ...image, imageUrl: fileUrl, imageId: uploadedFile.$id }
 
         }
 
@@ -330,7 +358,9 @@ export async function updatePost (post: IUpdatePost) {
         )
 
         if(!updatedPost) {
-            await deleteFile(image.imageId)
+            if (hasFileToUpdate) {
+                await deleteFile(image.imageId);
+            }
             throw new Error('Failed to update document')
         }
 
