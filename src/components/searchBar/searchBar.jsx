@@ -35,8 +35,8 @@ const switchType = (val) => {
                 <input  type="text" name="location" placeholder="City or Region" />
                 {/* <input  type="number" min={0} max={99999999} name="minPrice" placeholder="Min Price"/>
                 <input  type="number" min={0} max={99999999} name="maxPrice" placeholder="Max Price"/> */}
-                <button className="btnLarge">
-                    <img src="/search.png" alt="" />
+                <button className="btnLarge flex items-center justify-center">
+                    <img className="brightness-200" src="/icons/search.svg" alt="" />
                 </button>
                 <img className="btnSmall" src="/searchLarge.png" alt="" />
             </div>

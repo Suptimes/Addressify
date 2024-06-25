@@ -18,9 +18,9 @@ const Card = ({item}: PostCardProps) => {
 
 
   return (
-    <div className="card">
+    <div className="card lg:h-[170px]">
       <Link to={`/property/${item.$id}`} className="imageContainer">
-        <img src={item.imageUrl} alt="" />
+        <img src={item.imageUrl} alt="" className="max-w-[300px] max-lg:h-full" />
       </Link>
       <div className="textContainer">
         <h2 className="title">

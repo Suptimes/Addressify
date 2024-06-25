@@ -201,7 +201,7 @@ button{
     }
   
     .common-container-noscroll {
-      @apply flex flex-col flex-1 items-center gap-8 py-6 px-7 md:px-8 lg:py-6 overflow-hidden;
+      @apply flex flex-col flex-1 items-start gap-8 py-6 px-7 md:px-8 lg:py-6 overflow-hidden;
     }
     .common-container {
       @apply flex flex-col flex-1 items-center gap-10 py-10 px-5 md:px-8 lg:p-14 overflow-scroll custom-scrollbar;
@@ -217,7 +217,7 @@ button{
     }
     /* Dashboard Pages */
     .middlePage{
-      @apply absolute flex flex-1 md:left-[270px] top-[60px] left-0 xs:w-[100vw] w-[100vw] md:min-w-[500px] md:w-[calc(100vw-270px)] max-md:pb-[120px];
+      @apply absolute left-0 flex flex-1 w-[100vw] md:left-[270px] top-[60px] xs:w-[100vw]  md:min-w-[500px] md:w-[calc(100vw-270px)] max-md:pb-[120px];
     }
   
     /* Explore */
@@ -357,11 +357,14 @@ button{
     }
   
     .shad-input {
-      @apply h-12 bg-gray-50 border-none font-['Montserrat'] placeholder:italic  focus-visible:ring-1 focus-visible:ring-offset-1 ring-violet-800;
+      @apply h-12 bg-gray-50 hover:bg-gray-100 border-none font-['Montserrat'] placeholder:italic focus-visible:ring-1 focus-visible:ring-offset-1 ring-violet-800;
+    }
+    .shad-input-2 {
+      @apply h-12 bg-gray-50 hover:bg-gray-100 border-none font-['Montserrat'] placeholder:italic ring-offset-transparent ring-transparent;
     }
   
     .shad-textarea {
-      @apply h-36 bg-gray-50 font-['Montserrat'] placeholder:italic rounded-xl border-none resize-none focus-visible:ring-1 focus-visible:ring-offset-1 ring-violet-800;
+      @apply h-36 bg-gray-50 hover:bg-gray-100 font-['Montserrat'] placeholder:italic rounded-xl border-none resize-none focus-visible:ring-1 focus-visible:ring-offset-1 ring-violet-800;
     }
   
     /* Button */

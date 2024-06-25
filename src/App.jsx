@@ -9,7 +9,7 @@ import Dashboard from "./routes/dashboard/Dashboard";
 import Explore from "./routes/dashboard/explore/Explore.tsx"
 import Unauthorized from "./routes/unauthorized/Unauthorized.tsx"
 import EditPost from "./routes/dashboard/editPost/EditPost.tsx"
-import Saved from "./routes/dashboard/saved/Saved.jsx"
+import Saved from "./routes/dashboard/saved/Saved.tsx"
 import Messages from "./routes/dashboard/messages/Messages.jsx"
 import Properties from "./routes/dashboard/properties/Properties.jsx"
 import CreatePost from "./routes/dashboard/createPost/CreatePost.jsx"
