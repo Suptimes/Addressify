@@ -26,6 +26,7 @@ module.exports = {
     extend: {
       filter: {
         'colored-icon': 'brightness(0) saturate(100%) invert(28%) sepia(86%) saturate(4466%) hue-rotate(263deg) brightness(93%) contrast(96%)',
+        'white-icon': 'brightness(0) saturate(100%) invert(100%) sepia(100%) saturate(0%) hue-rotate(319deg) brightness(110%) contrast(103%)',
       },
       colors: {
         'primary-500': '#9333EA',

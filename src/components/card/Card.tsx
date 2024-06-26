@@ -13,7 +13,8 @@ type PostCardProps = {
 
 const Card = ({item}: PostCardProps) => {
   const { user } = useUserContext()
-
+  
+  if (!item) return null; // Ensure the item is valid
   if(!item.owner) return
 
 

@@ -27,14 +27,14 @@ const ExplorePages = () => {
         )
     }
 
+    console.log("Postss:", posts)
+
     const shouldShowSearchResults = searchValue !== "" && debouncedValue === searchValue
     const shouldShowPosts = !shouldShowSearchResults && posts.pages.every((item) => item.documents.length === 0)
     
   return (
     <div className="flex flex-col w-full">
-         
         <div className="common-container-noscroll max-w-5xl">
-            
             <div className="flex justify-center items-center bg-gray-50 hover:bg-gray-100 h-12 rounded-lg gap-3 px-5 w-full focus-within:ring-2 ring-violet-800">
                 <img src="/icons/search.svg" alt="search" width={24} height={24} />
                 <Input

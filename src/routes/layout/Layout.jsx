@@ -15,6 +15,7 @@ const Layout = () => {
     /^\/properties$/,
     /^\/create-post$/,
     /^\/edit-post\/[a-zA-Z0-9-]+$/, // For trailing slashes ^\/edit-post\/\d+\/?$
+    /^\/edit-profile\/[a-zA-Z0-9-]+$/, 
     /^\/profile\/[a-zA-Z0-9-]+$/,
   ];
 

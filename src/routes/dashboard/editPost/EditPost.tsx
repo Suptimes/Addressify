@@ -30,10 +30,10 @@ const EditPost = () => {
       <div className="common-container-noscroll">
         <div className="max-w-5xl flex-start gap-3 justify-start w-full">
           <img 
-            src="/icons/add-post.svg" 
+            src="/icons/edit-property.svg"
             width={36}
             height={36} 
-            alt="add" 
+            alt="edit-property" 
             className="brightness-0"/>
           <h2 className="h3-bold lg:h2-bold text-left w-full">Edit Property</h2>
         </div>

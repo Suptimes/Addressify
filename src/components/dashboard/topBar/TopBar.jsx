@@ -15,7 +15,7 @@ const TopBar = () => {
 
             <div className="right flex items-center justify-between">
                 <Link to={`/profile/${user.id}`} className="user flex items-center justify-between gap-5 font-semibold">
-                    <img src={user.imageUrl || "/icons/profile-placeholder.svg"} alt="profile image" className="rounded-full shadow-md coloredIcon" height={35} width={35} />
+                    <img src={user.imageUrl || "/icons/profile-placeholder.svg"} alt="profile image" className="rounded-full shadow-[0_2px_5px_rgba(0,0,0,0.4)]" height={35} width={35} />
                     {/* REMEMBER ONLY FIRST NAME IN LG SCREENS */}
                     <span className="userName hidden md:block">{user.name || ""}</span>
                 </Link>

@@ -1,6 +1,6 @@
 import {ID, ImageGravity, Query} from "appwrite"
 import { account, appwriteConfig, avatars, databases, storage } from "./config"
-import { INewPost, INewUser, IUpdatePost } from "@/types"
+import { INewPost, INewUser, IUpdatePost, IUpdateUser } from "@/types"
 import { useUserContext } from "@/context/AuthContext"
 
 
@@ -375,14 +375,14 @@ export async function updatePost (post: IUpdatePost) {
 
 export async function deletePost (postId: string, imageId: string) {
     if(!postId || !imageId) throw new Error("Cannot find post to delete.")
-
-    try {
-        await databases.deleteDocument(
+        
+        try {
+            await databases.deleteDocument(
             appwriteConfig.databaseId,
             appwriteConfig.propertyCollectionId,
             postId,
         )
-
+        
         return { status: "ok" }
     } catch (error) {
         console.log(error)
@@ -403,13 +403,13 @@ export async function getInfinitePosts({ pageParam }: {pageParam: number}) {
             appwriteConfig.propertyCollectionId,
             queries
         )
-
+        
         if(!posts) throw new Error("No posts found")
-
-        return posts
-    } catch (error) {
-        console.log(error)
-    }
+            
+            return posts
+        } catch (error) {
+            console.log(error)
+        }
 }
 
 export async function searchPosts(searchTerm: string) {
@@ -419,12 +419,127 @@ export async function searchPosts(searchTerm: string) {
             appwriteConfig.propertyCollectionId,
             [Query.search("title", searchTerm)]
         )
-
+        
         if(!posts) throw new Error("No posts found")
 
-        return posts
+            return posts
+        } catch (error) {
+            console.log(error)
+    }
+}
+
+
+export async function getSaveById(saveId?: string) {
+    if (!saveId) throw Error;
+    
+    try {
+        const save = await databases.getDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.savesCollectionId,
+            saveId
+        )
+        if (!save || Object.keys(save).length === 0) {
+            throw new Error("Save not found.")
+        }
+        
+        return save
     } catch (error) {
         console.log(error)
+    }
+}
+
+
+export async function getUserById(userId?: string) {
+    if (!userId) throw new Error("User ID is required")
+
+    try {
+        const user = await databases.getDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.userCollectionId,
+            userId
+        )
+
+        if (!user || Object.keys(user).length === 0) {
+            throw new Error("User not found.")
+        }
+        
+        return user
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+
+
+export async function updateProfile (user: IUpdateUser) {
+    const hasFileToUpdate = user.file.length > 0
+    
+    try{
+        
+        let image = {
+            imageUrl: user.imageUrl,
+            imageId: user.imageId,
+        }        
+
+        if(hasFileToUpdate) {
+            const uploadedFile = await uploadFile(user.file[0])
+            if(!uploadedFile) {
+                throw new Error('File upload failed')
+            }
+
+            // Get file URL
+            const fileUrl = await getFilePreview(uploadedFile.$id)
+            if(!fileUrl) {
+                await deleteFile(uploadedFile.$id)
+                throw new Error('Failed to generate file URL')
+            }
+
+            // Check the file URL validity
+            if (typeof fileUrl !== 'string' || fileUrl.length > 2000) {
+                await deleteFile(uploadedFile.$id);
+                throw new Error('Invalid file URL');
+            }
+
+            // Assign new image details
+            image = { ...image, imageUrl: fileUrl, imageId: uploadedFile.$id }
+
+        }
+
+
+        // Update user in the database
+        const updatedProfile = await databases.updateDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.userCollectionId,
+            user.userId,
+            {
+                name: user.name,
+                email: user.email,
+                imageUrl: image.imageUrl,
+                imageId: image.imageId,
+                bio: user.bio,
+            }
+        )
+
+        if(!updatedProfile) {
+            if (hasFileToUpdate) {
+                await deleteFile(image.imageId);
+            }
+            throw new Error('Failed to update document')
+        }
+
+        // Delete the old image if a new one was uploaded successfully
+        if (hasFileToUpdate && user.imageId && user.imageId !== image.imageId) {
+            try {
+                await deleteFile(user.imageId);
+              } catch (error) {
+                console.error('Error deleting old image:', error);
+              }
+        }
+
+        return updatedProfile
+    } catch (error) {
+        console.log('Error updating profile:', error)
+        throw error
     }
 }
 

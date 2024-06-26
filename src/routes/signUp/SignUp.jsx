@@ -179,7 +179,6 @@ const SignUp = () => {
             {isCreatingAccount ? (
               <div className="loader"><Loader/> Loading...</div>
             ) : "Sign up"}
-            {/* Sign up */}
             </button>
           <p className="already">Already have an account? <Link to="/signin"><span>Log in</span></Link></p>
         </form>
