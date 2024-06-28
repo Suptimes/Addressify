@@ -430,7 +430,7 @@ export async function searchPosts(searchTerm: string) {
 
 
 export async function getSaveById(saveId?: string) {
-    if (!saveId) throw Error;
+    if (!saveId) throw new Error("Save Id required")
     
     try {
         const save = await databases.getDocument(
@@ -444,7 +444,8 @@ export async function getSaveById(saveId?: string) {
         
         return save
     } catch (error) {
-        console.log(error)
+        console.error("Error fetching save by ID:", error)
+        throw new Error("Failed to fetch the save. Please try again later.")
     }
 }
 
@@ -543,4 +544,20 @@ export async function updateProfile (user: IUpdateUser) {
     }
 }
 
-
+export async function getSavesByIds(ids: string[]) {
+    if (!ids || ids.length === 0) throw new Error("No IDs provided");
+    
+    try {
+        // Use the `equal` query to fetch documents with the provided IDs
+        const result = await databases.listDocuments(
+            appwriteConfig.databaseId,
+            appwriteConfig.savesCollectionId,
+            [Query.equal('$id', ids)]
+        );
+        console.log("API result:", result.documents)
+        return result.documents;
+    } catch (error) {
+        console.error('Failed to fetch documents:', error);
+        throw error;
+    }
+}

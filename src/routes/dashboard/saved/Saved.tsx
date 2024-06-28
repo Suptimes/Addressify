@@ -1,29 +1,29 @@
 import Card2 from "@/components/cardNoEdit/Card2"
 import Loader from "@/components/shared/Loader"
-// import PopularPostsList from "@/components/shared/PopularPostsList"
-import { useGetCurrentUser } from "@/lib/react-query/queriesAndMutations"
+import { useGetCurrentUser, useGetSaveById, useGetSavedPosts } from "@/lib/react-query/queriesAndMutations"
 import { Models } from "appwrite"
 import { useEffect, useState } from "react"
 
 
+
 const Saved = () => {
-
-  const [savedUserPosts, setSavedUserPosts] = useState<Models.Document[]>([]);
-  const { data: currentUser, isLoading: isUserLoading } = useGetCurrentUser()
-
-  type SavedEntry = {
-    post: Models.Document;
-  };
-
-  // Fetch and set saved posts when currentUser is available
-  useEffect(() => {
-    if (!isUserLoading && currentUser && Array.isArray(currentUser?.save)) {
-      const savedPosts = currentUser.save.map((saveEntry: SavedEntry) => saveEntry.post).reverse();
-      setSavedUserPosts(savedPosts);
-      console.log("posts: ", savedPosts);
-    }
-  }, [isUserLoading, currentUser]);
+  const { data: currentUser, isLoading: isUserLoading } = useGetCurrentUser();
+  console.log("savesss:", currentUser?.save)
+  const savedPostIds = currentUser?.save.map((save: any) => save.$id);
+  console.log("saved posts iddd", savedPostIds)
+  const { data: savedPosts, isLoading: isSavedPostsLoading } = useGetSavedPosts(savedPostIds);
   
+  const [savedUserPosts, setSavedUserPosts] = useState<Models.Document[]>([]);
+  
+  useEffect(() => {
+    if (savedPosts) {
+      const savedPostsObj = savedPosts.map((obj)=>obj.post)
+      setSavedUserPosts(savedPostsObj);
+    }
+  }, [savedPosts]);
+
+
+  console.log("RESULTS: ", savedUserPosts)
 
   return (
     <div className="middlePage">
@@ -39,14 +39,14 @@ const Saved = () => {
         </div>
 
 
-        {isUserLoading ? 
+        {isUserLoading && isSavedPostsLoading ? 
             <div className="flex w-full h-full my-10 mx-auto">
               <Loader w={40} h={40} brightness="brightness-50"/>
             </div> :
-          !isUserLoading && savedUserPosts.length > 0 ? (
+          !isUserLoading && !isSavedPostsLoading && savedUserPosts.length > 0 ? (
             <div className="flex flex-col flex-1 gap-9 w-full">
-              {savedUserPosts.map((post: Models.Document, index) => (
-                <li className='list-none' key={index}>
+              {savedUserPosts.map((post: Models.Document) => (
+                <li className='list-none' key={post.$id}>
                   <Card2 item={post} />
                 </li>
               ))}
@@ -61,3 +61,12 @@ const Saved = () => {
 }
 
 export default Saved
+
+// useEffect(() => {
+  //   if (!isUserLoading && currentUser && Array.isArray(currentUser?.save)) {
+  //     const savedPosts = currentUser.save.map((saveEntry: SavedEntry) => saveEntry.post).reverse();
+  //     setSavedUserPosts(savedPosts);
+  //     // console.log("posts: ", savedPosts);
+  //   }
+  // }, [isUserLoading, currentUser]);
+  

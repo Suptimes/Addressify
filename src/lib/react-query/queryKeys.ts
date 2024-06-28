@@ -16,6 +16,7 @@ export enum QUERY_KEYS {
   GET_FILE_PREVIEW = "getFilePreview",
   // SAVE KEYS
   GET_SAVE_BY_ID = "getSaveById",
+  GET_SAVES_BY_ID = "getSavesById",
 
   //  SEARCH KEYS
   SEARCH_POSTS = "getSearchPosts",

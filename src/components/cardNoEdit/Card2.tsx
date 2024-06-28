@@ -1,5 +1,5 @@
 import "../card/card.scss"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { Models } from "appwrite"
 import { useUserContext } from "@/context/AuthContext"
 import SaveBtn from "../shared/SaveBtn"
@@ -10,9 +10,14 @@ type PostCardProps = {
 
 const Card2 = ({ item }: PostCardProps) => {
   const { user } = useUserContext()
+  const navigate = useNavigate()
+
+  const handleChatClick = () => {
+    navigate(`/chat/${item.owner.accountId}`) // Assuming the owner's ID is used to initiate a chat
+  }
 
   // Debugging logs
-  console.log("Rendering Card with item:", item)
+  // console.log("Rendering Card with item:", item)
 
   if (!item) return null; // Ensure the item is valid
 
@@ -59,7 +64,11 @@ const Card2 = ({ item }: PostCardProps) => {
               <SaveBtn post={item} userId={user.id} />
             </div>
             <div className="icon">
-              <img className="brightness-0" src="/icons/chat.svg" alt="chat" />
+              <img 
+              className="brightness-0" 
+              src="/icons/chat.svg"
+              onClick={handleChatClick} 
+              alt="chat" />
             </div>
           </div>
         </div>
