@@ -45,12 +45,12 @@
         .title{
             font-size: 20px;
             font-weight: 600;
-            color: #444;
+            color: black;
             transition: all 0.4s ease;
 
             &:hover{
-                color: black;
-                scale: 1.01;
+                // color: black;
+                // scale: 1.01;
             }
         }
 
@@ -101,10 +101,12 @@
             .icons{
                 display: flex;
                 gap: 20px;
-                align-items: center;
+                align-items: start;
+                justify-content: center;
+                margin-top: 6px;
 
                 .icon{
-                    padding: 2px 5px;
+                    padding: 0px 2px;
                     cursor: pointer;
                     display: flex;
                     justify-content: center;

@@ -178,6 +178,7 @@ const PostForm = ({ post, action }: PostFormProps) => {
           <Button 
             type="button" 
             className="shad-button_dark_4 max-md:scale-125"
+            onClick={() => navigate(-1)}
             >
               Cancel
           </Button>

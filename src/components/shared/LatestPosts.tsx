@@ -7,6 +7,8 @@ import Card from "@/components/card/Card.tsx"
 const LatestPosts = () => {
     
     const { data: posts, isPending: isPostLoading, isError: isErrorPosts } = useGetRecentPosts()
+
+    console.log("posts: ",posts)
   
   return (
     <div className="flex flex-1 w-full">
