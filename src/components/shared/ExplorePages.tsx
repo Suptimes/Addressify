@@ -27,7 +27,7 @@ const ExplorePages = () => {
         )
     }
 
-    console.log("Postss:", posts)
+    // console.log("Postss:", posts)
 
     const shouldShowSearchResults = searchValue !== "" && debouncedValue === searchValue
     const shouldShowPosts = !shouldShowSearchResults && posts.pages.every((item) => item?.documents.length === 0)
@@ -35,7 +35,7 @@ const ExplorePages = () => {
   return (
     <div className="flex flex-col w-full">
         <div className="common-container-noscroll max-w-5xl">
-            <div className="flex justify-center items-center bg-gray-50 hover:bg-gray-100 h-12 rounded-lg gap-3 px-5 w-full focus-within:ring-2 ring-violet-800">
+            <div className="flex justify-center items-center bg-slate-50 hover:bg-slate-100 h-12 rounded-lg gap-3 px-5 w-full focus-within:ring-2 ring-violet-800">
                 <img src="/icons/search.svg" alt="search" width={24} height={24} />
                 <Input
                     type="text"
@@ -48,7 +48,7 @@ const ExplorePages = () => {
 
             <div className="flex-between w-full max-w-5xl">
                 <h2 className="h3-bold lg:h2-bold text-left w-full">Search Properties</h2>
-                <div className="flex-center gap-3 bg-gray-50 hover:bg-gray-100 rounded-xl px-4 py-2 cursor-pointer">
+                <div className="flex-center gap-3 bg-slate-50 hover:bg-slate-100 rounded-xl px-4 py-2 cursor-pointer">
                     <p className="small-medium md:base-medium">All</p>
                     <img src="/icons/filter.svg" className="brightness-0" alt="filter" width={20} height={20} />
                 </div>
@@ -72,9 +72,10 @@ const ExplorePages = () => {
         </div>
 
         {hasNextPage && !searchValue && (
-            <div ref={ref} className="flex-center w-full h-full my-10 mx-auto">
+        
+        <div ref={ref} className="flex-center w-full h-full my-10 mx-auto">
                 <Loader w={30} h={30} brightness="brightness-50" />
-            </div>
+        </div>
         )}
     </div>
   )

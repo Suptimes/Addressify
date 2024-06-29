@@ -1,6 +1,8 @@
-import { useUserContext } from "@/context/AuthContext"
+// import { useUserContext } from "@/context/AuthContext"
 import { Models } from "appwrite"
 import Card from "../card/Card"
+import { Separator } from "../ui/separator"
+import PropertyCard from "./PropertyCard"
 
 
 type GridPostListProps ={
@@ -9,14 +11,12 @@ type GridPostListProps ={
 
 
 const PopularPostsList = ({ posts }: GridPostListProps) => {
-    const { user } = useUserContext()
+    // const { user } = useUserContext()
 
   return (
-    <ul className="grid gap-10 w-full">
-        {posts.map((post) => (
-            <li className="list-none" key={post.$id}>
-                <Card item={post} />
-            </li>
+    <ul className="grid gap-0 w-full">
+        {posts.map((item, index) => (
+            <PropertyCard key={index} post={item} />
         ))}
     </ul>
   )

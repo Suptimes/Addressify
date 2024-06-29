@@ -20,7 +20,7 @@ const Card = ({item}: PostCardProps) => {
 
   return (
     <div className="card lg:h-[170px]">
-      <Link to={`/property/${item.$id}`} className="imageContainer">
+      <Link to={`/property/${item.$id}`} className="imageContainer py-1">
         <img src={item.imageUrl} alt="" className="max-w-[300px] max-lg:h-full" />
       </Link>
       <div className="textContainer">
@@ -28,7 +28,7 @@ const Card = ({item}: PostCardProps) => {
           <Link to={`/property/${item.$id}`}>{item.title}</Link>
         </h2>
         <p className="address">
-          <img src="/pin.png" alt="" />
+          <img src="/pin.png" alt="pinpoint" />
           <span>{item.location}</span>
         </p>
         <p className="price">$ {item.price}</p>

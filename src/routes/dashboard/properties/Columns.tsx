@@ -50,7 +50,7 @@ export const columns: ColumnDef<PropertyData>[] = [
         accessorKey: "imageUrl",
         header: ({ column }) => {
           return (
-            <div className="flex h-[100%] justify-between items-center">
+            <div className="flex h-[100%] justify-start items-center">
                 <span>Image</span>
             </div>
         )
@@ -59,7 +59,7 @@ export const columns: ColumnDef<PropertyData>[] = [
         const PropertyData = row.original
    
         return (<div>
-          <img src={PropertyData.imageUrl} height={45} width={45} className="rounded-md bg-cover" alt="image" />
+          <img src={PropertyData.imageUrl} height={50} width={50} className="rounded-md bg-cover my-[-4px]" alt="image" />
         </div>)
       }
     },
