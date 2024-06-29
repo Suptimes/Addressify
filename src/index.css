@@ -357,14 +357,14 @@ button{
     }
   
     .shad-input {
-      @apply h-12 bg-gray-50 hover:bg-gray-100 border-none font-['Montserrat'] placeholder:italic focus-visible:ring-1 focus-visible:ring-offset-1 ring-violet-800;
+      @apply h-12 bg-slate-50 hover:bg-slate-100 border-none font-['Montserrat'] placeholder:italic focus-visible:ring-1 focus-visible:ring-offset-1 ring-violet-800;
     }
     .shad-input-2 {
-      @apply h-12 bg-gray-50 hover:bg-gray-100 border-none font-['Montserrat'] placeholder:italic ring-offset-transparent ring-transparent;
+      @apply h-12 bg-slate-50 hover:bg-slate-100 border-none font-['Montserrat'] placeholder:italic ring-offset-transparent ring-transparent;
     }
   
     .shad-textarea {
-      @apply h-36 bg-gray-50 hover:bg-gray-100 font-['Montserrat'] placeholder:italic rounded-xl border-none resize-none focus-visible:ring-1 focus-visible:ring-offset-1 ring-violet-800;
+      @apply h-36 bg-slate-50 hover:bg-slate-100 font-['Montserrat'] placeholder:italic rounded-xl border-none resize-none focus-visible:ring-1 focus-visible:ring-offset-1 ring-violet-800;
     }
   
     /* Button */
@@ -377,7 +377,7 @@ button{
     }
 
     .shad-button_dark_5 {
-      @apply h-12 bg-[#d9d9d9] hover:bg-[#c6c6c6] px-5 text-dark-1 shadow-md shadow-black/20 cursor-pointer border-none flex gap-2;
+      @apply h-12 bg-slate-200 hover:bg-slate-300 px-5 text-dark-1 shadow-md shadow-black/10 cursor-pointer border-none flex gap-2;
     }
   
     .shad-button_ghost {

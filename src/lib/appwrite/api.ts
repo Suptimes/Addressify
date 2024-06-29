@@ -554,7 +554,6 @@ export async function getSavesByIds(ids: string[]) {
             appwriteConfig.savesCollectionId,
             [Query.equal('$id', ids)]
         );
-        console.log("API result:", result.documents)
         return result.documents;
     } catch (error) {
         console.error('Failed to fetch documents:', error);

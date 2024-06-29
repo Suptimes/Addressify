@@ -17,7 +17,7 @@ const Saved = () => {
   
   useEffect(() => {
     if (savedPosts) {
-      const savedPostsObj = savedPosts.map((obj)=>obj.post)
+      const savedPostsObj = savedPosts.map((obj)=>obj.post).reverse()
       setSavedUserPosts(savedPostsObj);
     }
   }, [savedPosts]);
@@ -39,22 +39,21 @@ const Saved = () => {
         </div>
 
 
-        {isUserLoading && isSavedPostsLoading ? 
-            <div className="flex w-full h-full my-10 mx-auto">
+        {isUserLoading || isSavedPostsLoading ? 
+            <div className="flex w-full h-full my-10 justify-center">
               <Loader w={40} h={40} brightness="brightness-50"/>
             </div> :
-          !isUserLoading && !isSavedPostsLoading && savedUserPosts.length > 0 ? (
+        !isUserLoading && !isSavedPostsLoading && savedUserPosts.length > 0 ? (
             <div className="flex flex-col flex-1 gap-9 w-full">
               {savedUserPosts.map((post: Models.Document) => (
                 <li className='list-none' key={post.$id}>
                   <Card2 item={post} />
-                </li>
-              ))}
+                </li>))}
             </div>
           ) : (
             <p className="mt-10 text-[20px] text-center w-full">
-              No saved properties
-            </p>)}
+              No saved properties yet.
+            </p>)} 
       </div>
     </div>
   )
@@ -69,4 +68,3 @@ export default Saved
   //     // console.log("posts: ", savedPosts);
   //   }
   // }, [isUserLoading, currentUser]);
-  

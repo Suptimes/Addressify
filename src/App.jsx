@@ -12,7 +12,7 @@ import EditPost from "./routes/dashboard/editPost/EditPost.tsx"
 import EditProfile from "./routes/dashboard/editProfile/EditProfile.tsx"
 import Saved from "./routes/dashboard/saved/Saved.tsx"
 import Messages from "./routes/dashboard/messages/Messages.jsx"
-import Properties from "./routes/dashboard/properties/Properties.jsx"
+import Properties from "./routes/dashboard/properties/Properties.tsx"
 import CreatePost from "./routes/dashboard/createPost/CreatePost.jsx"
 import {
   createBrowserRouter,
