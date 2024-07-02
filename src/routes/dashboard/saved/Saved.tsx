@@ -1,5 +1,6 @@
 import Card2 from "@/components/cardNoEdit/Card2"
 import Loader from "@/components/shared/Loader"
+import PropertyCard from "@/components/shared/PropertyCard"
 import { useGetCurrentUser, useGetSaveById, useGetSavedPosts } from "@/lib/react-query/queriesAndMutations"
 import { Models } from "appwrite"
 import { useEffect, useState } from "react"
@@ -44,10 +45,10 @@ const Saved = () => {
               <Loader w={40} h={40} brightness="brightness-50"/>
             </div> :
         !isUserLoading && !isSavedPostsLoading && savedUserPosts.length > 0 ? (
-            <div className="flex flex-col flex-1 gap-9 w-full">
+            <div className="flex flex-col flex-1 w-full">
               {savedUserPosts.map((post: Models.Document) => (
                 <li className='list-none' key={post.$id}>
-                  <Card2 item={post} />
+                  <PropertyCard post={post} />
                 </li>))}
             </div>
           ) : (

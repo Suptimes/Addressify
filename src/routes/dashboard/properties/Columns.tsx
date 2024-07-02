@@ -10,6 +10,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 
 export type PropertyData = {
     id: string
@@ -59,7 +61,7 @@ export const columns: ColumnDef<PropertyData>[] = [
         const PropertyData = row.original
    
         return (<div>
-          <img src={PropertyData.imageUrl} height={50} width={50} className="rounded-md bg-cover my-[-4px]" alt="image" />
+          <img src={PropertyData.imageUrl} height={50} width={50} className="flex-center rounded-md object-cover my-[-2px]" alt="image" />
         </div>)
       }
     },
@@ -70,7 +72,7 @@ export const columns: ColumnDef<PropertyData>[] = [
             <div className="flex h-[100%] justify-between items-center">
                 <span>Title</span>
                 <Button
-                    className="p-[8px] border-none bg-gray-50 hover:bg-gray-200 cursor-pointer"
+                    className="p-[8px] border-none bg-transparent hover:bg-slate-200 cursor-pointer"
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                     >
@@ -109,31 +111,56 @@ export const columns: ColumnDef<PropertyData>[] = [
   },
   {
     id: "actions",
-    header: () => <div className="flex-center text-left h-[100%] w-[100%]">Actions</div>,
+    header: () => <div className="flex-center text-left h-[100%] w-[100%]">Action</div>,
     cell: ({ row }) => {
-      const payment = row.original
- 
+      const property = row.original
+      const [isMenuOpen, setIsMenuOpen] = useState(false)
+      const navigate = useNavigate()
+
       return (
-        <div className="flex-center">
-            <DropdownMenu>
-            <DropdownMenuTrigger asChild >
-                <Button variant="ghost" className="h-8 w-8 p-0 border-none bg-slate-100 hover:bg-slate-200 cursor-pointer">
+        <div className="group flex-center relative">
+          <DropdownMenu open={isMenuOpen} onOpenChange={setIsMenuOpen}>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                className={`${
+                  isMenuOpen ? "visible" : "invisible"
+                } h-8 w-8 p-0 border-none bg-transparent group-hover:visible hover:bg-slate-200 hover:cursor-pointer`}
+                onClick={() => setIsMenuOpen(true)}
+              >
                 <span className="sr-only">Open menu</span>
                 <MoreHorizontal className="h-4 w-4" />
-                </Button>
+              </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-                {/* <DropdownMenuLabel>Actions</DropdownMenuLabel> */}
-                <DropdownMenuItem
-                onClick={() => navigator.clipboard.writeText(payment.id)}
-                >
-                Edit post
-                </DropdownMenuItem>
-                <DropdownMenuItem>View tour booking</DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem className="focus:bg-red focus:text-white">Delete post</DropdownMenuItem>
+            <DropdownMenuContent
+              align="end"
+              className="z-10"
+              onPointerDownOutside={() => setIsMenuOpen(false)}
+              onCloseAutoFocus={() => setIsMenuOpen(false)}
+            >
+              <DropdownMenuItem
+                onClick={() => {
+                  navigate(`/edit-post/${property.$id}`)
+                  setIsMenuOpen(false)
+                }}
+              >
+                Edit Post
+              </DropdownMenuItem>
+              <DropdownMenuItem
+              onClick={() => {
+                navigate(`/bookings/${property.$id}`)
+                setIsMenuOpen(false)
+              }}
+              >Tour Bookings</DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                className=""
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Make Inactive
+              </DropdownMenuItem>
             </DropdownMenuContent>
-            </DropdownMenu>
+          </DropdownMenu>
         </div>
       )
     },

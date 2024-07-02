@@ -30,7 +30,7 @@ const Navbar = () => {
           {user 
             ? (
               <div className="user">
-                <img src="/accountImg.jpg" alt="" />
+                <img src="/accountImg.jpg" alt="user" />
                 {/* REMEMBER ONLY FIRST NAME IN LG SCREENS */}
                 <span className="userName">Hassan Anibou</span>
                 <Link to="/dashboard" className="profile">

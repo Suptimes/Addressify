@@ -55,11 +55,15 @@ const AuthProvider = ({ children }: {children: React.ReactNode }) => {
                 setIsAuthd(true)
                 localStorage.setItem('isAuthd', 'true')
                 return true
-            }
+            } else {
+                setIsAuthenticated(false)
+                localStorage.setItem('isAuthd', 'false')
 
-            return false
+                return false
+            }
         } catch (error) {
             console.log(error)
+            setIsAuthenticated(false)
             setIsAuthd(false)
             localStorage.setItem('isAuthd', 'false')
             return false
@@ -67,6 +71,10 @@ const AuthProvider = ({ children }: {children: React.ReactNode }) => {
             setIsLoading(false)
         }
     }
+
+    useEffect(() => {
+        checkAuthUser()
+      }, [])
 
     useEffect(() => {
         const cookieFallback = localStorage.getItem("cookieFallback")

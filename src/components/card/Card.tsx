@@ -4,6 +4,7 @@ import { Models } from "appwrite"
 // import { formatDateString, multiFormatDateString } from "@/lib/utils"
 import { useUserContext } from "@/context/AuthContext"
 import SaveBtn from "../shared/SaveBtn"
+import { Separator } from "../ui/separator"
 
 
 type PostCardProps = {
@@ -19,7 +20,7 @@ const Card = ({item}: PostCardProps) => {
 
 
   return (
-    <div className="card lg:h-[170px]">
+    <div className="card pl-1 lg:h-[170px]">
       <Link to={`/property/${item.$id}`} className="imageContainer py-1">
         <img src={item.imageUrl} alt="" className="max-w-[300px] max-lg:h-full" />
       </Link>
@@ -40,14 +41,21 @@ const Card = ({item}: PostCardProps) => {
         <div className="bottom">
           <div className="features">
             <div className="feature">
-              <img src="/bed.png" alt="bedroom" />
-              <span>{item.bedroom || 2}</span>
-              <span className="max-md:hidden">bed(s)</span>
+              <img src="/size.png" alt="size" />
+              <span>{item.size || 1500}</span>
+              <span className="max-lg:hidden">sqrf</span>
             </div>
+            <Separator orientation="vertical" />
             <div className="feature">
-              <img src="/bath.png" alt="bathroom" />
-              <span>{item.bathroom || 2}</span>
-              <span className="max-md:hidden">bath(s)</span>
+              <img src="/bed.png" alt="bedrooms" />
+              <span>{item.beds || 2}</span>
+              <span className="max-lg:hidden">bed(s)</span>
+            </div>
+            <Separator orientation="vertical" />
+            <div className="feature">
+              <img src="/bath.png" alt="bathrooms" />
+              <span>{item.baths || 2}</span>
+              <span className="max-lg:hidden">bath(s)</span>
             </div>
           </div>
 

@@ -22,11 +22,18 @@ import {
 } from "@/components/ui/table";
 
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator"
+import { Separator } from "@/components/ui/separator";
 import { useNavigate } from "react-router-dom";
 import { useDeletePost } from "@/lib/react-query/queriesAndMutations";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { ExclamationTriangleIcon } from "@radix-ui/react-icons"
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -42,8 +49,10 @@ export function DataTable<TData, TValue>({
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({
     $id: false,
     // Add other columns as necessary
-  })
+  });
   const [rowSelection, setRowSelection] = React.useState({});
+  const [editAlertVisible, setEditAlertVisible] = React.useState(false);
+  const [deleteAlertVisible, setDeleteAlertVisible] = React.useState(false);
 
   const table = useReactTable({
     data,
@@ -66,15 +75,14 @@ export function DataTable<TData, TValue>({
 
   const navigate = useNavigate(); 
   const deletePostMutation = useDeletePost();
-  
 
-   const handleEditSelected = () => {
+  const handleEditSelected = () => {
     const selectedRows = table.getSelectedRowModel().rows;
     if (selectedRows.length === 1) {
       const postId = selectedRows[0].original.$id;
       navigate(`/edit-post/${postId}`);
     } else {
-      alert("Please select exactly one post to edit.");
+      setEditAlertVisible(true);
     }
   };
 
@@ -101,7 +109,7 @@ export function DataTable<TData, TValue>({
         });
       });
     } else {
-      alert("Please select at least one post to delete.");
+      setDeleteAlertVisible(true)
     }
   }
 
@@ -149,7 +157,7 @@ export function DataTable<TData, TValue>({
             <img src="/icons/filter.svg" alt="filters" />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="border-none text-black p-0 bg-transparent cursor-pointer">
+                <Button variant="outline" className="outline-none border-none text-black p-0 bg-transparent cursor-pointer">
                   Filters
                 </Button>
               </DropdownMenuTrigger>
@@ -175,7 +183,25 @@ export function DataTable<TData, TValue>({
         </div>
       </div>
 
-      <div className="rounded-md border border-black"> {/* Apply black border */}
+      {/* Render Alert if visible */}
+      {editAlertVisible && (
+        <Alert variant="destructive">
+          <ExclamationTriangleIcon className="h-4 w-4" />
+          <AlertDescription>
+            Please select only one post to edit.
+          </AlertDescription>
+        </Alert>
+      )}
+      {deleteAlertVisible && (
+        <Alert variant="destructive">
+          <ExclamationTriangleIcon className="h-4 w-4" />
+          <AlertDescription>
+            Please select at least one post to delete.          
+          </AlertDescription>
+        </Alert>
+      )}
+
+      <div className="rounded-md border border-black">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -194,7 +220,7 @@ export function DataTable<TData, TValue>({
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row, index) => (
                 <React.Fragment key={row.id}>
-                  <TableRow data-state={row.getIsSelected() && "selected"}>
+                  <TableRow className="group hover:bg-slate-50" data-state={row.getIsSelected() && "selected"}>
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id}>
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}

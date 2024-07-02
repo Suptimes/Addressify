@@ -23,6 +23,16 @@ export type INavLink = {
     location?: string;
     price?: string;
     description?: string;
+    type?: string;
+    beds?: string;
+    baths?: number;
+    property?: string;
+    duration?: string;
+    cheques?: string;
+    size?: string;
+    city?: string;
+    address?: string;
+    category?: string;
   };
   
   export type IUpdatePost = {
@@ -34,6 +44,16 @@ export type INavLink = {
     location?: string;
     price?: number;
     description?: string;
+    type?: string;
+    beds?: string;
+    baths?: string;
+    property?: string;
+    size?: string;
+    duration?: string;
+    cheques?: string;
+    city?: string;
+    address?: string;
+    category?: string;
   };
   
   export type IUser = {

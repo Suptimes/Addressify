@@ -30,10 +30,10 @@ module.exports = {
       },
       colors: {
         'primary-500': '#9333EA',
+        'primary-600': '#7E22CE',
+        'secondary-300': '#f4ecfb',
         "red-500": "#f61414",
         "red-600": "#be1515",
-        'primary-600': '#7E22CE',
-        'secondary-500': '#FFB620',
         'off-white': '#D0DFFF',
         'red': '#FF5A5A',
         'dark-1': '#000000',

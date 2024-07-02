@@ -359,6 +359,9 @@ button{
     .shad-input {
       @apply h-12 bg-slate-50 hover:bg-slate-100 border-none font-['Montserrat'] placeholder:italic focus-visible:ring-1 focus-visible:ring-offset-1 ring-violet-800;
     }
+    .shad-input-post {
+      @apply h-12 bg-slate-50 hover:bg-slate-100 border border-black/50 font-['Montserrat'] placeholder:italic focus-visible:ring-1 focus-visible:ring-offset-1 ring-violet-800;
+    }
     .shad-input-2 {
       @apply h-12 bg-slate-50 hover:bg-slate-100 border-none font-['Montserrat'] placeholder:italic ring-offset-transparent ring-transparent;
     }

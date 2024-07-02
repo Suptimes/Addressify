@@ -90,8 +90,11 @@ export async function getCurrentUser() {
 
 export async function signOutAccount (){
     try {
-        const session = await account.deleteSession("current");
+        
         localStorage.setItem('isAuthd', 'false')
+        localStorage.removeItem('isAuthd')
+        const session = await account.deleteSession("current")
+        window.location.reload() // to be changed asap
         return session
     } catch (error) {
         console.log(error)
@@ -129,6 +132,16 @@ export async function createPost (post: INewPost) {
                 location: post.location,
                 price: post.price,
                 description: post.description,
+                type: post.type,
+                beds: post.beds,
+                baths: post.baths,
+                property: post.property,
+                size: post.size,
+                duration: post.duration,
+                cheques: post.cheques,
+                city: post.city,
+                address: post.address,
+                category: post.category,
             }
         )
 
@@ -350,6 +363,16 @@ export async function updatePost (post: IUpdatePost) {
                 location: post.location,
                 price: post.price,
                 description: post.description,
+                type: post.type,
+                beds: post.beds,
+                baths: post.baths,
+                size: post.size,
+                property: post.property,
+                duration: post.duration,
+                cheques: post.cheques,
+                city: post.city,
+                address: post.address,
+                category: post.category,
             }
         )
 
