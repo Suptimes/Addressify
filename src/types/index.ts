@@ -76,3 +76,19 @@ export type INavLink = {
     saveId: string
     posts: object | string
   }
+ 
+  export type INewAvailability = {
+    user: string
+    datetime: string
+    // date: string
+    // time: string
+    status: string
+  }
+  
+  export type INewBooking = {
+    user: string
+    availability: string
+    status: string
+    note: string
+  }
+  

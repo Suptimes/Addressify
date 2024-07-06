@@ -239,18 +239,18 @@
                     display: flex;
                     align-items: center;
                     gap: 5px;
-                    color: white;
+                    color: black;
                     border: none;
                     border-radius: 10px;
                     cursor: pointer;
                     font-size: 12px;
                     font-weight: bold;
-                    background-color: #7009cbc8;
+                    background-color: white;
                     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
                     
                     &:hover{
                         color: white;
-                        background-color: #7009cb;
+                        background-color: #7009cbc8;
                     }
 
                     @include lg{

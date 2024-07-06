@@ -6,10 +6,10 @@
 
     .imageContainer{
         flex: 2;
-        height: 150px;
+        height: 185px;
         // max-height: 100%;
         @include xl{
-            height: 170px;
+            height: 185px;
         }
 
         img{

@@ -16,7 +16,7 @@ import { useNavigate } from "react-router-dom"
 export type PropertyData = {
     id: string
     title: string
-    // status: "pending" | "processing" | "success" | "failed"
+    // status: "pending" | "processing" | "approved" | "failed"
     // file: File[]
     price: number
     imageUrl: string
@@ -84,7 +84,7 @@ export const columns: ColumnDef<PropertyData>[] = [
     },
     {
       accessorKey: "$id",
-      header: ({ column }) => {
+      header: () => {
         return (
             <div className="flex h-[100%] justify-between items-center">
                 <span>Post ID</span>

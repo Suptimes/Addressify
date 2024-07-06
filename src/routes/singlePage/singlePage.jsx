@@ -2,6 +2,7 @@ import Slider from "../../components/slider/Slider"
 import Map from "../../components/map/Map"
 import "./singlePage.scss"
 import { singlePostData, userData } from "../../lib/dummyData"
+import BookAppointment from "../../components/shared/BookAppointment.tsx"
 
 const SinglePage = () => {
   return (
@@ -114,16 +115,17 @@ const SinglePage = () => {
             <Map items={[singlePostData]} />
           </div>
           <div className="buttons">
-            <button>
-              <img src="/chat1.png" alt="Send a message" />
-              Send a Message
+            <button className="group">
+              <img src="/icons/chat.svg" alt="Send a message" className="brightness-0 group-hover:brightness-200"/>
+              Send Message
             </button>
-            <button>
+            <BookAppointment/>
+            {/* <button>
               <img src="/calendar1.png" alt="Send a message" />
-              Book a Tour
-            </button>
-            <button>
-              <img src="/save1.png" alt="Save this property" />
+              Book Tour
+            </button> */}
+            <button className="group">
+              <img src="/icons/save.svg" alt="Save this property" className="brightness-0 group-hover:brightness-200" />
               Save Property
             </button>
           </div>

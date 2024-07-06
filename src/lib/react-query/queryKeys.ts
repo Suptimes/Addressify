@@ -20,4 +20,9 @@ export enum QUERY_KEYS {
 
   //  SEARCH KEYS
   SEARCH_POSTS = "getSearchPosts",
+
+
+  // BOOKINGS KEYS
+  GET_RECENT_AVAIL = "GetRecentAvailabilities",
+  GET_RECENT_BOOKING = "GetRecentBookings",
 }

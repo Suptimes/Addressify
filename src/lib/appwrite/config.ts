@@ -8,6 +8,8 @@ export const appwriteConfig = {
     userCollectionId: import.meta.env.VITE_APPWRITE_USER_COLLECTION_ID,
     propertyCollectionId: import.meta.env.VITE_APPWRITE_PROPERTY_COLLECTION_ID,
     savesCollectionId: import.meta.env.VITE_APPWRITE_SAVES_COLLECTION_ID,
+    availabilityCollectionId: import.meta.env.VITE_APPWRITE_AVAILABILITY_COLLECTION_ID,
+    bookingCollectionId: import.meta.env.VITE_APPWRITE_BOOKING_COLLECTION_ID,    
 }
 
 

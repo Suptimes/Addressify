@@ -1,9 +1,10 @@
 import {ID, ImageGravity, Query} from "appwrite"
 import { account, appwriteConfig, avatars, databases, storage } from "./config"
-import { INewPost, INewUser, IUpdatePost, IUpdateUser } from "@/types"
+import { INewAvailability, INewBooking, INewPost, INewUser, IUpdatePost, IUpdateUser } from "@/types"
 import { useUserContext } from "@/context/AuthContext"
 
 
+// USER SECTION
 export async function createUserAccount(user: INewUser){
     try{
         const newAccount = await account.create(
@@ -100,6 +101,9 @@ export async function signOutAccount (){
         console.log(error)
     }
 }
+
+// PROPERTY SECTION
+
 
 export async function createPost (post: INewPost) {
     try{
@@ -581,5 +585,89 @@ export async function getSavesByIds(ids: string[]) {
     } catch (error) {
         console.error('Failed to fetch documents:', error);
         throw error;
+    }
+}
+
+
+// AVAILABILITY SECTION
+
+export async function createAvailability(avail: INewAvailability) {
+    try {
+        const availabilities = await databases.createDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.availabilityCollectionId,
+            ID.unique(),
+            {
+                user: avail.user,
+                datetime: avail.datetime,
+                // date: avail.date,
+                // time: avail.time,
+                status: avail.status,
+            }
+        )
+
+        if(!availabilities) throw new Error("availability did not register.")
+
+            return availabilities
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+
+export async function deleteAvailability(availabilityId: string) {
+    try {
+        const statusCode = await databases.deleteDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.savesCollectionId,
+            availabilityId,
+        )
+
+        if(!statusCode) throw new Error("Delete availabilities did not register.")
+
+            return { status: "ok" }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+// BOOKING SECTION
+
+export async function createBooking(booking: INewBooking) {
+    try {
+        const bookingSlot = await databases.createDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.bookingCollectionId,
+            ID.unique(),
+            {
+                user: booking.user,
+                availability: booking.availability,
+                status: booking.status,
+                note: booking.note,
+            }
+        )
+
+        if(!bookingSlot) throw new Error("booking did not register.")
+
+            return bookingSlot
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+
+export async function deleteBooking(bookingId: string) {
+    try {
+        const statusCode = await databases.deleteDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.bookingCollectionId,
+            bookingId,
+        )
+
+        if(!statusCode) throw new Error("Delete booking did not register.")
+
+            return { status: "ok" }
+    } catch (error) {
+        console.log(error)
     }
 }

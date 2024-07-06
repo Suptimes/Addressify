@@ -116,7 +116,7 @@ export function DataTable<TData, TValue>({
   return (
     <div>
       <div className="flex gap-5 items-center justify-between py-4">
-        <div className="group flex-1 rounded-md flex items-center w-full max-w-sm bg-slate-100 hover:bg-slate-200 focus-within:ring-2 ring-violet-800 shadow-[0_2px_3px_rgba(0,0,0,0.1)]">
+        <div className="group flex-1 rounded-md flex items-center w-full max-w-sm bg-slate-100 hover:bg-slate-200 focus-within:ring-2 ring-violet-800]">
           <img 
             src="/icons/search.svg" 
             alt="search titles"
@@ -129,7 +129,7 @@ export function DataTable<TData, TValue>({
               table.getColumn("title")?.setFilterValue(event.target.value)
             }
             className="w-full border-none bg-slate-100 group-hover:bg-slate-200 shad-input-2"
-            />
+          />
         </div>
 
         <div className="w-full flex gap-3 flex-1 items-center justify-end">

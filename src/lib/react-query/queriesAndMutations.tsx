@@ -4,8 +4,8 @@ import {
     useQueryClient,
     useInfiniteQuery,
 } from "@tanstack/react-query"
-import { createPost, createUserAccount, deletePost, deleteSavedPost, getCurrentUser, getInfinitePosts, getPostById, getRecentPosts, getSaveById, getSavesByIds, getUserById, likePost, savePost, searchPosts, signInAccount, signOutAccount, updatePost, updateProfile } from "../appwrite/api"
-import { INewPost, INewUser, IUpdatePost, IUpdateUser } from "@/types"
+import { createAvailability, createBooking, createPost, createUserAccount, deletePost, deleteSavedPost, getCurrentUser, getInfinitePosts, getPostById, getRecentPosts, getSaveById, getSavesByIds, getUserById, likePost, savePost, searchPosts, signInAccount, signOutAccount, updatePost, updateProfile } from "../appwrite/api"
+import { INewAvailability, INewBooking, INewPost, INewUser, IUpdatePost, IUpdateUser } from "@/types"
 import { QUERY_KEYS } from "./queryKeys"
 
 
@@ -235,4 +235,30 @@ export const useGetSavedPosts = (postIds: string[]) => {
         },
         enabled: !!postIds && postIds.length > 0,
     });
-};
+}
+
+export const useCreateAvailability = () => {
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: (avail: INewAvailability) => createAvailability(avail),
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: [QUERY_KEYS.GET_RECENT_AVAIL]
+            })
+        }
+    })
+}
+
+export const useCreateBooking = () => {
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: (booking: INewBooking) => createBooking(booking),
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: [QUERY_KEYS.GET_RECENT_BOOKING]
+            })
+        }
+    })
+}
