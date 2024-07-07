@@ -20,6 +20,7 @@ export type PropertyData = {
     // file: File[]
     price: number
     imageUrl: string
+    imageUrls: string[]
 }
 
 
@@ -59,9 +60,9 @@ export const columns: ColumnDef<PropertyData>[] = [
       },
       cell: ({ row }) => {
         const PropertyData = row.original
-   
+        // console.log("proprty:",PropertyData)
         return (<div>
-          <img src={PropertyData.imageUrl} height={50} width={50} className="flex-center rounded-md object-cover my-[-2px]" alt="image" />
+          <img src={PropertyData.imageUrl || PropertyData.imageUrls[0]} height={50} width={50} className="flex-center rounded-md object-cover my-[-2px]" alt="image" />
         </div>)
       }
     },

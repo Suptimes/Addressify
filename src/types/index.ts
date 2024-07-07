@@ -19,7 +19,7 @@ export type INavLink = {
   export type INewPost = {
     userId: string;
     title: string;
-    file: File[];
+    files: File[];
     location?: string;
     price?: string;
     description?: string;
@@ -38,9 +38,9 @@ export type INavLink = {
   export type IUpdatePost = {
     postId: string;
     title: string;
-    imageId: string;
-    imageUrl: URL;
-    file: File[];
+    imageIds: string[];
+    imageUrls: string[];
+    files: File[];
     location?: string;
     price?: number;
     description?: string;
@@ -54,6 +54,9 @@ export type INavLink = {
     city?: string;
     address?: string;
     category?: string;
+    // removeOldFiles: boolean;
+    newFiles: File[];
+    removedFileIndices: number[];
   };
   
   export type IUser = {

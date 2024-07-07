@@ -136,7 +136,7 @@ export function DataTable<TData, TValue>({
           <div className="flex-center gap-2 px-2 cursor-pointer bg-slate-100 hover:bg-slate-200 rounded-md shadow-[0_2px_3px_rgba(0,0,0,0.1)]">
             <img src="/icons/edit.svg" height={16} className="brightness-0" alt="edit" />
             <Button
-              variant="outline"
+              variant="none"
               className="border-none text-black p-0 bg-transparent cursor-pointer"
               onClick={handleEditSelected}
             >
@@ -146,8 +146,8 @@ export function DataTable<TData, TValue>({
           <div className="flex-center gap-2 px-2 cursor-pointer bg-slate-100 hover:bg-red-500 active:bg-red-600 rounded-md group shadow-[0_2px_3px_rgba(0,0,0,0.1)]">
             <img src="/icons/delete.svg" height={18} className="group-hover:brightness-[100]" alt="delete" />
             <Button
-              variant="outline"
-              className="border-none cursor-pointer bg-transparent p-0 text-black group-hover:text-white transition-none"
+              variant="none"
+              className="border-none cursor-pointer bg-transparent p-0 text-red-500 group-hover:text-white transition-none"
               onClick={handleDeleteSelected}
             >
               Delete
@@ -157,7 +157,7 @@ export function DataTable<TData, TValue>({
             <img src="/icons/filter.svg" alt="filters" />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="outline-none border-none text-black p-0 bg-transparent cursor-pointer">
+                <Button variant="none" className="outline-none border-none text-black p-0 bg-transparent cursor-pointer">
                   Filters
                 </Button>
               </DropdownMenuTrigger>

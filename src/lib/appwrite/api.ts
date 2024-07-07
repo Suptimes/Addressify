@@ -107,22 +107,31 @@ export async function signOutAccount (){
 
 export async function createPost (post: INewPost) {
     try{
-        // Upload image to storage
-        const uploadedFile = await uploadFile(post.file[0])
-        // Quick check
-        if(!uploadedFile) throw new Error('File upload failed')
+        // Array to store uploaded file URLs and IDs
+        const imageUrls: string[] = [];
+        const imageIds: string[] = [];
 
-        // Get file URL
-        const fileUrl = await getFilePreview(uploadedFile.$id)
+        // Loop through each file and upload it
+        for (const file of post.files) {
+            const uploadedFile = await uploadFile(file);
+            if (!uploadedFile) throw new Error('File upload failed');
 
-        if(!fileUrl) {
-            await deleteFile(uploadedFile.$id)
-            throw new Error('Failed to generate file URL')
+            const fileUrl = await getFilePreview(uploadedFile.$id);
+            if (!fileUrl) {
+                await deleteFile(uploadedFile.$id);
+                throw new Error('Failed to generate file URL');
+            }
+
+            // Ensure fileUrl is valid
+            if (typeof fileUrl !== 'string' || fileUrl.length > 2000) {
+                await deleteFile(uploadedFile.$id);
+                throw new Error('Invalid file URL');
+            }
+
+            imageUrls.push(fileUrl);
+            imageIds.push(uploadedFile.$id);
         }
-        if (typeof fileUrl !== 'string' || fileUrl.length > 2000) {
-            await deleteFile(uploadedFile.$id);
-            throw new Error('Invalid file URL');
-        }
+
         // Save post to database
         const newPost = await databases.createDocument(
             appwriteConfig.databaseId,
@@ -131,8 +140,10 @@ export async function createPost (post: INewPost) {
             {
                 owner: post.userId,
                 title: post.title,
-                imageUrl: fileUrl,
-                imageId: uploadedFile.$id,
+                imageUrls,  // Store an array of image URLs
+                imageIds,   // Store an array of image IDs
+                // imageUrl: fileUrl,
+                // imageId: uploadedFile.$id,
                 location: post.location,
                 price: post.price,
                 description: post.description,
@@ -150,7 +161,10 @@ export async function createPost (post: INewPost) {
         )
 
         if(!newPost) {
-            await deleteFile(uploadedFile.$id)
+            // Clean up by deleting uploaded files if document creation fails
+            for (const imageId of imageIds) {
+                await deleteFile(imageId);
+            }
             throw new Error('Failed to create document')
         }
 
@@ -179,10 +193,10 @@ export function getFilePreview(fileId: string) {
         const fileObject = storage.getFilePreview(
             appwriteConfig.storageId,
             fileId,
-            2000,
-            2000,
+            1800,
+            1800,
             ImageGravity.Center,
-            100,
+            70,
         )
 
         if (!fileObject) throw new Error('Failed to generate file preview URL');
@@ -298,8 +312,9 @@ export async function getPostById(postId?: string) {
 
 
 export async function updatePost (post: IUpdatePost) {
-    const hasFileToUpdate = post.file.length > 0
-    
+    const hasNewFiles = post.newFiles && post.newFiles.length > 0;
+    const { newFiles, removedFileIndices } = post;
+
     try{
         // Fetch the current user to validate ownership
         const currentUser = await getCurrentUser();
@@ -323,37 +338,36 @@ export async function updatePost (post: IUpdatePost) {
             throw new Error("You are not authorized to edit this post");
         }
 
+        // Prepare new image data
+        let updatedImageUrls = [...existingPost.imageUrls];
+        let updatedImageIds = [...existingPost.imageIds];
 
-        let image = {
-            imageUrl: post.imageUrl, //.toString()
-            imageId: post.imageId,
-        }
 
-        if(hasFileToUpdate) {
-            // Upload image to storage
-            const uploadedFile = await uploadFile(post.file[0])
-            // Quick check
-            if(!uploadedFile) throw new Error('File upload failed')
-
-            // Get file URL
-            const fileUrl = await getFilePreview(uploadedFile.$id)
-        
-            if(!fileUrl) {
-                await deleteFile(uploadedFile.$id)
-                throw new Error('Failed to generate file URL')
+        // Remove old files if needed
+        if (removedFileIndices.length > 0) {
+        removedFileIndices.forEach(index => {
+            if (index < updatedImageUrls.length && index < updatedImageIds.length) {
+            updatedImageUrls.splice(index, 1);
+            updatedImageIds.splice(index, 1);
             }
-
-            // Check the file URL validity
-            if (typeof fileUrl !== 'string' || fileUrl.length > 2000) {
+        });
+        }
+            // Upload new files
+        if (hasNewFiles) {
+            for (const file of newFiles) {
+            const uploadedFile = await uploadFile(file);
+            if (!uploadedFile) throw new Error('File upload failed');
+    
+            const fileUrl = await getFilePreview(uploadedFile.$id);
+            if (!fileUrl) {
                 await deleteFile(uploadedFile.$id);
-                throw new Error('Invalid file URL');
+                throw new Error('Failed to generate file URL');
             }
-
-            // Assign new image details
-            image = { ...image, imageUrl: fileUrl, imageId: uploadedFile.$id }
-
+    
+            updatedImageUrls.push(fileUrl);
+            updatedImageIds.push(uploadedFile.$id);
+            }
         }
-
 
         // Update post in the database
         const updatedPost = await databases.updateDocument(
@@ -362,8 +376,8 @@ export async function updatePost (post: IUpdatePost) {
             post.postId,
             {
                 title: post.title,
-                imageUrl: image.imageUrl,
-                imageId: image.imageId,
+                imageUrls: updatedImageUrls,
+                imageIds: updatedImageIds,
                 location: post.location,
                 price: post.price,
                 description: post.description,
@@ -381,16 +395,16 @@ export async function updatePost (post: IUpdatePost) {
         )
 
         if(!updatedPost) {
-            if (hasFileToUpdate) {
-                await deleteFile(image.imageId);
-            }
+            // if (hasFileToUpdate) {
+            //     await deleteFile(image.imageId);
+            // }
             throw new Error('Failed to update document')
         }
 
         // Delete the old image if a new one was uploaded successfully
-        if (hasFileToUpdate && post.imageId && post.imageId !== image.imageId) {
-            await deleteFile(post.imageId);
-        }
+        // if (hasFileToUpdate && post.imageId && post.imageId !== image.imageId) {
+        //     await deleteFile(post.imageId);
+        // }
 
         return updatedPost
     } catch (error) {

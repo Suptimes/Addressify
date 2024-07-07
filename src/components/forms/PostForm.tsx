@@ -7,12 +7,13 @@ import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "../ui/textarea"
-import FileUploader from "../shared/FileUploader.tsx"
+// import FileUploader from "../shared/FileUploader.tsx"
+import MultiFilesUploader from "../shared/MultiFilesUploader.tsx"
 import { PostValidation } from "@/lib/validation/index.ts"
 import { Models } from "appwrite"
 import { useCreatePost, useUpdatePost } from "@/lib/react-query/queriesAndMutations.tsx"
 import { useUserContext } from "@/context/AuthContext.tsx"
-import { useToast } from "../ui/use-toast.ts"
+import { toast } from "sonner"
 import Loader from "../shared/Loader.tsx"
 import {
   Select,
@@ -22,6 +23,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Separator } from "../ui/separator.tsx"
+import { useState } from "react"
 
 
 
@@ -36,17 +38,18 @@ const PostForm = ({ post, action }: PostFormProps) => {
     const { mutateAsync: createPost, isPending: isLoadingCreate } = useCreatePost()
     const { mutateAsync: updatePost, isPending: isLoadingUpdate } = useUpdatePost()
 
-
+    const [removedFileIndices, setRemovedFileIndices] = useState<number[]>([]);
+    const [newFiles, setNewFiles] = useState<File[]>([]);
     const { user } = useUserContext()
-    const { toast } = useToast()
     const navigate = useNavigate()
+    const isUpdate = action === "Update"
 
-  // 1. Define your form.
+    // 1. Define your form.
   const form = useForm<z.infer<typeof PostValidation>>({
     resolver: zodResolver(PostValidation),
     defaultValues: {
       title: post?.title || "",
-      file: [],
+      files: [],
       location: post?.location || "",
       price: post?.price || "",
       description: post?.description || "",
@@ -60,8 +63,20 @@ const PostForm = ({ post, action }: PostFormProps) => {
       address: post?.address || "",
       size: post?.size || "",
       category: post?.category || "residential",
+      isUpdate,
     },
 })
+
+  // Handle file change
+  const handleFileChange = (files: File[]) => {
+    setNewFiles(files);
+    form.setValue("files", files);
+  }
+
+  // Handle file removal from FileUploader
+  const handleRemoveFile = (index: number) => {
+    setRemovedFileIndices([...removedFileIndices, index]);
+  };
     
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof PostValidation>) {
@@ -70,16 +85,19 @@ const PostForm = ({ post, action }: PostFormProps) => {
       const updatedPost = await updatePost({
         ...values,
         postId: post.$id,
-        imageId: post?.imageId,
-        imageUrl: post?.imageUrl,
+        imageIds: post?.imageIds,
+        imageUrls: post?.imageUrls,
+        newFiles: newFiles, // new files to be added
+        removedFileIndices: removedFileIndices, // indices of old files to be removed
       })
 
       if(!updatedPost) {
-        toast({ title: "Please try again."})
+        toast.error("Please try again.")
         throw new Error("Post could not update.")
       }
       // return navigate(`/property/${post.$id}`)
-      return navigate(`/properties`)
+      navigate(`/properties`)
+      return toast.success("Property updated successfully.")
     }
 
 
@@ -87,19 +105,16 @@ const PostForm = ({ post, action }: PostFormProps) => {
     const newPost = await createPost({
           ...values,
           userId: user.id,
+          files: values.files, // Pass the files array to createPost
      })
 
     if(!newPost) {
-      toast({
-        title: "Please try again."
-      })
+      toast("Please try again.")
      }
 
-     toast({
-      title: "Property successfully added."
-    })
-    //  navigate(`../property/:${newPost.$id}`)
+     //  navigate(`../property/:${newPost.$id}`)
      navigate(`../properties`)
+     toast.success("Property successfully added.")
      
   }
 
@@ -128,14 +143,15 @@ const PostForm = ({ post, action }: PostFormProps) => {
 
         <FormField // Image
           control={form.control}
-          name="file"
+          name="files"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Images</FormLabel>
               <FormControl>
-                <FileUploader
-                  fieldChange={field.onChange}
-                  mediaUrl={post?.imageUrl}
+                <MultiFilesUploader
+                  fieldChange={handleFileChange}
+                  mediaUrls={post?.imageUrls || []} // Pass mediaUrls for initial preview
+                  onRemoveFile={handleRemoveFile}
                 />
               </FormControl>
               <FormMessage className="shad-form_message" />
