@@ -25,4 +25,5 @@ export enum QUERY_KEYS {
   // BOOKINGS KEYS
   GET_RECENT_AVAIL = "GetRecentAvailabilities",
   GET_RECENT_BOOKING = "GetRecentBookings",
+  GET_AVAIL_BY_PROP_ID = "GetAvailByPropId",
 }

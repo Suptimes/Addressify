@@ -4,7 +4,7 @@ import {
     useQueryClient,
     useInfiniteQuery,
 } from "@tanstack/react-query"
-import { createAvailability, createBooking, createPost, createUserAccount, deletePost, deleteSavedPost, getCurrentUser, getInfinitePosts, getPostById, getRecentPosts, getSaveById, getSavesByIds, getUserById, likePost, savePost, searchPosts, signInAccount, signOutAccount, updatePost, updateProfile } from "../appwrite/api"
+import { createAvailability, createBooking, createPost, createUserAccount, deletePost, deleteSavedPost, getAvailabilitiesByPropertyId, getCurrentUser, getInfinitePosts, getPostById, getRecentPosts, getSaveById, getSavesByIds, getUserById, likePost, savePost, searchPosts, signInAccount, signOutAccount, updatePost, updateProfile } from "../appwrite/api"
 import { INewAvailability, INewBooking, INewPost, INewUser, IUpdatePost, IUpdateUser } from "@/types"
 import { QUERY_KEYS } from "./queryKeys"
 
@@ -237,6 +237,8 @@ export const useGetSavedPosts = (postIds: string[]) => {
     });
 }
 
+// BOOKING SECTION
+
 export const useCreateAvailability = () => {
     const queryClient = useQueryClient()
 
@@ -262,3 +264,16 @@ export const useCreateBooking = () => {
         }
     })
 }
+
+export const useGetAvailByPropId = (propId?: string) => {
+    return useQuery({
+        queryKey: ['GET_AVAIL_BY_PROP_ID', propId],
+        queryFn: async () => { 
+            if (!propId) throw new Error("Property ID is required");
+            return getAvailabilitiesByPropertyId(propId);
+        },
+        enabled: !!propId, // Only run if propId is provided
+        retry: false, // Disable retry if you want immediate error feedback
+        staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+    });
+};

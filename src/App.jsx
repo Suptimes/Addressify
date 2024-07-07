@@ -18,7 +18,7 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom"
-import { Toaster } from "@/components/ui/toaster"
+import { Toaster } from "@/components/ui/sonner"
 import ProtectedRoutes from './components/ProtectedRoutes'
 import PublicRoutes from "./components/PublicRoutes.jsx";
 

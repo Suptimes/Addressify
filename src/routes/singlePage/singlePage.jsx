@@ -115,11 +115,11 @@ const SinglePage = () => {
             <Map items={[singlePostData]} />
           </div>
           <div className="buttons">
+            <BookAppointment/>
             <button className="group">
               <img src="/icons/chat.svg" alt="Send a message" className="brightness-0 group-hover:brightness-200"/>
               Send Message
             </button>
-            <BookAppointment/>
             {/* <button>
               <img src="/calendar1.png" alt="Send a message" />
               Book Tour

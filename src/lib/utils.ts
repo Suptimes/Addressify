@@ -56,3 +56,34 @@ export const multiFormatDateString = (timestamp: string = ""): string => {
 export const checkIsLiked = (likeList: string[], userId: string) => {
   return likeList.includes(userId)
 }
+
+
+// BOOKING FORMAT
+
+export const formatDateTime = (isoString, locale = undefined, timeZone = undefined) => {
+  const date = new Date(isoString); // ISO String is in UTC
+  const options = {
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+      hour: '2-digit', minute: '2-digit', hour12: false, timeZone
+  };
+  return date.toLocaleString(locale, options);
+}
+
+export const dubaiTimeToUTC = (date, time) => {
+  const [hours, minutes] = time.split(':').map(Number);
+
+  // Create a date object with Dubai time
+  const localDateTime = new Date(date);
+  localDateTime.setHours(hours);
+  localDateTime.setMinutes(minutes);
+  localDateTime.setSeconds(0);
+  localDateTime.setMilliseconds(0);
+
+  // Dubai is UTC+4, so subtract 4 hours to get UTC time
+  const offset = 4 * 60 * 60 * 1000;
+  const utcDateTime = new Date(localDateTime.getTime());
+
+  console.log("UTC IN FUNCTION:",utcDateTime)
+
+  return utcDateTime.toISOString(); // Return ISO string in UTC
+}

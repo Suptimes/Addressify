@@ -631,6 +631,31 @@ export async function deleteAvailability(availabilityId: string) {
     }
 }
 
+
+export async function getAvailabilitiesByPropertyId(propertyId: string) {
+    try {
+        const response = await databases.listDocuments(
+            appwriteConfig.databaseId,
+            appwriteConfig.availabilityCollectionId,
+            [
+                Query.equal("property", propertyId),
+                Query.equal("status", "available")
+            
+            ]
+        );
+
+        if (!response.documents) {
+            throw new Error("Failed to get the availabilities.");
+        }
+
+        return response.documents; // Make sure to return documents
+    } catch (error) {
+        console.error("Error fetching availabilities:", error);
+        throw new Error("Failed to get the availabilities.");
+    }
+}
+
+
 // BOOKING SECTION
 
 export async function createBooking(booking: INewBooking) {
@@ -641,7 +666,9 @@ export async function createBooking(booking: INewBooking) {
             ID.unique(),
             {
                 user: booking.user,
+                property: booking.property,
                 availability: booking.availability,
+                booking: booking.booking, //time of the booking
                 status: booking.status,
                 note: booking.note,
             }

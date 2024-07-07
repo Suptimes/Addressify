@@ -15,12 +15,14 @@ import { CalendarDays, Clock, Trash } from "lucide-react";
 import { Separator } from "../ui/separator";
 import { useCreateAvailability } from "@/lib/react-query/queriesAndMutations";
 import { useUserContext } from "@/context/AuthContext";
+import { toast } from "sonner";
+import { useParams } from "react-router-dom"
 
 const MultiAvailabilityForm = () => {
-  const [availabilities, setAvailabilities] = useState([
-    { date: new Date(), timeSlot: [] },
-  ]);
+  const [availabilities, setAvailabilities] = useState([ { date: new Date(), timeSlot: [] }, ])
   const [timeSlot, setTimeSlot] = useState([]);
+
+  const { propertyId } = useParams() // TO BE SETUP AND ROUTE PROTECTED
   const { user } = useUserContext();
   const { mutateAsync: createNewAvailability, isPending: isCreatingAvail } = useCreateAvailability();
 
@@ -93,9 +95,10 @@ const MultiAvailabilityForm = () => {
       setAvailabilities([{ date: new Date(), timeSlot: [] }]);
       // Close the dialog after successful submission
       setIsDialogOpen(false);
+      toast.success("Availability successfully added.")
     } catch (err) {
       console.error("Error submitting availabilities:", err);
-      alert("Failed to submit availabilities.");
+      toast.error("Failed to submit availability.");
     }
   };
 

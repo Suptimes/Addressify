@@ -88,6 +88,8 @@ export type INavLink = {
   export type INewBooking = {
     user: string
     availability: string
+    property: string
+    booking: string
     status: string
     note: string
   }
