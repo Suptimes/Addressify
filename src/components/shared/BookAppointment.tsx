@@ -126,11 +126,11 @@ const BookAppointment = () => {
                 <img src="/calendar1.png" alt="Book a tour" className="brightness-0 group-hover:brightness-200" />
                 Book Tour
             </DialogTrigger>
-            <DialogContent className="max-md:h-[100vh] max-md:overflow-y-scroll max-md:custom-scrollbar max-md:max-w-[360px]">
+            <DialogContent className={`${!isLoadingAvailabilities && availableSlots.length > 0 ? "max-md:h-fit" : "max-md:h-[100vh]" }  max-md:overflow-y-scroll max-md:custom-scrollbar max-md:max-w-[360px]`}>
                 <DialogHeader>
-                    <DialogTitle className="text-xl md:pl-7 ml-2">Book a Tour</DialogTitle>
+                    <DialogTitle className="text-xl md:pl-7 max-md:ml-4">Book Property Tour</DialogTitle>
                     <DialogDescription>
-                        <div className="w-full ml-2 pl-2 pr-1">
+                        <div className="w-full md:ml-2 pl-2 pr-1">
                             <div className="flex max-md:flex max-md:flex-col max-md:justify-center max-md:items-center mt-3 gap-8 max-md:gap-4">
                                 {/* CALENDAR */}
                                 <div className={`${!isLoadingAvailabilities && availableSlots.length > 0 && "hidden"} flex flex-col gap-3 items-baseline md:pl-5`}>
@@ -150,12 +150,12 @@ const BookAppointment = () => {
                                     <ArrowRight className="text-slate-300 scale-150" />
                                 </div>
                                 {/* TIME SLOT */}
-                                <div className="flex flex-col w-full gap-3 items-baseline max-md:scale-105 max-md:pb-4">
+                                <div className={`flex flex-col w-full gap-3 items-baseline max-md:scale-105 ${!isLoadingAvailabilities && availableSlots.length > 0 ?"max-md:ml-0":"max-md:ml-8"}  max-md:pb-4`}>
                                     <h2 className="flex items-center gap-2 text-sm font-normal">
                                         <Clock className="text-primary-600" width={20} />
-                                        Select Time
+                                        {!isLoadingAvailabilities && availableSlots.length > 0 ? "Select Available Time" :"Select Time"}
                                     </h2>
-                                    <div className={`rounded-md border border-solid border-gray-300 p-5 py-5 ${availableSlots.length > 0 ? "grid grid-cols-2 w-full" : "grid grid-cols-3"} gap-2`}>
+                                    <div className={`rounded-md border border-solid grid grid-cols-3 border-gray-300 p-5 py-5 ${availableSlots.length > 0 ? "grid max-md:grid-cols-1 md:grid-cols-2 w-full overflow-y-scroll custom-scrollbar" : ""} gap-2`}>
                                         {!isLoadingAvailabilities && availableSlots.length > 0 ? (
                                             availableSlots.map((slot, index) => (
                                                 <h4
@@ -181,7 +181,7 @@ const BookAppointment = () => {
                                 </div>
                             </div>
                             <Textarea
-                                className="shad-textarea mt-3 max-h-[70px] md:w-[89.7%] md:ml-5"
+                                className="shad-textarea mt-3 max-h-[70px] max-md: md:w-[89.7%] md:ml-5"
                                 placeholder="Note to the owner... (optional)"
                                 value={note}
                                 onChange={(e) => setNote(e.target.value)}
