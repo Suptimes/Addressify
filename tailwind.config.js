@@ -5,6 +5,7 @@ module.exports = {
   corePlugins: {
     preflight: false,
   },
+  // important: true,
 
   
   darkMode: ["class"],
@@ -46,6 +47,9 @@ module.exports = {
         'light-3': '#7878A3',
         'light-4': '#5C5C7B',
       },
+      // borderWidth: {
+      //   default: '0px',
+      // },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",

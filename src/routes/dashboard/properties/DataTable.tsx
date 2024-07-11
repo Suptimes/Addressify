@@ -34,6 +34,7 @@ import { useNavigate } from "react-router-dom";
 import { useDeletePost } from "@/lib/react-query/queriesAndMutations";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { ExclamationTriangleIcon } from "@radix-ui/react-icons"
+import { Edit, Trash2 } from "lucide-react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -132,28 +133,29 @@ export function DataTable<TData, TValue>({
           />
         </div>
 
-        <div className="w-full flex gap-3 flex-1 items-center justify-end">
-          <div className="flex-center gap-2 px-2 cursor-pointer bg-slate-100 hover:bg-slate-200 rounded-md shadow-[0_2px_3px_rgba(0,0,0,0.1)]">
+        <div className="w-full flex gap-3 flex-1 items-center justify-end transition-all ease-in-out">
+          <div className="flex-center gap-2 px-2 cursor-pointer bg-slate-100 hover:bg-slate-200 rounded-md shadow-[0_2px_3px_rgba(0,0,0,0.1)] transition-all ease-in-out">
             <img src="/icons/edit.svg" height={16} className="brightness-0" alt="edit" />
             <Button
               variant="none"
               className="border-none text-black p-0 bg-transparent cursor-pointer"
               onClick={handleEditSelected}
             >
+              {/* <Edit/> */}
               Edit
             </Button>
           </div>
-          <div className="flex-center gap-2 px-2 cursor-pointer bg-slate-100 hover:bg-red-500 active:bg-red-600 rounded-md group shadow-[0_2px_3px_rgba(0,0,0,0.1)]">
-            <img src="/icons/delete.svg" height={18} className="group-hover:brightness-[100]" alt="delete" />
+          <div className="flex-center gap-2 px-2 cursor-pointer bg-slate-100 hover:bg-red-500 active:bg-red-600 rounded-md group shadow-[0_2px_3px_rgba(0,0,0,0.1)] transition-all ease-in-out">
             <Button
               variant="none"
-              className="border-none cursor-pointer bg-transparent p-0 text-red-500 group-hover:text-white transition-none"
+              className="border-none cursor-pointer bg-transparent p-0 text-red-500 group-hover:text-white transition-none gap-1"
               onClick={handleDeleteSelected}
             >
+              <Trash2 height={18} className="group-hover:brightness-[100]" />
               Delete
             </Button>
           </div>
-          <div className="flex-center gap-2 px-2 cursor-pointer bg-slate-100 hover:bg-slate-200 rounded-md shadow-[0_2px_3px_rgba(0,0,0,0.1)]">
+          <div className="flex-center gap-2 px-2 cursor-pointer bg-slate-100 hover:bg-slate-200 rounded-md shadow-[0_2px_3px_rgba(0,0,0,0.1)] transition-all ease-in-out">
             <img src="/icons/filter.svg" alt="filters" />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -188,7 +190,7 @@ export function DataTable<TData, TValue>({
         <Alert variant="destructive">
           <ExclamationTriangleIcon className="h-4 w-4" />
           <AlertDescription>
-            Please select only one post to edit.
+            Please select one post to edit.
           </AlertDescription>
         </Alert>
       )}
@@ -201,7 +203,7 @@ export function DataTable<TData, TValue>({
         </Alert>
       )}
 
-      <div className="rounded-md border border-black">
+      <div className="rounded-md">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -230,7 +232,7 @@ export function DataTable<TData, TValue>({
                   {index < table.getRowModel().rows.length - 1 && (
                     <TableRow className="border-none">
                       <TableCell colSpan={columns.length} className="p-0 sm:p-0">
-                        <div><Separator /></div>
+                        <div><Separator className="h-[0.5px]" /></div>
                       </TableCell>
                     </TableRow>
                   )}

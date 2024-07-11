@@ -83,7 +83,7 @@ export const dubaiTimeToUTC = (date, time) => {
   const offset = 4 * 60 * 60 * 1000;
   const utcDateTime = new Date(localDateTime.getTime());
 
-  console.log("UTC IN FUNCTION:",utcDateTime)
+  // console.log("UTC IN FUNCTION:",utcDateTime)
 
   return utcDateTime.toISOString(); // Return ISO string in UTC
 }

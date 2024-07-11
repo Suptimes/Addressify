@@ -11,7 +11,7 @@ const buttonVariants = cva(
       variant: {
         none: "",
         mine: "bg-slate-50 hover:bg-primary-600 hover:text-white cursor-pointer border-none focus:bg-primary-600 focus:text-white",
-        default: "bg-primary-600 text-white border-none flex-center hover:bg-primary-600/90 cursor-pointer",
+        default: "bg-primary-500 text-white border-none flex-center hover:bg-primary-600 cursor-pointer",
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:

@@ -66,7 +66,7 @@ const Properties = () => {
           <div>
           <Button 
             type="submit" 
-            className="shad-button_primary whitespace-nowrap max-md:scale-125 mr-3"
+            className="shad-button_primary whitespace-nowrap max-md:scale-125 mr-3 max-md:mr-5"
             >
             <Link to={"/create-post"}>Create post</Link>
           </Button>

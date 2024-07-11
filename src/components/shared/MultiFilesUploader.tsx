@@ -101,7 +101,7 @@ const MultiFilesUploader = ({ fieldChange, mediaUrls = [], onRemoveFile }: FileU
               />
               <h3 className='base-medium text-dark-4 mb-2 mt-6'>Drag images here</h3>
               <p className='text-light-4 small-regular mb-6'>PNG, JPG, JPEG</p>
-              <Button className='shad-button_dark_5'>
+              <Button variant="none" className='shad-button_dark_5'>
                 Select from files
               </Button>
             </div>

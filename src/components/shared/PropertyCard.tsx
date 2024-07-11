@@ -8,7 +8,7 @@ const PropertyCard = ( {post} ) => {
         <li className="list-none p-4" key={post.$id}>
             <Card item={post} />
         </li>
-        <Separator />
+        <Separator className="h-[0.5px]" />
     </div>
   )
 }

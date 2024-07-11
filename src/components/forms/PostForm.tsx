@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "../ui/textarea"
-// import FileUploader from "../shared/FileUploader.tsx"
 import MultiFilesUploader from "../shared/MultiFilesUploader.tsx"
 import { PostValidation } from "@/lib/validation/index.ts"
 import { Models } from "appwrite"
@@ -47,6 +46,7 @@ const PostForm = ({ post, action }: PostFormProps) => {
     // 1. Define your form.
   const form = useForm<z.infer<typeof PostValidation>>({
     resolver: zodResolver(PostValidation),
+    mode: 'onSubmit', // Only validate on submit
     defaultValues: {
       title: post?.title || "",
       files: [],
