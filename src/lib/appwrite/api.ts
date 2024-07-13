@@ -712,3 +712,71 @@ export async function deleteBooking(bookingId: string) {
         console.log(error)
     }
 }
+
+
+// CHAT SECTION
+
+export async function initiateChat(senderId: string, receiverId: string) {
+    
+    // Step 1: Check if a chat exists between sender and receiver
+    const existingChats = await databases.listDocuments(
+        appwriteConfig.databaseId,
+        appwriteConfig.chatsCollectionId,
+        [
+            Query.equal('chatters', [senderId, receiverId]),
+            Query.equal('chatters', [receiverId, senderId])
+            // Query.equal('participants', [senderId, receiverId])
+        ]
+        
+    );
+    console.log("existingChats:", existingChats)
+    let chatId;
+    if (existingChats.total === 0) {
+        // Step 2: Create a new chat if not found
+        const newChat = await databases.createDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.chatsCollectionId,
+            ID.unique(),
+            {
+                // participants: [senderId, receiverId],
+                chatters: [senderId, receiverId],
+                lastMessageId: '',
+                lastUpdated: new Date().toISOString()
+            }
+        );
+
+        chatId = newChat.$id;
+
+        // Step 3: Create UserChats entries for each participant
+        await databases.createDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.userChatsCollectionId,
+            ID.unique(),
+            {
+                user: senderId,
+                chats: [chatId],
+                // lastMessageId: '',
+                // lastUpdated: new Date().toISOString()
+            }
+        );
+
+        await databases.createDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.userChatsCollectionId,
+            ID.unique(),
+            {
+                user: receiverId,
+                chats: [chatId],
+                // lastMessageId: '',
+                // lastUpdated: new Date().toISOString()
+            }
+        );
+    } else {
+        // Use the existing chat
+        chatId = existingChats.documents[0].$id;
+    }
+    // console.log("CHAT ID:", chatId)
+    return chatId
+}
+
+

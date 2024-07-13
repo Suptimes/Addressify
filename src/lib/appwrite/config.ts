@@ -10,6 +10,9 @@ export const appwriteConfig = {
     savesCollectionId: import.meta.env.VITE_APPWRITE_SAVES_COLLECTION_ID,
     availabilityCollectionId: import.meta.env.VITE_APPWRITE_AVAILABILITY_COLLECTION_ID,
     bookingCollectionId: import.meta.env.VITE_APPWRITE_BOOKING_COLLECTION_ID,    
+    userChatsCollectionId: import.meta.env.VITE_APPWRITE_USERCHATS_COLLECTION_ID,    
+    chatsCollectionId: import.meta.env.VITE_APPWRITE_CHATS_COLLECTION_ID,    
+    messagesCollectionId: import.meta.env.VITE_APPWRITE_MESSAGES_COLLECTION_ID,    
 }
 
 

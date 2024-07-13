@@ -10,7 +10,7 @@ const Layout = () => {
   const noNavbarRoutes = [
     /^\/dashboard$/,
     /^\/explore$/,
-    /^\/messages$/,
+    /^\/messages\/[a-zA-Z0-9-]+$/,
     /^\/saved$/,
     /^\/properties$/,
     /^\/create-post$/,

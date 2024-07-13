@@ -4,9 +4,10 @@ import {
     useQueryClient,
     useInfiniteQuery,
 } from "@tanstack/react-query"
-import { createAvailability, createBooking, createPost, createUserAccount, deletePost, deleteSavedPost, getAvailabilitiesByPropertyId, getCurrentUser, getInfinitePosts, getPostById, getRecentPosts, getSaveById, getSavesByIds, getUserById, likePost, savePost, searchPosts, signInAccount, signOutAccount, updatePost, updateProfile } from "../appwrite/api"
+import { createAvailability, createBooking, createPost, createUserAccount, deletePost, deleteSavedPost, getAvailabilitiesByPropertyId, getCurrentUser, getInfinitePosts, getPostById, getRecentPosts, getSaveById, getSavesByIds, getUserById, initiateChat, likePost, savePost, searchPosts, signInAccount, signOutAccount, updatePost, updateProfile } from "../appwrite/api"
 import { INewAvailability, INewBooking, INewPost, INewUser, IUpdatePost, IUpdateUser } from "@/types"
 import { QUERY_KEYS } from "./queryKeys"
+import { useCallback } from "react"
 
 
 export const useCreateUserAccount = () => {
@@ -277,3 +278,33 @@ export const useGetAvailByPropId = (propId?: string) => {
         staleTime: 5 * 60 * 1000, // Cache for 5 minutes
     });
 };
+
+// CHAT SECTION
+
+export const useInitiateChat = () => {
+    const queryClient = useQueryClient();
+  
+    const mutation = useMutation(initiateChat, {
+      onSuccess: (chatId: string, { senderId, receiverId }) => {
+        // Update the cache with the new or fetched chat
+        queryClient.setQueryData(['chat', { senderId, receiverId }], chatId);
+        queryClient.invalidateQueries(['userChats', senderId]);
+        queryClient.invalidateQueries(['userChats', receiverId]);
+      },
+      onError: (error: any) => {
+        console.error('Error initiating chat:', error);
+      }
+    });
+  
+    const initiate = useCallback((senderId: string, receiverId: string) => {
+      return mutation.mutateAsync({ senderId, receiverId });
+    }, [mutation]);
+  
+    return {
+      initiate,
+      isLoading: mutation.isPending,
+      isError: mutation.isError,
+      data: mutation.data,
+      error: mutation.error,
+    };
+  }; // NOT USED, ERROR OCCURRED

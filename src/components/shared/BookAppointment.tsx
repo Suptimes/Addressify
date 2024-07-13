@@ -36,8 +36,8 @@ const BookAppointment = () => {
     const { mutateAsync: createNewBooking, isPending, isSuccess: successBooking } = useCreateBooking()
     const { data: propertyAvailabilities, isLoading: isLoadingAvailabilities, isSuccess:successAvailLoading } = useGetAvailByPropId(propertyId)
 
-    console.log("Availabilities:", availableSlots)
-    console.log("Property:", propertyId)
+    // console.log("Availabilities:", availableSlots)
+    // console.log("Property:", propertyId)
 
     useEffect(() => {
         getTime()
@@ -61,7 +61,7 @@ const BookAppointment = () => {
     }, [selectedTimeSlot, availableSlots])
 
 
-    console.log("AvID:",availabilityId)
+    // console.log("AvID:",availabilityId)
 
     const getTime = () => {
         const timeList = []

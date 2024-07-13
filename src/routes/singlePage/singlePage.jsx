@@ -1,10 +1,48 @@
-import Slider from "../../components/slider/Slider"
-import Map from "../../components/map/Map"
-import "./singlePage.scss"
+import Slider from "../../components/slider/Slider";
+import Map from "../../components/map/Map";
+import "./singlePage.scss";
+import BookAppointment from "../../components/shared/BookAppointment.tsx";
 import { singlePostData, userData } from "../../lib/dummyData"
-import BookAppointment from "../../components/shared/BookAppointment.tsx"
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useGetCurrentUser, useGetPostById, useInitiateChat } from "../../lib/react-query/queriesAndMutations.tsx";
+import { initiateChat } from "../../lib/appwrite/api.ts";
 
 const SinglePage = () => {
+  const [senderId, setSenderId] = useState(null);
+  // const [chatId, setChatId] = useState(null);
+  const [receiverId, setReceiverId] = useState(null);
+  const { id: propertyId } = useParams();
+  const navigate = useNavigate();
+
+  const { data: sender, isLoading: isUserLoading } = useGetCurrentUser();
+  const { data: property, isPending: isPropertyLoading } = useGetPostById(propertyId || "");
+  // const { data: chat, initiate, isLoading: isChatLoading } = useInitiateChat();
+
+  // useEffect(() => {
+  //   if (chat && !isChatLoading) {
+  //     setChatId(chat);
+  //   }
+  // }, [chat, isChatLoading]);
+
+  useEffect(() => {
+    if (sender && !isUserLoading) {
+      setSenderId(sender.$id);
+    }
+  }, [sender, isUserLoading]);
+
+  useEffect(() => {
+    if (property && !isPropertyLoading) {
+      setReceiverId(property.owner.$id);
+    }
+  }, [property, isPropertyLoading]);
+
+  const handleSendMessage = async () => {
+    const chatId = await initiateChat(senderId, receiverId);
+    navigate(`/messages/${chatId}`);
+  };
+
+  // console.log("PARTICIPANTS:", senderId , receiverId)
   return (
     <div className="singlePage">
       
@@ -116,7 +154,9 @@ const SinglePage = () => {
           </div>
           <div className="buttons">
             <BookAppointment/>
-            <button className="group">
+            <button 
+              className="group" 
+              onClick={handleSendMessage}>
               <img src="/icons/chat.svg" alt="Send a message" className="brightness-0 group-hover:brightness-200"/>
               Send Message
             </button>

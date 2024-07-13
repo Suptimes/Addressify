@@ -9,9 +9,9 @@ import { useEffect, useState } from "react"
 
 const Saved = () => {
   const { data: currentUser, isLoading: isUserLoading } = useGetCurrentUser();
-  console.log("savesss:", currentUser?.save)
+  // console.log("savesss:", currentUser?.save)
   const savedPostIds = currentUser?.save.map((save: any) => save.$id);
-  console.log("saved posts iddd", savedPostIds)
+  // console.log("saved posts iddd", savedPostIds)
   const { data: savedPosts, isLoading: isSavedPostsLoading } = useGetSavedPosts(savedPostIds);
   
   const [savedUserPosts, setSavedUserPosts] = useState<Models.Document[]>([]);
