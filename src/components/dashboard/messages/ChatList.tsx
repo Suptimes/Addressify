@@ -1,7 +1,30 @@
+import Loader from '@/components/shared/Loader'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
+import { useGetUserChats } from '@/lib/react-query/queriesAndMutations'
+import { useEffect, useState } from 'react'
 
-const ChatList = () => {
+const ChatList = ({ userId }: string) => {
+    // console.log("ID:", userId)
+    const [ userChats, setUserChats ] = useState(null)
+
+    const {data: userChatsList, isPending: isUserChatsLoading} = useGetUserChats(userId)
+
+    useEffect(()=>{
+        if (userChatsList && !isUserChatsLoading){
+            setUserChats(userChatsList.documents[0].chats)
+        }
+    }, [userChatsList, isUserChatsLoading])
+    
+    if (isUserChatsLoading) {
+        return (
+            <div className='p-10 flex-center w-full h-full'>
+               <Loader h={25} w={25} brightness='brightness-0'/> 
+            </div>
+        )
+            
+      }
+    console.log("CHATUSERS:", userChats)
   return (
     <div className='flex flex-col gap-1 p-2 px-0 pb-0 h-full'>
         {/* SEARCH */}
@@ -18,64 +41,40 @@ const ChatList = () => {
         </div>
 
         {/* CHATS */}
-        <div className='overflow-y-scroll custom-scrollbar h-fit'>
-            <div className='flex p-3 hover:bg-slate-100 rounded-md'>
-                <img src="/icons/profile-placeholder.svg" alt="chatter image" height={40} className='rounded-full object-cover' />
-                <div className='flex flex-col pl-3'>
-                    <span className='font-semibold'>Randa Afas</span>
-                    <p className='text-sm'>Hello</p>
+        <div className='overflow-y-auto flex flex-col custom-scrollbar h-fit w-full'>
+      {userChats ? (
+        userChats.map((chat) => {
+          // Filter out the current user from participants to get the receiver's details
+          const receiver = chat.participants.find(participant => participant.accountId !== userId);
+          
+          return (
+            <div className='w-full h-full hover:cursor-pointer'>
+                <div key={chat.$id} className='flex p-3 gap-3 hover:bg-slate-100 rounded-md w-full'>
+                
+                    <img 
+                        src={receiver.imageUrl || "/icons/profile-placeholder.svg"} 
+                        alt={receiver.name} 
+                        height={40} 
+                        className='rounded-full object-cover' 
+                    />
+                    <div className='flex flex-col w-full'>
+                        <span className='font-semibold'>
+                        {receiver.name}
+                        </span>
+                        <p className='text-sm'>{chat.lastMessageId}</p>
+                    </div> 
+                
+                
                 </div>
+            <div className='w-full'>
+                    <Separator className='h-[0.5px]' />
             </div>
-            <Separator/>
-            <div className='flex p-3 hover:bg-slate-100 rounded-md'>
-                <img src="/icons/profile-placeholder.svg" alt="chatter image" height={40} className='object-cover' />
-                <div className='flex flex-col pl-3'>
-                    <span className='font-semibold'>Randa Afas</span>
-                    <p className='text-sm'>Hello</p>
-                </div>
             </div>
-            <Separator/>
-            <div className='flex p-3 hover:bg-slate-100 rounded-md'>
-                <img src="/icons/profile-placeholder.svg" alt="chatter image" height={40} className='object-cover' />
-                <div className='flex flex-col pl-3'>
-                    <span className='font-semibold'>Randa Afas</span>
-                    <p className='text-sm'>Hello</p>
-                </div>
-            </div>
-            <Separator/>
-            <div className='flex p-3 hover:bg-slate-100 rounded-md'>
-                <img src="/icons/profile-placeholder.svg" alt="chatter image" height={40} className='object-cover' />
-                <div className='flex flex-col pl-3'>
-                    <span className='font-semibold'>Randa Afas</span>
-                    <p className='text-sm'>Hello</p>
-                </div>
-            </div>
-            <Separator/>
-            <div className='flex p-3 hover:bg-slate-100 rounded-md'>
-                <img src="/icons/profile-placeholder.svg" alt="chatter image" height={40} className='object-cover' />
-                <div className='flex flex-col pl-3'>
-                    <span className='font-semibold'>Randa Afas</span>
-                    <p className='text-sm'>Hello</p>
-                </div>
-            </div>
-            <Separator/>
-            <div className='flex p-3 hover:bg-slate-100 rounded-md'>
-                <img src="/icons/profile-placeholder.svg" alt="chatter image" height={40} className='object-cover' />
-                <div className='flex flex-col pl-3'>
-                    <span className='font-semibold'>Randa Afas</span>
-                    <p className='text-sm'>Hello</p>
-                </div>
-            </div>
-            <Separator/>
-            <div className='flex p-3 hover:bg-slate-100 rounded-md'>
-                <img src="/icons/profile-placeholder.svg" alt="chatter image" height={40} className='object-cover' />
-                <div className='flex flex-col pl-3'>
-                    <span className='font-semibold'>Randa Afas</span>
-                    <p className='text-sm'>Hello</p>
-                </div>
-            </div>
-            <Separator/>
-            
+          );
+        })
+        ) : (
+          <div className='flex-center'>No chats found.</div>
+        )}
         </div>
     </div>
   )

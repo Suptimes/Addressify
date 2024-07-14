@@ -21,7 +21,7 @@ const ChatDetails = () => {
         <div>
           <div className="flex items-center justify-between">
           <span className="text-sm font-semibold text-gray-500">Chat Settings</span>
-          <img src="arrowDown.png" alt="arrow" height={12} className="brightness-50 cursor-pointer"/>
+          <img src="/arrowDown.png" alt="arrow" height={12} className="brightness-50 cursor-pointer"/>
           </div>
           <div></div>
         </div>
@@ -32,7 +32,7 @@ const ChatDetails = () => {
         <div>
           <div className="flex items-center justify-between">
           <span className="text-sm font-semibold text-gray-500">Privacy & Help</span>
-          <img src="arrowUp.png" height={12} alt="" className="brightness-50 cursor-pointer"/>
+          <img src="/arrowUp.png" height={12} alt="arrow" className="brightness-50 cursor-pointer"/>
           </div>
           <div></div>
         </div>
@@ -43,7 +43,7 @@ const ChatDetails = () => {
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between">
             <span className="text-sm font-semibold text-gray-500">Shared Photos</span>
-            <img src="arrowUp.png" height={12} alt="" className="brightness-50 cursor-pointer"/>
+            <img src="/arrowUp.png" height={12} alt="arrow" className="brightness-50 cursor-pointer"/>
           </div>
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">

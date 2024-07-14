@@ -26,4 +26,8 @@ export enum QUERY_KEYS {
   GET_RECENT_AVAIL = "GetRecentAvailabilities",
   GET_RECENT_BOOKING = "GetRecentBookings",
   GET_AVAIL_BY_PROP_ID = "GetAvailByPropId",
+
+  // CHATS KEYS
+  GET_USERCHATS = "GetUserChats"
+
 }

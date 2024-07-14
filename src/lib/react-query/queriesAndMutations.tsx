@@ -4,7 +4,7 @@ import {
     useQueryClient,
     useInfiniteQuery,
 } from "@tanstack/react-query"
-import { createAvailability, createBooking, createPost, createUserAccount, deletePost, deleteSavedPost, getAvailabilitiesByPropertyId, getCurrentUser, getInfinitePosts, getPostById, getRecentPosts, getSaveById, getSavesByIds, getUserById, initiateChat, likePost, savePost, searchPosts, signInAccount, signOutAccount, updatePost, updateProfile } from "../appwrite/api"
+import { createAvailability, createBooking, createPost, createUserAccount, deletePost, deleteSavedPost, getAvailabilitiesByPropertyId, getCurrentUser, getInfinitePosts, getPostById, getRecentPosts, getSaveById, getSavesByIds, getUserById, getUserChats, initiateChat, likePost, savePost, searchPosts, signInAccount, signOutAccount, updatePost, updateProfile } from "../appwrite/api"
 import { INewAvailability, INewBooking, INewPost, INewUser, IUpdatePost, IUpdateUser } from "@/types"
 import { QUERY_KEYS } from "./queryKeys"
 import { useCallback } from "react"
@@ -308,3 +308,12 @@ export const useInitiateChat = () => {
       error: mutation.error,
     };
   }; // NOT USED, ERROR OCCURRED
+
+
+export const useGetUserChats = (userId: string) => {
+    return useQuery({
+        queryKey: [QUERY_KEYS.GET_USERCHATS, userId],
+        queryFn: () => getUserChats(userId),
+        enabled: !!userId, // Ensures the query runs only when userId is available
+    })
+}

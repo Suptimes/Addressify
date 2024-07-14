@@ -738,7 +738,7 @@ export async function initiateChat(senderId: string, receiverId: string) {
             appwriteConfig.chatsCollectionId,
             ID.unique(),
             {
-                // participants: [senderId, receiverId],
+                participants: [senderId, receiverId],
                 chatters: [senderId, receiverId],
                 lastMessageId: '',
                 lastUpdated: new Date().toISOString()
@@ -780,3 +780,14 @@ export async function initiateChat(senderId: string, receiverId: string) {
 }
 
 
+export async function getUserChats(userId: string) {
+    const userChats = await databases.listDocuments(
+        appwriteConfig.databaseId,
+        appwriteConfig.userChatsCollectionId,
+        [Query.equal("user", userId)]
+    )
+
+    if(!userChats) throw new Error("Failed to get user chats.")
+
+    return userChats
+}
