@@ -110,9 +110,9 @@ const SignUp = () => {
 
       if (isLoggedIn) {
         // setValues({ name: "", email: "", password: "", confirmPassword: "" });
-        navigate('./')
+        navigate('./dashboard')
       } else {
-        toast({ title: "Sign in failed. Please try again." });
+        toast({ title: "Sign up failed. Please try again." });
       }
     } catch (error) {
       console.log(error);

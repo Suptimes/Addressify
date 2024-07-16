@@ -4,7 +4,7 @@ import {
     useQueryClient,
     useInfiniteQuery,
 } from "@tanstack/react-query"
-import { createAvailability, createBooking, createPost, createUserAccount, deletePost, deleteSavedPost, getAvailabilitiesByPropertyId, getCurrentUser, getInfinitePosts, getPostById, getRecentPosts, getSaveById, getSavesByIds, getUserById, getUserChats, initiateChat, likePost, savePost, searchPosts, signInAccount, signOutAccount, updatePost, updateProfile } from "../appwrite/api"
+import { createAvailability, createBooking, createPost, createUserAccount, deletePost, deleteSavedPost, getAvailabilitiesByPropertyId, getCurrentUser, getInfinitePosts, getPostById, getRecentPosts, getSaveById, getSavesByIds, getUnseenMessagesCounts, getUserById, getUserChats, initiateChat, likePost, savePost, searchPosts, signInAccount, signOutAccount, updatePost, updateProfile } from "../appwrite/api"
 import { INewAvailability, INewBooking, INewPost, INewUser, IUpdatePost, IUpdateUser } from "@/types"
 import { QUERY_KEYS } from "./queryKeys"
 import { useCallback } from "react"
@@ -315,5 +315,13 @@ export const useGetUserChats = (userId: string) => {
         queryKey: [QUERY_KEYS.GET_USERCHATS, userId],
         queryFn: () => getUserChats(userId),
         enabled: !!userId, // Ensures the query runs only when userId is available
+    })
+}
+
+export const useGetUnseenMessagesCounts = (chatIds: string[], userId: string) => {
+    return useQuery({
+        queryKey: [QUERY_KEYS.GET_UNSEEN_MESSAGES_COUNT, chatIds, userId],
+        queryFn: () => getUnseenMessagesCounts(chatIds, userId),
+        enabled: chatIds.length > 0 && !!userId,
     })
 }

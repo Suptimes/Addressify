@@ -21,7 +21,7 @@ const Messages = () => {
           <ChatList userId={userId} />
         </div>
         <Separator/>
-        <div className="max-h-[calc(70vh)] h-full overflow-y-scroll custom-scrollbar">
+        <div className="flex-1 h-full overflow-y-auto custom-scrollbar">
           <ChatDetails/>
         </div>
       </div>

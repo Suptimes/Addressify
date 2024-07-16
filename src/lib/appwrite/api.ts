@@ -2,6 +2,7 @@ import {ID, ImageGravity, Query} from "appwrite"
 import { account, appwriteConfig, avatars, databases, storage } from "./config"
 import { INewAvailability, INewBooking, INewPost, INewUser, IUpdatePost, IUpdateUser } from "@/types"
 import { useUserContext } from "@/context/AuthContext"
+import { useNavigate } from "react-router-dom"
 
 
 // USER SECTION
@@ -38,8 +39,8 @@ export async function saveUserToDB(user: {
     accountId: string;
     email: string;
     name: string;
-    imageUrl?: URL; // maybe change it to string because its stored in DB
-    username?: string;
+    imageUrl?: URL;
+    // username?: string;
 }) {
 
     try {
@@ -48,6 +49,16 @@ export async function saveUserToDB(user: {
             appwriteConfig.userCollectionId,
             ID.unique(),
             user,
+        )
+
+        await databases.createDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.userChatsCollectionId,
+            ID.unique(),
+            {
+                user: newUser.$id,
+                chats: [],
+            }
         )
 
         return newUser
@@ -511,7 +522,7 @@ export async function getUserById(userId?: string) {
     }
 }
 
-
+// PROFILE SECTION
 
 export async function updateProfile (user: IUpdateUser) {
     const hasFileToUpdate = user.file.length > 0
@@ -584,6 +595,7 @@ export async function updateProfile (user: IUpdateUser) {
         throw error
     }
 }
+
 
 export async function getSavesByIds(ids: string[]) {
     if (!ids || ids.length === 0) throw new Error("No IDs provided");
@@ -716,20 +728,18 @@ export async function deleteBooking(bookingId: string) {
 
 // CHAT SECTION
 
-export async function initiateChat(senderId: string, receiverId: string) {
-    
+export async function initiateChat(senderId, receiverId) {
     // Step 1: Check if a chat exists between sender and receiver
     const existingChats = await databases.listDocuments(
         appwriteConfig.databaseId,
         appwriteConfig.chatsCollectionId,
         [
-            Query.equal('chatters', [senderId, receiverId]),
-            Query.equal('chatters', [receiverId, senderId])
-            // Query.equal('participants', [senderId, receiverId])
+            Query.contains('chatters', [senderId]),
+            Query.contains('chatters', [receiverId])
         ]
-        
     );
-    console.log("existingChats:", existingChats)
+
+    console.log("existingChats:", existingChats);
     let chatId;
     if (existingChats.total === 0) {
         // Step 2: Create a new chat if not found
@@ -746,37 +756,63 @@ export async function initiateChat(senderId: string, receiverId: string) {
         );
 
         chatId = newChat.$id;
+        console.log("chatId::", chatId);
 
-        // Step 3: Create UserChats entries for each participant
-        await databases.createDocument(
-            appwriteConfig.databaseId,
-            appwriteConfig.userChatsCollectionId,
-            ID.unique(),
-            {
-                user: senderId,
-                chats: [chatId],
-                // lastMessageId: '',
-                // lastUpdated: new Date().toISOString()
-            }
-        );
+        // Step 3: Perform backend operations asynchronously
+        (async () => {
+            // Step 3: Update UserChats entries for each participant
+            const senderUserChatsList = await databases.listDocuments(
+                appwriteConfig.databaseId,
+                appwriteConfig.userChatsCollectionId,
+                [Query.equal('user', senderId)]
+            );
+            console.log("senderUserChatsList:", senderUserChatsList);
 
-        await databases.createDocument(
-            appwriteConfig.databaseId,
-            appwriteConfig.userChatsCollectionId,
-            ID.unique(),
-            {
-                user: receiverId,
-                chats: [chatId],
-                // lastMessageId: '',
-                // lastUpdated: new Date().toISOString()
+            const receiverUserChatsList = await databases.listDocuments(
+                appwriteConfig.databaseId,
+                appwriteConfig.userChatsCollectionId,
+                [Query.equal('user', receiverId)]
+            );
+            console.log("receiverUserChatsList:", receiverUserChatsList);
+
+            if (senderUserChatsList.total === 0 || receiverUserChatsList.total === 0) {
+                throw new Error("UserChats document not found for one or both users.");
             }
-        );
+
+            const senderUserChats = senderUserChatsList.documents[0];
+            const receiverUserChats = receiverUserChatsList.documents[0];
+
+            const updatedSenderChats = senderUserChats.chats
+                ? [...senderUserChats.chats.map(chat => chat.$id), chatId]
+                : [chatId];
+            const updatedReceiverChats = receiverUserChats.chats
+                ? [...receiverUserChats.chats.map(chat => chat.$id), chatId]
+                : [chatId];
+
+            await databases.updateDocument(
+                appwriteConfig.databaseId,
+                appwriteConfig.userChatsCollectionId,
+                senderUserChats.$id,
+                {
+                    chats: updatedSenderChats,
+                }
+            );
+
+            await databases.updateDocument(
+                appwriteConfig.databaseId,
+                appwriteConfig.userChatsCollectionId,
+                receiverUserChats.$id,
+                {
+                    chats: updatedReceiverChats,
+                }
+            );
+        })();
     } else {
         // Use the existing chat
         chatId = existingChats.documents[0].$id;
     }
-    // console.log("CHAT ID:", chatId)
-    return chatId
+
+    return chatId;
 }
 
 
@@ -791,3 +827,29 @@ export async function getUserChats(userId: string) {
 
     return userChats
 }
+
+
+export async function getUnseenMessagesCounts(chatIds: string[], userId: string) {
+    const unseenMessagesCounts = await Promise.all(
+        chatIds.map(async (chatId) => {
+            const unseenMessages = await databases.listDocuments(
+                appwriteConfig.databaseId,
+                appwriteConfig.messagesCollectionId,
+                [
+                    Query.equal("chatId", chatId),
+                    Query.notEqual("seenBy", userId)
+                ]
+            );
+
+            return {
+                chatId,
+                count: unseenMessages.total
+            };
+        })
+    );
+
+    return unseenMessagesCounts;
+}
+
+
+

@@ -21,10 +21,9 @@ const ChatList = ({ userId }: string) => {
             <div className='p-10 flex-center w-full h-full'>
                <Loader h={25} w={25} brightness='brightness-0'/> 
             </div>
-        )
-            
-      }
-    console.log("CHATUSERS:", userChats)
+        )  
+    }
+
   return (
     <div className='flex flex-col gap-1 p-2 px-0 pb-0 h-full'>
         {/* SEARCH */}
@@ -42,35 +41,35 @@ const ChatList = ({ userId }: string) => {
 
         {/* CHATS */}
         <div className='overflow-y-auto flex flex-col custom-scrollbar h-fit w-full'>
-      {userChats ? (
-        userChats.map((chat) => {
-          // Filter out the current user from participants to get the receiver's details
-          const receiver = chat.participants.find(participant => participant.accountId !== userId);
-          
-          return (
-            <div className='w-full h-full hover:cursor-pointer'>
-                <div key={chat.$id} className='flex p-3 gap-3 hover:bg-slate-100 rounded-md w-full'>
+            {userChats ? (
+                userChats.map((chat) => {
+                // Filter out the current user from participants to get the receiver's details
+                const receiver = chat.participants.find(participant => participant.accountId !== userId)
                 
-                    <img 
-                        src={receiver.imageUrl || "/icons/profile-placeholder.svg"} 
-                        alt={receiver.name} 
-                        height={40} 
-                        className='rounded-full object-cover' 
-                    />
-                    <div className='flex flex-col w-full'>
-                        <span className='font-semibold'>
-                        {receiver.name}
-                        </span>
-                        <p className='text-sm'>{chat.lastMessageId}</p>
-                    </div> 
+                console.log("RECEIVER:", receiver)
                 
-                
-                </div>
-            <div className='w-full'>
-                    <Separator className='h-[0.5px]' />
+                return (
+                    <div className='w-full h-full hover:cursor-pointer'>
+                        <div key={chat.$id} className='flex p-3 gap-3 hover:bg-slate-100 rounded-md w-full'>
+                        
+                        <img 
+                            src={receiver.imageUrl || "/icons/profile-placeholder.svg"} 
+                            alt={receiver.name} 
+                            height={40} 
+                            className='rounded-full object-cover' 
+                        />
+                        <div className='flex flex-col w-full'>
+                            <span className='font-semibold'>
+                            {receiver.name}
+                            </span>
+                            <p className='text-sm'>{chat.lastMessageId}</p>
+                        </div> 
+                    </div>
+                    <div className='w-full'>
+                        <Separator className='h-[0.5px]' />
+                    </div>
             </div>
-            </div>
-          );
+          )
         })
         ) : (
           <div className='flex-center'>No chats found.</div>

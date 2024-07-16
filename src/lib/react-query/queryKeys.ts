@@ -28,6 +28,7 @@ export enum QUERY_KEYS {
   GET_AVAIL_BY_PROP_ID = "GetAvailByPropId",
 
   // CHATS KEYS
-  GET_USERCHATS = "GetUserChats"
-
+  GET_USERCHATS = "GetUserChats",
+  GET_UNSEEN_MESSAGES_COUNT = "GetUnseenMessagesCount",
+  
 }

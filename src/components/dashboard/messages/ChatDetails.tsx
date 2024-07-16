@@ -11,7 +11,7 @@ const ChatDetails = () => {
       <div className="flex flex-col items-center gap-1">
         <img src="/icons/profile-placeholder.svg" height={45} alt="" className="" />
         <h4>Mark Cuban</h4>
-        <p className="text-xs mt-[-3px]">Let's rock and roll</p>
+        <p className="text-xs mt-[-3px]">Active</p>
       </div>
       <Separator className="h-[0.5px]"/>
 

@@ -7,10 +7,12 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useGetCurrentUser, useGetPostById, useInitiateChat } from "../../lib/react-query/queriesAndMutations.tsx";
 import { initiateChat } from "../../lib/appwrite/api.ts";
+import Loader from "../../components/shared/Loader.tsx";
 
 const SinglePage = () => {
   const [senderId, setSenderId] = useState(null);
   // const [chatId, setChatId] = useState(null);
+  const [chatLoading, setChatLoading] = useState(false)
   const [receiverId, setReceiverId] = useState(null);
   const { id: propertyId } = useParams();
   const navigate = useNavigate();
@@ -38,8 +40,12 @@ const SinglePage = () => {
   }, [property, isPropertyLoading]);
 
   const handleSendMessage = async () => {
-    const chatId = await initiateChat(senderId, receiverId);
-    navigate(`/messages/${chatId}`);
+    setChatLoading(true)
+    const chatId = await initiateChat(senderId, receiverId)
+    if (chatId){
+      navigate(`/messages/${chatId}`)
+      setChatLoading(false)
+    }
   };
 
   // console.log("PARTICIPANTS:", senderId , receiverId)
@@ -157,8 +163,10 @@ const SinglePage = () => {
             <button 
               className="group" 
               onClick={handleSendMessage}>
-              <img src="/icons/chat.svg" alt="Send a message" className="brightness-0 group-hover:brightness-200"/>
-              Send Message
+              {!chatLoading && <img src="/icons/chat.svg" alt="Send a message" className="brightness-0 group-hover:brightness-200"/>}
+              {chatLoading ? 
+                <div className="flex-center gap-3 group"><Loader h={18} w={18} brightness="brightness-0" hover="hover:brightness-200"/> Messaging...</div>
+               : "Send Message"}
             </button>
             {/* <button>
               <img src="/calendar1.png" alt="Send a message" />

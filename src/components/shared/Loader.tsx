@@ -1,7 +1,7 @@
 
-const Loader = ({ h = 21, w = 21, brightness = "" }) => {
+const Loader = ({ h = 21, w = 21, brightness = "", hover = "" }) => {
   return (
-    <div className={`${brightness} justify-center items-center`}>
+    <div className={`${brightness} group-${hover} justify-center items-center`}>
       <img 
         src="/loader.svg" 
         alt="loader"
