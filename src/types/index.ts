@@ -97,3 +97,17 @@ export type INavLink = {
     note: string
   }
   
+export type IMessage = {
+  content: string
+  timestamp: string
+  senderId: string
+  chat: string
+  seenBy: boolean
+}
+
+export type INewMessage = {
+  body: string
+  senderId: string
+  timestamp: Date
+  // tempId: string
+}

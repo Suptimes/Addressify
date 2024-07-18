@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom"
 
 import { useUserContext } from "../../context/AuthContext"
 import Loader from "../../components/shared/Loader"
-
+import { LucideEdit } from "lucide-react"
 
 const Profile = () => {
 
@@ -60,7 +60,7 @@ const Profile = () => {
             <div className="flex items-center justify-end gap-[10px] w-full">
               <button className="flex-center gap-2 py-[12px] px-[20px] bg-[#7209cb] text-white rounded-[12px] border-none shadow-[0_2px_4px_rgba(0,0,0,0.2)] cursor-pointer max-sm:p-4 max-sm:" 
                       onClick={()=>navigate(`/edit-profile/${user.id}`)}>
-                        <img src="/icons/profile-edit.svg" width={20} height={20} className="whiteIcon" alt="" />
+                        <LucideEdit width={20} height={20} className="whiteIcon"/>
                         <p className="max-sm:text-sm text-[15px] max-xs:hidden">Update Profile</p>
               </button>
 

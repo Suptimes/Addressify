@@ -4,8 +4,8 @@ import {
     useQueryClient,
     useInfiniteQuery,
 } from "@tanstack/react-query"
-import { createAvailability, createBooking, createPost, createUserAccount, deletePost, deleteSavedPost, getAvailabilitiesByPropertyId, getCurrentUser, getInfinitePosts, getPostById, getRecentPosts, getSaveById, getSavesByIds, getUnseenMessagesCounts, getUserById, getUserChats, initiateChat, likePost, savePost, searchPosts, signInAccount, signOutAccount, updatePost, updateProfile } from "../appwrite/api"
-import { INewAvailability, INewBooking, INewPost, INewUser, IUpdatePost, IUpdateUser } from "@/types"
+import { createAvailability, createBooking, createMessage, createPost, createUserAccount, deletePost, deleteSavedPost, getAvailabilitiesByPropertyId, getChatById, getChatMessages, getCurrentUser, getInfiniteMessages, getInfinitePosts, getPostById, getRecentPosts, getSaveById, getSavesByIds, getUnseenMessagesCounts, getUserById, getUserChats, initiateChat, likePost, savePost, searchPosts, signInAccount, signOutAccount, updatePost, updateProfile } from "../appwrite/api"
+import { IMessage, INewAvailability, INewBooking, INewPost, INewUser, IUpdatePost, IUpdateUser } from "@/types"
 import { QUERY_KEYS } from "./queryKeys"
 import { useCallback } from "react"
 
@@ -307,7 +307,18 @@ export const useInitiateChat = () => {
       data: mutation.data,
       error: mutation.error,
     };
-  }; // NOT USED, ERROR OCCURRED
+}
+
+export const useGetChatById = (chatId: string) => {
+    return useQuery({
+        queryKey: [QUERY_KEYS.GET_CHAT_BY_ID, chatId],
+        queryFn: async () => { 
+            if (!chatId) throw new Error("Chat ID is required")
+            return getChatById(chatId)
+        },
+        enabled: !!chatId,
+    })
+}
 
 
 export const useGetUserChats = (userId: string) => {
@@ -324,4 +335,41 @@ export const useGetUnseenMessagesCounts = (chatIds: string[], userId: string) =>
         queryFn: () => getUnseenMessagesCounts(chatIds, userId),
         enabled: chatIds.length > 0 && !!userId,
     })
+}
+
+export const useCreateMessage = () => {
+    const queryClient = useQueryClient()
+
+    return useMutation({
+        mutationFn: ({message, chatId, seenBy}) => createMessage(message, chatId, seenBy),
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: [QUERY_KEYS.GET_CHAT_MESSAGES]
+            })
+        }
+    })
+}
+
+
+export const useGetChatMessages = (chatId: string, limit = 20, offset = 0) => {
+    return useQuery({
+        queryKey: [QUERY_KEYS.GET_CHAT_MESSAGES, chatId],
+        queryFn: () => getChatMessages(chatId, limit, offset),
+        enabled: !!chatId,  // Ensure the query runs only when chatId is available
+    });
+}
+
+export const useGetInfiniteMessages = () => {
+    return useInfiniteQuery({
+        queryKey: [QUERY_KEYS.GET_INFINITE_MESSAGES],
+        queryFn: getInfiniteMessages,
+        getNextPageParam: (lastPage) => {
+          if(lastPage && lastPage.documents.length === 0) return null
+          
+          const lastId = lastPage?.documents[lastPage?.documents.length - 1].$id
+
+          return lastId
+        }
+    })
+    
 }

@@ -2,15 +2,24 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { UserX2 } from "lucide-react"
 
+interface UserProp  {
+  receiver: {
+    name: string; 
+    imageUrl:string;
+  }
+}
 
-const ChatDetails = () => {
+const ChatDetails = ({receiver}: UserProp) => {
+
+  // console.log("receiver",receiver)
+
   return (
     <div className="h-full flex flex-col p-3 pt-5 overflow-y-scroll custom-scrollbar justify-between">
       <div className="flex flex-col gap-3">
       {/* USER */}
       <div className="flex flex-col items-center gap-1">
-        <img src="/icons/profile-placeholder.svg" height={45} alt="" className="" />
-        <h4>Mark Cuban</h4>
+        <img src={receiver?.imageUrl || "/icons/profile-placeholder.svg"} alt="user" className="rounded-full h-[55px] w-[55px]" />
+        <h4>{receiver?.name || "User"}</h4>
         <p className="text-xs mt-[-3px]">Active</p>
       </div>
       <Separator className="h-[0.5px]"/>

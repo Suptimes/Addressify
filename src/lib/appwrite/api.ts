@@ -1,8 +1,6 @@
 import {ID, ImageGravity, Query} from "appwrite"
 import { account, appwriteConfig, avatars, databases, storage } from "./config"
-import { INewAvailability, INewBooking, INewPost, INewUser, IUpdatePost, IUpdateUser } from "@/types"
-import { useUserContext } from "@/context/AuthContext"
-import { useNavigate } from "react-router-dom"
+import { IMessage, INewAvailability, INewBooking, INewMessage, INewPost, INewUser, IUpdatePost, IUpdateUser } from "@/types"
 
 
 // USER SECTION
@@ -728,7 +726,7 @@ export async function deleteBooking(bookingId: string) {
 
 // CHAT SECTION
 
-export async function initiateChat(senderId, receiverId) {
+export async function initiateChat(senderId: string, receiverId: string) {
     // Step 1: Check if a chat exists between sender and receiver
     const existingChats = await databases.listDocuments(
         appwriteConfig.databaseId,
@@ -756,24 +754,24 @@ export async function initiateChat(senderId, receiverId) {
         );
 
         chatId = newChat.$id;
-        console.log("chatId::", chatId);
+        // console.log("chatId::", chatId);
 
         // Step 3: Perform backend operations asynchronously
         (async () => {
-            // Step 3: Update UserChats entries for each participant
+            // Step 3.1: Update UserChats entries for each participant
             const senderUserChatsList = await databases.listDocuments(
                 appwriteConfig.databaseId,
                 appwriteConfig.userChatsCollectionId,
                 [Query.equal('user', senderId)]
             );
-            console.log("senderUserChatsList:", senderUserChatsList);
+            // console.log("senderUserChatsList:", senderUserChatsList);
 
             const receiverUserChatsList = await databases.listDocuments(
                 appwriteConfig.databaseId,
                 appwriteConfig.userChatsCollectionId,
                 [Query.equal('user', receiverId)]
             );
-            console.log("receiverUserChatsList:", receiverUserChatsList);
+            // console.log("receiverUserChatsList:", receiverUserChatsList);
 
             if (senderUserChatsList.total === 0 || receiverUserChatsList.total === 0) {
                 throw new Error("UserChats document not found for one or both users.");
@@ -815,6 +813,27 @@ export async function initiateChat(senderId, receiverId) {
     return chatId;
 }
 
+export async function getChatById(chatId: string) {
+
+    if (!chatId) throw new Error("Chat ID is required")
+
+    try {
+        const chat = await databases.getDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.chatsCollectionId,
+            chatId
+        )
+
+        if (!chat || Object.keys(chat).length === 0) {
+            throw new Error("Chat not found.")
+        }
+
+        return chat
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 
 export async function getUserChats(userId: string) {
     const userChats = await databases.listDocuments(
@@ -851,5 +870,115 @@ export async function getUnseenMessagesCounts(chatIds: string[], userId: string)
     return unseenMessagesCounts;
 }
 
+export async function createMessage(message: INewMessage, chatId: string, seenBy: string[]) {
+    
+    try {
+        const newMessage = await databases.createDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.messagesCollectionId,
+            ID.unique(),
+            {
+                body: message.body,
+                timestamp: message.timestamp,
+                senderId: message.senderId,
+                chat: chatId,
+                seenBy,
+            }
+        )
+
+        const lastMessage = message.body
+        await updateLastChatMessage(chatId, lastMessage)
+        
+        if(!newMessage) {
+            throw new Error('Failed to send message')
+        }
+
+
+        return newMessage
+    } catch (error) {
+        console.error("Error sending a message:", error)
+        throw new Error("Error sending a message:")
+    }
+    
+}
+
+export async function updateLastChatMessage(chatId: string, lastMessage: string) {
+    try {
+        const updateLastMessage = await databases.updateDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.chatsCollectionId,
+            chatId,
+            {
+                lastMessage: lastMessage,
+            }
+        )
+        
+        if(!updateLastMessage) throw new Error("Last message did not register.")
+
+        return updateLastMessage
+        
+    } catch (error) {
+        throw new Error("Error updating a message:")
+    }
+}
+
+export async function getChatMessages(chatId: string, limit = 20, offset = 0) {
+    const chatsMessages = await databases.listDocuments(
+        appwriteConfig.databaseId,
+        appwriteConfig.messagesCollectionId,
+        [
+            Query.equal("chat", chatId),
+            Query.orderDesc("$createdAt"),
+            Query.limit(limit),
+            Query.offset(offset)
+        ]
+    );
+
+    if (!chatsMessages || chatsMessages.documents.length === 0) {
+        throw new Error("Failed to get chat messages.");
+    }
+
+    return chatsMessages.documents;
+}
+
+export async function deleteMessage(messageId: string){
+    try {
+        const statusCode = await databases.deleteDocument(
+        appwriteConfig.databaseId,
+        appwriteConfig.messagesCollectionId,
+        messageId,
+        )
+
+        if(!statusCode) throw new Error("Delete message did not register.")
+
+        return { status: "ok" }
+
+    } catch (error) {
+        console.error(error)
+        throw new Error ("Error deleting the message")
+    }
+}
+
+export async function getInfiniteMessages({ pageParam }: {pageParam: number}) {
+    const queries : any[] = [Query.orderDesc("$updatedAt"), Query.limit(10)]
+
+    if(pageParam) {
+        queries.push(Query.cursorAfter(pageParam.toString()))
+    }
+
+    try {
+        const messages = await databases.listDocuments(
+            appwriteConfig.databaseId,
+            appwriteConfig.messagesCollectionId,
+            queries
+        )
+        
+        if(!messages) throw new Error("No messages found")
+            
+            return messages
+        } catch (error) {
+            console.log(error)
+        }
+} // not used
 
 

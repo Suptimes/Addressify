@@ -30,5 +30,9 @@ export enum QUERY_KEYS {
   // CHATS KEYS
   GET_USERCHATS = "GetUserChats",
   GET_UNSEEN_MESSAGES_COUNT = "GetUnseenMessagesCount",
+  GET_CHAT_MESSAGES = "GetChatMessages",
+  CREATE_NEW_MESSAGE = "CreateNewMessage",
+  GET_CHAT_BY_ID = "GetChatById",
+  GET_INFINITE_MESSAGES = "GetInfiniteMessages",
   
 }

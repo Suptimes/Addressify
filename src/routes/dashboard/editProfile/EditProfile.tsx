@@ -17,6 +17,7 @@ import { useToast } from "@/components/ui/use-toast"
 import ProfileUploader from "@/components/shared/ProfileUploader"
 import { useEffect } from "react"
 import { IUpdateUser } from "@/types"
+import { LucideEdit } from "lucide-react"
 
 
 
@@ -122,12 +123,7 @@ const EditProfile = () => {
     <div className="middlePage w-full">
       <div className="common-container-noscroll w-full max-w-5xl">
         <div className="max-w-5xl flex-start gap-3 justify-start w-full">
-          <img 
-            src="/icons/profile-edit.svg"
-            width={36}
-            height={36} 
-            alt="edit profile" 
-            className="brightness-0"/>
+          <LucideEdit width={36} height={36} alt="edit profile" className="brightness-0"/>
           <h2 className="h3-bold lg:h2-bold text-left w-full">Edit Profile</h2>
         </div>
 
