@@ -341,7 +341,7 @@ export const useCreateMessage = () => {
     const queryClient = useQueryClient()
 
     return useMutation({
-        mutationFn: ({message, chatId, seenBy}) => createMessage(message, chatId, seenBy),
+        mutationFn: ({message, chatId, seenBy, lastMessageSender}) => createMessage(message, chatId, seenBy, lastMessageSender),
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: [QUERY_KEYS.GET_CHAT_MESSAGES]

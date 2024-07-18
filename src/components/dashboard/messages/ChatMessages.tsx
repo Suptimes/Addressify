@@ -3,8 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { deleteMessage } from "@/lib/appwrite/api";
+import { appwriteConfig } from "@/lib/appwrite/config";
 import { useCreateMessage, useGetChatMessages } from "@/lib/react-query/queriesAndMutations";
 import { multiFormatDateString } from "@/lib/utils";
+import { Client } from "appwrite";
 import { AlertTriangle, Check, Image, SendHorizontal, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -45,6 +47,43 @@ const ChatMessages = ({ userId, chatId, receiver, toggleChatDetails }: ChatProps
       setMessages(formattedMessages.reverse());
     }
   }, [isMessagesLoading, xChat, deleteMessage]);
+  
+
+  useEffect(() => {
+    const client = new Client();
+  
+    client.setProject(appwriteConfig.projectId)
+          .setEndpoint(appwriteConfig.url);
+  
+    const unsubscribe = client.subscribe(`databases.${appwriteConfig.databaseId}.collections.${appwriteConfig.chatsCollectionId}.documents.${chatId}`, response => {
+
+      console.log("response",response)
+      if (response?.events.includes("databases.*.collections.*.documents.*.update")) {
+        const { lastMessage, lastMessageSender } = response.payload;
+  
+        if (lastMessageSender !== userId) {
+          const newMessageToShow = {
+            body: lastMessage,
+            senderId: lastMessageSender,
+            timestamp: new Date().toISOString(),
+            tempId: `temp-${Date.now()}`
+          };
+  
+          setMessages(prevMessages => [
+            ...prevMessages,
+            newMessageToShow,
+          ]);
+        }
+  
+        endRef.current?.scrollIntoView({ behavior: "smooth" });
+      }
+    });
+  
+    return () => {
+      unsubscribe();
+    };
+  }, [chatId, userId]);
+
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -84,7 +123,7 @@ const ChatMessages = ({ userId, chatId, receiver, toggleChatDetails }: ChatProps
     setValue("");
 
     sendMessage(
-      { message: messageToSend, chatId: chatId, seenBy: seenBy },
+      { message: messageToSend, chatId: chatId, seenBy: seenBy, lastMessageSender: userId },
       {
         onSuccess: (data) => {
           // Update the message status to 'sent'

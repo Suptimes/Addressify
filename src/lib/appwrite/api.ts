@@ -870,7 +870,7 @@ export async function getUnseenMessagesCounts(chatIds: string[], userId: string)
     return unseenMessagesCounts;
 }
 
-export async function createMessage(message: INewMessage, chatId: string, seenBy: string[]) {
+export async function createMessage(message: INewMessage, chatId: string, seenBy: string[], lastMessageSender: string) {
     
     try {
         const newMessage = await databases.createDocument(
@@ -887,7 +887,7 @@ export async function createMessage(message: INewMessage, chatId: string, seenBy
         )
 
         const lastMessage = message.body
-        await updateLastChatMessage(chatId, lastMessage)
+        await updateLastChatMessage(chatId, lastMessage, lastMessageSender)
         
         if(!newMessage) {
             throw new Error('Failed to send message')
@@ -902,7 +902,7 @@ export async function createMessage(message: INewMessage, chatId: string, seenBy
     
 }
 
-export async function updateLastChatMessage(chatId: string, lastMessage: string) {
+export async function updateLastChatMessage(chatId: string, lastMessage: string, lastMessageSender: string) {
     try {
         const updateLastMessage = await databases.updateDocument(
             appwriteConfig.databaseId,
@@ -910,6 +910,7 @@ export async function updateLastChatMessage(chatId: string, lastMessage: string)
             chatId,
             {
                 lastMessage: lastMessage,
+                lastMessageSender: lastMessageSender,
             }
         )
         
