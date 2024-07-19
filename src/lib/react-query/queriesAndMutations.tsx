@@ -4,7 +4,7 @@ import {
     useQueryClient,
     useInfiniteQuery,
 } from "@tanstack/react-query"
-import { createAvailability, createBooking, createMessage, createPost, createUserAccount, deletePost, deleteSavedPost, getAvailabilitiesByPropertyId, getChatById, getChatMessages, getCurrentUser, getInfiniteMessages, getInfinitePosts, getPostById, getRecentPosts, getSaveById, getSavesByIds, getUnseenMessagesCounts, getUserById, getUserChats, initiateChat, likePost, savePost, searchPosts, signInAccount, signOutAccount, updatePost, updateProfile } from "../appwrite/api"
+import { createAvailability, createBooking, createMessage, createPost, createUserAccount, deletePost, deleteSavedPost, getAvailabilitiesByPropertyId, getChatById, getChatMessages, getCurrentUser, getInfiniteMessages, getInfinitePosts, getPostById, getRecentPosts, getSaveById, getSavesByIds, getUnseenMessagesCounts, getUserById, getUserChats, initiateChat, likePost, savePost, searchPosts, signInAccount, signOutAccount, toggleBlockUser, updatePost, updateProfile } from "../appwrite/api"
 import { IMessage, INewAvailability, INewBooking, INewPost, INewUser, IUpdatePost, IUpdateUser } from "@/types"
 import { QUERY_KEYS } from "./queryKeys"
 import { useCallback } from "react"
@@ -372,4 +372,18 @@ export const useGetInfiniteMessages = () => {
         }
     })
     
+}
+
+export const useBlockUser = (setReceiverBlocked) => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: ({ userId, blockedUser }) => toggleBlockUser(userId, blockedUser),
+        onSuccess: (_, { blockedUser }) => {
+            queryClient.invalidateQueries([QUERY_KEYS.GET_BLOCKED_USERS]);
+            if (setReceiverBlocked) {
+                setReceiverBlocked((prev) => !prev);
+            }
+        }
+    });
 }

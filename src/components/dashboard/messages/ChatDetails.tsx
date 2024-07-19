@@ -1,17 +1,45 @@
+import Loader from "@/components/shared/Loader";
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
+import { toast } from "sonner";
 import { UserX2 } from "lucide-react"
+import { useState } from "react";
+import { useBlockUser } from "@/lib/react-query/queriesAndMutations";
 
 interface UserProp  {
+  userId: string,
   receiver: {
     name: string; 
     imageUrl:string;
-  }
+    $id: string;
+  },
+  userBlockedList: []
 }
 
-const ChatDetails = ({receiver}: UserProp) => {
+const ChatDetails = ({userId, receiver, userBlockedList}: UserProp) => {
+  
+  const receiverId = receiver?.$id
+  const [isBlocking, setIsBlocking] = useState(false)
+  const [receiverBlocked, setReceiverBlocked] = useState(false)
+  const { mutate: blockOrUnblockUser } = useBlockUser(setReceiverBlocked);
 
-  // console.log("receiver",receiver)
+  // const receiverBlocked = userBlockedList?.includes(receiverId)
+  
+
+  const handleBlockOrUnblockUser = (userId, receiverId, setReceiverBlocked) => {
+    setIsBlocking(true);
+    blockOrUnblockUser({ userId, blockedUser: receiverId }, {
+        onSuccess: () => {
+            setIsBlocking(false);
+            toast(receiverBlocked ? "User unblocked successfully" : "User blocked successfully");
+        },
+        onError: (error) => {
+            setIsBlocking(false);
+            console.error("Error blocking/unblocking user:", error);
+            toast("Failed to block/unblock user");
+        }
+    });
+};
 
   return (
     <div className="h-full flex flex-col p-3 pt-5 overflow-y-scroll custom-scrollbar justify-between">
@@ -64,7 +92,7 @@ const ChatDetails = ({receiver}: UserProp) => {
             </div>
             
           </div>
-          <Separator/>
+          <Separator className="h-[0.5px]"/>
           <div className="flex justify-between items-center py-1">
             <div className="flex items-center gap-2">
               <img src="https://images.pexels.com/photos/26595640/pexels-photo-26595640/free-photo-of-tokyo.jpeg?auto=compress&cs=tinysrgb&w=400&lazy=load" alt="" className="object-cover rounded-sm" height={30}/>
@@ -79,9 +107,25 @@ const ChatDetails = ({receiver}: UserProp) => {
       </div>
 
       <div className="w-full flex">
-        <Button className="w-full gap-2 bg-transparent text-red-500 border border-slate-300 border-solid hover:bg-red-500 hover:text-white">
-          <UserX2 height={18}/>
-          Block User
+        <Button 
+            className="group w-full gap-2 bg-transparent text-red-500 border border-slate-300 border-solid hover:bg-red-500 hover:text-white"
+            onClick={() => handleBlockOrUnblockUser(userId, receiverId, setReceiverBlocked)}
+            disabled={isBlocking}
+        >
+            <UserX2 height={18} />
+            {
+                isBlocking ? (
+                    <div className="flex-center gap-1">
+                        Loading...
+                    </div>
+                ) : (
+                    receiverBlocked ? (
+                        "Unblock User"
+                    ) : (
+                        "Block User"
+                    )
+                )
+            }
         </Button>
       </div>
     </div>

@@ -16,11 +16,13 @@ const ChatList = ({ userId, OpenChatDetails }: ListProp) => {
 
     const {data: userChatsList, isPending: isUserChatsLoading} = useGetUserChats(userId)
 
-    useEffect(()=>{
-        if (userChatsList && !isUserChatsLoading){
-            setUserChats(userChatsList.documents[0].chats)
+    useEffect(() => {
+        if (userChatsList && !isUserChatsLoading) {
+            const allChats = userChatsList.documents[0].chats;
+            const sortedChats = allChats.sort((a, b) => new Date(b?.lastUpdated) - new Date(a?.lastUpdated));
+            setUserChats(sortedChats);
         }
-    }, [userChatsList, isUserChatsLoading])
+    }, [userChatsList, isUserChatsLoading]);
     
     if (isUserChatsLoading) {
         return (

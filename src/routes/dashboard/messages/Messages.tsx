@@ -17,8 +17,11 @@ const Messages = () => {
 
   const { data: chatContent, isPending: isChatIdLoading } = useGetChatById(chatId)
   
-  
   const userId = user.id
+  const sender = chatContent?.participants.find((participant) => participant.$id === userId)
+  const userBlockedList = sender?.blockedUsers
+
+
   useEffect(()=>{
     if(chatContent && !isChatIdLoading) {
       setReceiver(chatContent?.participants.find((participant) => participant.$id !== userId))
@@ -26,8 +29,9 @@ const Messages = () => {
   }, [chatContent, isChatIdLoading])
   
   const toggleChatDetails = () => {
-    setShowChatDetails((prev) => !prev);
+    setShowChatDetails((prev) => !prev)
   }
+
   const OpenChatDetails= () => {
     setShowChatDetails(true)
   }
@@ -44,7 +48,7 @@ const Messages = () => {
         </div>
         <Separator className="h-[0.5px]" />
         <div className={`flex-1 h-full overflow-y-auto custom-scrollbar ${showChatDetails ? '' : 'hidden'}`}>
-          <ChatDetails receiver={receiver}/>
+          <ChatDetails userId={userId} receiver={receiver} userBlockedList={userBlockedList}/>
         </div>
       </div>
     </div>

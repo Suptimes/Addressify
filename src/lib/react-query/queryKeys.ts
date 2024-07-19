@@ -34,5 +34,6 @@ export enum QUERY_KEYS {
   CREATE_NEW_MESSAGE = "CreateNewMessage",
   GET_CHAT_BY_ID = "GetChatById",
   GET_INFINITE_MESSAGES = "GetInfiniteMessages",
+  GET_BLOCKED_USERS = "GetBlockedUsers",
   
 }

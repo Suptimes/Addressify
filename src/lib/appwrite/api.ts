@@ -982,4 +982,42 @@ export async function getInfiniteMessages({ pageParam }: {pageParam: number}) {
         }
 } // not used
 
+export async function toggleBlockUser(userId: string, blockedUser: string) {
+    if (!userId || !blockedUser) throw new Error("No IDs provided");
 
+    try {
+        const userDoc = await databases.getDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.userCollectionId,
+            userId
+        );
+
+        let updatedBlockedUsers = userDoc?.blockedUsers || [];
+
+        if (updatedBlockedUsers.includes(blockedUser)) {
+            // Unblock user
+            updatedBlockedUsers = updatedBlockedUsers.filter(user => user !== blockedUser);
+        } else {
+            // Block user
+            updatedBlockedUsers.push(blockedUser);
+        }
+
+        const updateBlockedUser = await databases.updateDocument(
+            appwriteConfig.databaseId,
+            appwriteConfig.userCollectionId,
+            userId,
+            { blockedUsers: updatedBlockedUsers }
+        );
+
+        if (!updateBlockedUser) {
+            console.log("Updating blocked users did not register.");
+            throw new Error("Updating blocked users did not register.");
+        }
+
+        console.log("Updated user document response:", updateBlockedUser);
+        return updateBlockedUser;
+    } catch (error) {
+        console.log(error);
+        throw new Error("Error updating blocked users");
+    }
+}
