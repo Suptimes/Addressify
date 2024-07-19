@@ -17,19 +17,24 @@ interface ChatProps {
   receiver: {
     name: string;
     imageUrl: string;
+    $id: string;
   }
   toggleChatDetails: () => void
+  userBlockedList: []
 }
 
-const ChatMessages = ({ userId, chatId, receiver, toggleChatDetails }: ChatProps) => {
-  const [messages, setMessages] = useState([]);
-  const [value, setValue] = useState("");
+const ChatMessages = ({ userId, chatId, receiver, toggleChatDetails, userBlockedList }: ChatProps) => {
+
+  const [ value, setValue ] = useState("");
+  const [ messages, setMessages ] = useState([]);
+  const [ receiverBlocked, setReceiverBlocked ] = useState(false);
   const { id:xChat } = useParams()
 
   const endRef = useRef(null);
 
   const limit = 20;
   const offset = 0;
+  const receiverId = receiver?.$id
 
   const { data: allMessages, isPending: isMessagesLoading } = useGetChatMessages(chatId, limit, offset);
   const { mutate: sendMessage } = useCreateMessage();
@@ -47,6 +52,13 @@ const ChatMessages = ({ userId, chatId, receiver, toggleChatDetails }: ChatProps
       setMessages(formattedMessages.reverse());
     }
   }, [isMessagesLoading, xChat, deleteMessage]);
+
+  useEffect(() => {
+      if (userBlockedList) {
+          const receiverBlockedInitially = userBlockedList?.includes(receiverId);
+          setReceiverBlocked(receiverBlockedInitially);
+      }
+  }, [userBlockedList, receiverId]);
   
 
   useEffect(() => {
@@ -246,21 +258,27 @@ const ChatMessages = ({ userId, chatId, receiver, toggleChatDetails }: ChatProps
       <Separator className="h-[0.5px] mb-2" />
 
       {/* BOTTOM SECTION */}
-      <div className="flex items-center justify-between gap-3 px-2 rounded-md pt-1 pb-3">
-        <div className="flex-center">
-          <Image className="text-primary-600 h-[23px] w-[23px] cursor-pointer" />
-        </div>
-        <Input
-          value={value}
-          onChange={handleChange}
-          onKeyDown={handleKeyDown}
-          className="px-3 bg-slate-100 hover:bg-slate-200 flex-1 h-fit"
-          placeholder="Write a message..."
-        />
-        <Button type="submit" className="flex-center h-fit" onClick={handleSubmit}>
-          <SendHorizontal className="h-5 w-5" />
-        </Button>
-      </div>
+      {
+        !receiverBlocked && (
+          <div className="flex items-center justify-between gap-3 px-2 rounded-md pt-1 pb-3">
+            <Button className="p-0 flex-center bg-transparent hover:bg-transparent" disabled={receiverBlocked}>
+              <Image className="text-primary-600 h-[23px] w-[23px] cursor-pointer" />
+            </Button>
+            <Input
+              value={value}
+              onChange={handleChange}
+              onKeyDown={handleKeyDown}
+              className="px-3 bg-slate-100 hover:bg-slate-200 flex-1 h-fit"
+              placeholder= {receiverBlocked ? "You cannot send a message to this user" : "Write a message..."}
+              disabled={receiverBlocked}
+            />
+            <Button type="submit" className="flex-center h-fit" onClick={handleSubmit} disabled={receiverBlocked}>
+              <SendHorizontal className="h-5 w-5" />
+            </Button>
+          </div>
+        )
+      }
+      
     </div>
   );
 };

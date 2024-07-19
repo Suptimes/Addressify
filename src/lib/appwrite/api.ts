@@ -1014,7 +1014,6 @@ export async function toggleBlockUser(userId: string, blockedUser: string) {
             throw new Error("Updating blocked users did not register.");
         }
 
-        console.log("Updated user document response:", updateBlockedUser);
         return updateBlockedUser;
     } catch (error) {
         console.log(error);

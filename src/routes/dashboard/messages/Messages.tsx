@@ -39,7 +39,7 @@ const Messages = () => {
   return (
     <div className="middlePage flex">
       <div className="flex-[2] h-[calc(100vh-60px)]">
-        <ChatMessages userId ={userId} chatId={chatId} receiver={receiver} toggleChatDetails={toggleChatDetails} />
+        <ChatMessages userId ={userId} chatId={chatId} receiver={receiver} toggleChatDetails={toggleChatDetails} userBlockedList={userBlockedList}/>
       </div>
       <Separator className="h-[calc(100vh-60px)] w-[0.5px]" orientation="vertical"/>
       <div className="flex-[1] flex flex-col h-100 max-h-[calc(100vh-60px)]">

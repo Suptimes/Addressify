@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { toast } from "sonner";
 import { UserX2 } from "lucide-react"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useBlockUser } from "@/lib/react-query/queriesAndMutations";
 
 interface UserProp  {
@@ -19,11 +19,18 @@ interface UserProp  {
 const ChatDetails = ({userId, receiver, userBlockedList}: UserProp) => {
   
   const receiverId = receiver?.$id
+
   const [isBlocking, setIsBlocking] = useState(false)
   const [receiverBlocked, setReceiverBlocked] = useState(false)
   const { mutate: blockOrUnblockUser } = useBlockUser(setReceiverBlocked);
 
-  // const receiverBlocked = userBlockedList?.includes(receiverId)
+  useEffect(() => {
+    if (userBlockedList) {
+        const receiverBlockedInitially = userBlockedList?.includes(receiverId);
+        setReceiverBlocked(receiverBlockedInitially);
+    }
+}, [userBlockedList, receiverId]);
+
   
 
   const handleBlockOrUnblockUser = (userId, receiverId, setReceiverBlocked) => {
@@ -31,12 +38,12 @@ const ChatDetails = ({userId, receiver, userBlockedList}: UserProp) => {
     blockOrUnblockUser({ userId, blockedUser: receiverId }, {
         onSuccess: () => {
             setIsBlocking(false);
-            toast(receiverBlocked ? "User unblocked successfully" : "User blocked successfully");
+            toast.success(receiverBlocked ? "User unblocked successfully" : "User blocked successfully");
         },
         onError: (error) => {
             setIsBlocking(false);
             console.error("Error blocking/unblocking user:", error);
-            toast("Failed to block/unblock user");
+            toast.error("Failed to block/unblock user");
         }
     });
 };
