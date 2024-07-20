@@ -18,16 +18,19 @@ interface ChatProps {
     name: string;
     imageUrl: string;
     $id: string;
+    blockedUsers: []
   }
   toggleChatDetails: () => void
+  setLastMessage: () => void
   userBlockedList: []
 }
 
-const ChatMessages = ({ userId, chatId, receiver, toggleChatDetails, userBlockedList }: ChatProps) => {
+const ChatMessages = ({ userId, chatId, receiver, toggleChatDetails, userBlockedList, setLastMessage }: ChatProps) => {
 
   const [ value, setValue ] = useState("");
   const [ messages, setMessages ] = useState([]);
   const [ receiverBlocked, setReceiverBlocked ] = useState(false);
+  const [ senderBlocked, setSenderBlocked ] = useState(false);
   const { id:xChat } = useParams()
 
   const endRef = useRef(null);
@@ -35,6 +38,7 @@ const ChatMessages = ({ userId, chatId, receiver, toggleChatDetails, userBlocked
   const limit = 20;
   const offset = 0;
   const receiverId = receiver?.$id
+  const receiverBlockedList = receiver?.blockedUsers
 
   const { data: allMessages, isPending: isMessagesLoading } = useGetChatMessages(chatId, limit, offset);
   const { mutate: sendMessage } = useCreateMessage();
@@ -60,6 +64,13 @@ const ChatMessages = ({ userId, chatId, receiver, toggleChatDetails, userBlocked
       }
   }, [userBlockedList, receiverId]);
   
+  useEffect(() => {
+      if (receiverBlockedList) {
+          const senderBlocked = receiverBlockedList?.includes(userId);
+          setSenderBlocked(senderBlocked);
+      }
+  }, [receiverBlockedList, userId])
+  
 
   useEffect(() => {
     const client = new Client();
@@ -72,6 +83,8 @@ const ChatMessages = ({ userId, chatId, receiver, toggleChatDetails, userBlocked
       console.log("response",response)
       if (response?.events.includes("databases.*.collections.*.documents.*.update")) {
         const { lastMessage, lastMessageSender } = response.payload;
+
+        setLastMessage(lastMessage)
   
         if (lastMessageSender !== userId) {
           const newMessageToShow = {
@@ -245,9 +258,14 @@ const ChatMessages = ({ userId, chatId, receiver, toggleChatDetails, userBlocked
                     }
                   </div>
                 </div>
-              );
+              )
             })
           )}
+          {(receiverBlocked || senderBlocked) && (
+              <div className="flex mx-auto text-center p-3 text-slate-600 text-sm">
+                You cannot send a message to this user!
+              </div>
+            )}
           <div ref={endRef}></div>
         </div>
       ) : (
@@ -259,7 +277,7 @@ const ChatMessages = ({ userId, chatId, receiver, toggleChatDetails, userBlocked
 
       {/* BOTTOM SECTION */}
       {
-        !receiverBlocked && (
+        !receiverBlocked && !senderBlocked && (
           <div className="flex items-center justify-between gap-3 px-2 rounded-md pt-1 pb-3">
             <Button className="p-0 flex-center bg-transparent hover:bg-transparent" disabled={receiverBlocked}>
               <Image className="text-primary-600 h-[23px] w-[23px] cursor-pointer" />

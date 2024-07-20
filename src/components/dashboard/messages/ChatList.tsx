@@ -3,16 +3,18 @@ import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import { useGetUserChats } from '@/lib/react-query/queriesAndMutations'
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 
 interface ListProp {
     userId: string;
     OpenChatDetails: () => void;
+    lastMessage: string
 }
 
-const ChatList = ({ userId, OpenChatDetails }: ListProp) => {
+const ChatList = ({ userId, OpenChatDetails, lastMessage }: ListProp) => {
     const [ userChats, setUserChats ] = useState(null)
     const [searchTerm, setSearchTerm] = useState("")
+    const { id: chatId } = useParams()
 
     const {data: userChatsList, isPending: isUserChatsLoading} = useGetUserChats(userId)
 
@@ -73,7 +75,12 @@ const ChatList = ({ userId, OpenChatDetails }: ListProp) => {
                                         <span className='font-semibold'>
                                             {receiver?.name || "User"}
                                         </span>
-                                        <p className='text-sm'>{chat?.lastMessage || "Start a conversation..."}</p>
+                                        <p className='text-sm'>{
+                                            chatId === chat?.$id ?
+                                                lastMessage !== "" ? lastMessage : chat?.lastMessage || "Start a conversation..."
+                                                : chat?.lastMessage || "Start a conversation..."
+                                            }
+                                        </p>
                                     </div>
                                 </div>
                                 <div className='w-full'>
