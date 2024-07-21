@@ -960,27 +960,42 @@ export async function deleteMessage(messageId: string){
     }
 }
 
-export async function getInfiniteMessages({ pageParam }: {pageParam: number}) {
-    const queries : any[] = [Query.orderDesc("$updatedAt"), Query.limit(10)]
+export async function getInfiniteMessages({ pageParam , chatId }: { pageParam?: string, chatId?: string }) {
+    console.log("pageParam",pageParam)
 
-    if(pageParam) {
-        queries.push(Query.cursorAfter(pageParam.toString()))
+    
+    const queries: any[] = [
+        Query.equal("chat", chatId),
+        Query.orderDesc("$updatedAt"), 
+        Query.limit(10),
+    ];
+  
+    if (pageParam) {
+      queries.push(Query.cursorAfter(pageParam));
     }
 
+    console.log("queries",queries)
+  
     try {
-        const messages = await databases.listDocuments(
-            appwriteConfig.databaseId,
-            appwriteConfig.messagesCollectionId,
-            queries
-        )
-        
-        if(!messages) throw new Error("No messages found")
-            
-            return messages
-        } catch (error) {
-            console.log(error)
-        }
-} // not used
+      const messages = await databases.listDocuments(
+        appwriteConfig.databaseId,
+        appwriteConfig.messagesCollectionId,
+        queries
+      );
+  
+      if (!messages.documents) throw new Error("No messages found");
+      
+      console.log("DATAAAAAAA:", messages.documents)
+      return {
+        data: messages.documents,
+        nextPage: messages.documents.length > 0 ? messages.documents[messages.documents.length - 1].$id : null,
+      };
+    } catch (error) {
+      console.log(error);
+      throw new Error("Error fetching messages");
+    }
+}
+
 
 export async function toggleBlockUser(userId: string, blockedUser: string) {
     if (!userId || !blockedUser) throw new Error("No IDs provided");
