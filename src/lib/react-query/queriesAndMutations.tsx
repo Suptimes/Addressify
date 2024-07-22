@@ -378,7 +378,10 @@ export const useMessages = (chatId, lastMessageId) => {
     return useInfiniteQuery({
         queryKey: [QUERY_KEYS.GET_INFINITE_MESSAGES, chatId],
         queryFn: ({ pageParam = lastMessageId }) => getInfiniteMessages({ chatId, pageParam }),
-        getNextPageParam: (lastPage) => lastPage.nextPage
+        getNextPageParam: (lastPage) => lastPage.nextPage,
+        staleTime: 1000 * 60 * 5, // 5 minutes
+        cacheTime: 1000 * 60 * 10, // 10 minutes
+        refetchOnWindowFocus: false, // Do not refetch on window focus
     });
 };
 

@@ -4,11 +4,11 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { deleteMessage } from "@/lib/appwrite/api";
 import { appwriteConfig } from "@/lib/appwrite/config";
-import { useCreateMessage, useGetChatMessages, useMessages } from "@/lib/react-query/queriesAndMutations";
+import { useCreateMessage, useMessages } from "@/lib/react-query/queriesAndMutations";
 import { multiFormatDateString } from "@/lib/utils";
 import { Client } from "appwrite";
 import { AlertTriangle, Check, Image, SendHorizontal, Trash2 } from "lucide-react";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 
 interface ChatProps {
@@ -31,49 +31,39 @@ const ChatMessages = ({ userId, chatId, receiver, toggleChatDetails, userBlocked
   const [ messages, setMessages ] = useState([]);
   const [ receiverBlocked, setReceiverBlocked ] = useState(false);
   const [ senderBlocked, setSenderBlocked ] = useState(false);
-  const [ isDeleting, setIsDeleting ] = useState(false);
-  const [ fetchMoreMessages, setFetchMoreMessages ] = useState(false);
-  // const [ loadingMoreMsgs, setLoadingMoreMsgs ] = useState(false);
+  const [ scrollDown, setScrollDown ] = useState(false);
+  const [ notScrollDown, setNotScrollDown ] = useState(false);
 
   
   const { id:xChat } = useParams()
   const endRef = useRef(null)
-  // const scrollRef = useRef(null)
   const messageListRef = useRef(null);
-
-  const limit = 10;
-  const offset = 0;
 
   const receiverId = receiver?.$id
   const receiverBlockedList = receiver?.blockedUsers
+  const lastMessageIdInArray = messages?.[0]?.id
   
-  
-  // const lastMessageIdInArray = messages?.[0]?.id
-  const lastMessageIdInArray = "669a42910039fefad63c"
-  
-  // console.log("lastMessageIdInArray", lastMessageIdInArray)
-  console.log("messages", messages)
  
   const { mutate: sendMessage } = useCreateMessage();
-  const { data: allMessages, isPending: isMessagesLoading } = useGetChatMessages(chatId, limit, offset)
-  const { data: allOldMessages, error, fetchNextPage, hasNextPage, isFetchingNextPage, status } = useMessages(chatId, lastMessageIdInArray)
-  // const { fetchNextPage, hasNextPage, isFetchingNextPage } = useMessages(chatId, lastMessageIdInArray)
+  const { isFetched, refetch: refetchMessage ,isFetching: isMessagesLoading, data: allMessages, error, fetchNextPage, hasNextPage, isFetchingNextPage, status } = useMessages(chatId, lastMessageIdInArray)
 
 
   // FETCHING EXISTING MESSAGES
 
   useEffect(() => {
-    if (allMessages && !isMessagesLoading) {
-      const formattedMessages = allMessages.map(message => ({
-        body: message.body,
-        senderId: message.senderId.$id,
-        timestamp: message.$createdAt,
-        id: message.$id,
-        check: message.check,
-      }));
-      setMessages(formattedMessages.reverse());
+    if (allMessages) {
+      const newMessages = allMessages.pages?.flatMap(page =>
+        page.data?.map(message => ({
+          body: message.body,
+          senderId: message.senderId.$id,
+          timestamp: message.$createdAt,
+          id: message.$id,
+          check: message.check,
+        }))
+      );
+      setMessages(newMessages.reverse());
     }
-  }, [isMessagesLoading, xChat, deleteMessage]);
+  }, [allMessages]);
   
 
     // BLOCKED USERS
@@ -138,10 +128,14 @@ const ChatMessages = ({ userId, chatId, receiver, toggleChatDetails, userBlocked
   // CHAT SCROLL
 
   useEffect(() => {
-    if(!isDeleting && !fetchMoreMessages && !isFetchingNextPage) {
-      endRef.current?.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [messages]);
+    if(!notScrollDown)
+      endRef.current?.scrollIntoView({ behavior: "instant" })
+  }, [messages])
+
+  useEffect(() => {
+    endRef.current?.scrollIntoView({ behavior: "smooth" })
+    setScrollDown(false)
+  }, [scrollDown])
 
   
 
@@ -178,6 +172,7 @@ const ChatMessages = ({ userId, chatId, receiver, toggleChatDetails, userBlocked
         status: 'sending',
       },
     ]);
+    setScrollDown(true)
 
     setValue("");
 
@@ -219,42 +214,31 @@ const ChatMessages = ({ userId, chatId, receiver, toggleChatDetails, userBlocked
   //DELETING A MESSAGE
 
   const handleDeleteMessage = (messageId) => {
-    setIsDeleting(true)
     deleteMessage(messageId)
     setMessages(prev => messages.filter(message=> message.id !== messageId))
-    setIsDeleting(false)
   }
 
 
-  // INFINITE SCROLL
-
+  // INFINITE SCROLL (Button)
   const loadMoreMessages = async () => {
     if (hasNextPage) {
-      const currentScrollHeight = messageListRef.current.scrollHeight;
-      setFetchMoreMessages(true)
-      await fetchNextPage({ pageParam: lastMessageIdInArray });
-      const newScrollHeight = messageListRef.current.scrollHeight;
-      messageListRef.current.scrollTop = newScrollHeight - currentScrollHeight;
+      const currentScrollHeight = messageListRef.current.scrollHeight
+      
+      await fetchNextPage()
+      setNotScrollDown(true)
+      
+      // Adding a slight delay to ensure DOM has updated
+      setTimeout(() => {
+        const newScrollHeight = messageListRef.current.scrollHeight;
+        
+            // Adjust scroll position to maintain the user's view instantly
+            messageListRef.current.scrollTo({
+                top: messageListRef.current.scrollTop + (newScrollHeight - currentScrollHeight),
+                behavior: 'instant'
+            })
+        }, 1)
     }
-  }
-  
-  useEffect(() => {
-    if (fetchMoreMessages) {
-      // console.log("DATAPAGES:", allOldMessages.pages)
-      const newMessages = allOldMessages.pages.reverse()
-      const newMessageFetched = newMessages[0].data.map(message => ({
-        body: message.body,
-        senderId: message.senderId.$id,
-        timestamp: message.$createdAt,
-        id: message.$id,
-        check: message.check,
-      }));
-      const reversedNewMessages = newMessageFetched.reverse()
-      console.log("NEWMESSAGES", reversedNewMessages)
-      setMessages(prevMessages => [...reversedNewMessages, ...prevMessages])
-      setFetchMoreMessages(false)
-    }
-  }, [fetchMoreMessages]);
+}
 
 
   return (
@@ -283,16 +267,16 @@ const ChatMessages = ({ userId, chatId, receiver, toggleChatDetails, userBlocked
           onClick={toggleChatDetails}
         />
       </div>
-      <Separator /></>)}
+      <Separator className="h-[0.5px]" /></>)}
 
       {/* MIDDLE SECTION */}
       {chatId !== "chat" ? (
         <div ref={messageListRef} className="flex-1 flex flex-col bg-slate-100 p-5 py-2 gap-2 w-full overflow-y-auto custom-scrollbar">
-          {isMessagesLoading ? (
+          {(isMessagesLoading && !isFetchingNextPage) ? (
             <h4 className="flex-center w-full h-full gap-3">
               <Loader brightness="brightness-50" />
             </h4>
-          ) : allMessages === undefined ? (
+          ) : allMessages === (undefined || null) ? (
             <div className="flex-center w-full h-full bg-slate-100">
               <h4>Write a message to start a conversation</h4>
             </div>
@@ -305,12 +289,6 @@ const ChatMessages = ({ userId, chatId, receiver, toggleChatDetails, userBlocked
                   "Load More Messages"
                 )}
               </div>
-
-              {/* {isFetchingNextPage && (
-                <div className="flex-center w-full h-full gap-3">
-                  <Loader brightness="brightness-50" />
-                </div>
-              )} */}
               {messages.map((message, index) => {
                 const ownMsg = userId === message?.senderId;
                 const messageSent = message?.check === true;
@@ -359,13 +337,13 @@ const ChatMessages = ({ userId, chatId, receiver, toggleChatDetails, userBlocked
           <h4>Click on a chat to start a conversation</h4>
         </div>
       )}
-
+      <Separator className="h-[0.5px]"/>
 
 
       {/* BOTTOM SECTION */}
       {
         !receiverBlocked && !senderBlocked && (
-          <div className="flex items-center justify-between gap-3 px-2 rounded-md pt-1 pb-3">
+          <div className="flex items-center justify-between gap-3 px-3 rounded-md pt-2 pb-3">
             <Button className="p-0 flex-center bg-transparent hover:bg-transparent" disabled={receiverBlocked}>
               <Image className="text-primary-600 h-[23px] w-[23px] cursor-pointer" />
             </Button>
@@ -391,6 +369,45 @@ const ChatMessages = ({ userId, chatId, receiver, toggleChatDetails, userBlocked
 export default ChatMessages;
 
 
+
+  // useEffect(() => {
+  //   if (allMessages && !isMessagesLoading) {
+  //     const formattedMessages = allMessages.map(message => ({
+  //       body: message.body,
+  //       senderId: message.senderId.$id,
+  //       timestamp: message.$createdAt,
+  //       id: message.$id,
+  //       check: message.check,
+  //     }));
+  //     setMessages(formattedMessages.reverse());
+
+  //     const refetchOldMessages = async () => {
+  //       await refetchMessage({ pageParam: lastMessageIdInArray });
+  //       setInitialFetch(true);
+  //     };
+
+  //     refetchOldMessages();
+  //   }
+  // }, [isMessagesLoading, xChat, allMessages, refetchMessage, lastMessageIdInArray]);
+
+
+  // useEffect(() => {
+  //   if (fetchMoreMessages) {
+  //     // console.log("DATAPAGES:", allOldMessages.pages)
+  //     const newMessages = allMessages.pages.reverse()
+  //     const newMessageFetched = newMessages[0].data.map(message => ({
+  //       body: message.body,
+  //       senderId: message.senderId.$id,
+  //       timestamp: message.$createdAt,
+  //       id: message.$id,
+  //       check: message.check,
+  //     }));
+  //     const reversedNewMessages = newMessageFetched.reverse()
+  //     console.log("NEWMESSAGES", reversedNewMessages)
+  //     setMessages(prevMessages => [...reversedNewMessages, ...prevMessages])
+  //     setFetchMoreMessages(false)
+  //   }
+  // }, [fetchMoreMessages]);
 
 
 // MIDDLE SECTION

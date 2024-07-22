@@ -961,7 +961,7 @@ export async function deleteMessage(messageId: string){
 }
 
 export async function getInfiniteMessages({ pageParam , chatId }: { pageParam?: string, chatId?: string }) {
-    console.log("pageParam",pageParam)
+    // console.log("pageParam",pageParam)
 
     
     const queries: any[] = [
@@ -974,7 +974,7 @@ export async function getInfiniteMessages({ pageParam , chatId }: { pageParam?: 
       queries.push(Query.cursorAfter(pageParam));
     }
 
-    console.log("queries",queries)
+    // console.log("queries",queries)
   
     try {
       const messages = await databases.listDocuments(
@@ -985,7 +985,7 @@ export async function getInfiniteMessages({ pageParam , chatId }: { pageParam?: 
   
       if (!messages.documents) throw new Error("No messages found");
       
-      console.log("DATAAAAAAA:", messages.documents)
+    //   console.log("DATAAAAAAA:", messages.documents)
       return {
         data: messages.documents,
         nextPage: messages.documents.length > 0 ? messages.documents[messages.documents.length - 1].$id : null,
