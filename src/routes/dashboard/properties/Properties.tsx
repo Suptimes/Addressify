@@ -39,12 +39,12 @@ const Properties = () => {
 
   if (userLoading) {
     return (
-          <div className="middlePage flex w-full h-full my-10 justify-center">
-            <Loader w={40} h={40} brightness="brightness-50"/>
-          </div>
-          )
+      <div className="middlePage flex-center w-full">
+        <Loader w={40} h={40} brightness="brightness-50" />
+      </div>
+    )
   }
-  
+
   if (error) {
     return <div className="middlePage flex w-full h-full my-10 justify-center">Error loading user data</div>; // Handle potential errors
   }
@@ -55,21 +55,21 @@ const Properties = () => {
       <div className="common-container-noscroll">
         <div className="max-w-5xl flex-start gap-3 justify-start w-full">
           <div className="max-w-5xl flex-start gap-3 justify-start w-full">
-            <img 
-              src="/icons/add-post.svg" 
+            <img
+              src="/icons/add-post.svg"
               width={32}
-              height={32} 
-              alt="add" 
-              className="brightness-0"/>
+              height={32}
+              alt="add"
+              className="brightness-0" />
             <h2 className="h3-bold lg:h2-bold text-left w-full">My Properties</h2>
           </div>
           <div>
-          <Button 
-            type="submit" 
-            className="shad-button_primary whitespace-nowrap max-md:scale-125 mr-3 max-md:mr-5"
+            <Button
+              type="submit"
+              className="shad-button_primary whitespace-nowrap max-md:scale-125 mr-3 max-md:mr-5"
             >
-            <Link to={"/create-post"}>Create post</Link>
-          </Button>
+              <Link to={"/create-post"}>Create post</Link>
+            </Button>
           </div>
         </div>
         <div className="container">

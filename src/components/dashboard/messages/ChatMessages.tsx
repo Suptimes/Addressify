@@ -282,13 +282,19 @@ const ChatMessages = ({ userId, chatId, receiver, toggleChatDetails, userBlocked
             </div>
           ) : (
             <>
-              <div onClick={loadMoreMessages} className="flex-center p-2 text-sm bg-transparent text-slate-500 cursor-pointer">
-                {isFetchingNextPage ? (
-                  <Loader brightness="brightness-50" />
-                ) : (
-                  "Load More Messages"
-                )}
-              </div>
+              { 
+                hasNextPage &&
+                (
+                  <div onClick={loadMoreMessages} className="flex-center p-2 text-sm bg-transparent text-slate-500 cursor-pointer">
+                  {isFetchingNextPage ? (
+                    <Loader brightness="brightness-50" />
+                  ) : (
+                    "Load More Messages"
+                  )}
+                </div>
+                )
+              }
+
               {messages.map((message, index) => {
                 const ownMsg = userId === message?.senderId;
                 const messageSent = message?.check === true;

@@ -359,21 +359,6 @@ export const useGetChatMessages = (chatId: string, limit = 20, offset = 0) => {
     });
 }
 
-// export const useGetInfiniteMessages = () => {
-//     return useInfiniteQuery({
-//         queryKey: [QUERY_KEYS.GET_INFINITE_MESSAGES],
-//         queryFn: getInfiniteMessages,
-//         getNextPageParam: (lastPage) => {
-//           if(lastPage && lastPage.documents.length === 0) return null
-          
-//           const lastId = lastPage?.documents[lastPage?.documents.length - 1].$id
-
-//           return lastId
-//         }
-//     })
-    
-// }
-
 export const useMessages = (chatId, lastMessageId) => {
     return useInfiniteQuery({
         queryKey: [QUERY_KEYS.GET_INFINITE_MESSAGES, chatId],

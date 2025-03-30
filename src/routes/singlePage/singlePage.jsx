@@ -42,7 +42,7 @@ const SinglePage = () => {
   const handleSendMessage = async () => {
     setChatLoading(true)
     const chatId = await initiateChat(senderId, receiverId)
-    if (chatId){
+    if (chatId) {
       navigate(`/messages/${chatId}`)
       setChatLoading(false)
     }
@@ -51,11 +51,11 @@ const SinglePage = () => {
   // console.log("PARTICIPANTS:", senderId , receiverId)
   return (
     <div className="singlePage">
-      
+
       <div className="details">
         <div className="wrapper">
 
-          <Slider images={singlePostData.images}/>
+          <Slider images={singlePostData.images} />
 
           <div className="info">
             <div className="top">
@@ -131,25 +131,25 @@ const SinglePage = () => {
           <div className="listHoriz">
 
             <div className="feature">
-                <img src="/school.png" alt="pet" />
-                <div className="featureText">
-                  <span>School</span>
-                  <p>550m away</p>
-                </div>
+              <img src="/school.png" alt="pet" />
+              <div className="featureText">
+                <span>School</span>
+                <p>550m away</p>
+              </div>
             </div>
             <div className="feature">
-                <img src="/bus.png" alt="pet" />
-                <div className="featureText">
-                  <span>Bus/Tram Station</span>
-                  <p>100m away</p>
-                </div>
+              <img src="/bus.png" alt="pet" />
+              <div className="featureText">
+                <span>Bus/Tram Station</span>
+                <p>100m away</p>
+              </div>
             </div>
             <div className="feature">
-                <img src="/restaurant.png" alt="pet" />
-                <div className="featureText">
-                  <span>Restaurent</span>
-                  <p>200m away</p>
-                </div>
+              <img src="/restaurant.png" alt="pet" />
+              <div className="featureText">
+                <span>Restaurent</span>
+                <p>200m away</p>
+              </div>
             </div>
 
           </div>
@@ -159,14 +159,14 @@ const SinglePage = () => {
             <Map items={[singlePostData]} />
           </div>
           <div className="buttons">
-            <BookAppointment/>
-            <button 
-              className="group" 
+            <BookAppointment />
+            <button
+              className="group"
               onClick={handleSendMessage}>
-              {!chatLoading && <img src="/icons/chat.svg" alt="Send a message" className="brightness-0 group-hover:brightness-200"/>}
-              {chatLoading ? 
-                <div className="flex-center gap-3 group"><Loader h={18} w={18} brightness="brightness-0" hover="hover:brightness-200"/> Messaging...</div>
-               : "Send Message"}
+              {!chatLoading && <img src="/icons/chat.svg" alt="Send a message" className="brightness-0 group-hover:brightness-200" />}
+              {chatLoading ?
+                <div className="flex-center gap-3 group"><Loader h={18} w={18} brightness="brightness-0" hover="hover:brightness-200" /> Messaging...</div>
+                : "Send Message"}
             </button>
             {/* <button>
               <img src="/calendar1.png" alt="Send a message" />

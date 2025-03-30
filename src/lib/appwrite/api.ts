@@ -1,11 +1,11 @@
-import {ID, ImageGravity, Query} from "appwrite"
+import { ID, ImageGravity, Query } from "appwrite"
 import { account, appwriteConfig, avatars, databases, storage } from "./config"
 import { IMessage, INewAvailability, INewBooking, INewMessage, INewPost, INewUser, IUpdatePost, IUpdateUser } from "@/types"
 
 
 // USER SECTION
-export async function createUserAccount(user: INewUser){
-    try{
+export async function createUserAccount(user: INewUser) {
+    try {
         const newAccount = await account.create(
             ID.unique(),
             user.email,
@@ -13,7 +13,7 @@ export async function createUserAccount(user: INewUser){
             user.name,
         )
 
-        if(!newAccount) throw new Error("Account creation failed")
+        if (!newAccount) throw new Error("Account creation failed")
 
         const avatarUrl = avatars.getInitials(user.name)
 
@@ -26,7 +26,7 @@ export async function createUserAccount(user: INewUser){
         })
 
         return newUser
-        
+
     } catch (error) {
         console.log(error)
         return error
@@ -69,7 +69,7 @@ export async function saveUserToDB(user: {
 export async function signInAccount(user: { email: string; password: string; }) {
     try {
         const session = await account.createEmailPasswordSession(user.email, user.password)
-        
+
         return session
     } catch (error) {
         console.log(error)
@@ -81,7 +81,7 @@ export async function getCurrentUser() {
     try {
         const currentAccount = await account.get()
 
-        if(!currentAccount) throw new Error("No current account")
+        if (!currentAccount) throw new Error("No current account")
 
         const currentUser = await databases.listDocuments(
             appwriteConfig.databaseId,
@@ -89,18 +89,18 @@ export async function getCurrentUser() {
             [Query.equal('accountId', currentAccount.$id)]
         )
 
-        if(!currentUser) throw new Error("No user found")
+        if (!currentUser) throw new Error("No user found")
 
         return currentUser.documents[0]
 
-    } catch(error) {
+    } catch (error) {
         console.log(error)
     }
 }
 
-export async function signOutAccount (){
+export async function signOutAccount() {
     try {
-        
+
         localStorage.setItem('isAuthd', 'false')
         localStorage.removeItem('isAuthd')
         const session = await account.deleteSession("current")
@@ -114,8 +114,8 @@ export async function signOutAccount (){
 // PROPERTY SECTION
 
 
-export async function createPost (post: INewPost) {
-    try{
+export async function createPost(post: INewPost) {
+    try {
         // Array to store uploaded file URLs and IDs
         const imageUrls: string[] = [];
         const imageIds: string[] = [];
@@ -169,7 +169,7 @@ export async function createPost (post: INewPost) {
             }
         )
 
-        if(!newPost) {
+        if (!newPost) {
             // Clean up by deleting uploaded files if document creation fails
             for (const imageId of imageIds) {
                 await deleteFile(imageId);
@@ -209,7 +209,7 @@ export function getFilePreview(fileId: string) {
         )
 
         if (!fileObject) throw new Error('Failed to generate file preview URL');
-        
+
         // Convert URL object to string
         const fileUrl = fileObject.toString()
 
@@ -236,7 +236,7 @@ export async function getRecentPosts() {
         [Query.orderDesc("$createdAt"), Query.limit(20)]
     )
 
-    if(!posts) throw new Error("Failed to get recent posts.")
+    if (!posts) throw new Error("Failed to get recent posts.")
 
     return posts
 }
@@ -253,9 +253,9 @@ export async function likePost(postId: string, likesArray: string[]) {
             }
         )
 
-        if(!updatedPost) throw new Error("Like did not register.")
+        if (!updatedPost) throw new Error("Like did not register.")
 
-            return updatedPost
+        return updatedPost
     } catch (error) {
         console.log(error)
     }
@@ -274,9 +274,9 @@ export async function savePost(postId: string, userId: string) {
             }
         )
 
-        if(!updatedPost) throw new Error("Save did not register.")
+        if (!updatedPost) throw new Error("Save did not register.")
 
-            return updatedPost
+        return updatedPost
     } catch (error) {
         console.log(error)
     }
@@ -291,9 +291,9 @@ export async function deleteSavedPost(savedRecordId: string) {
             savedRecordId,
         )
 
-        if(!statusCode) throw new Error("Delete saved post did not register.")
+        if (!statusCode) throw new Error("Delete saved post did not register.")
 
-            return { status: "ok" }
+        return { status: "ok" }
     } catch (error) {
         console.log(error)
     }
@@ -312,7 +312,7 @@ export async function getPostById(postId?: string) {
         if (!post || Object.keys(post).length === 0) {
             throw new Error("Post not found.")
         }
-        
+
         return post
     } catch (error) {
         console.log(error)
@@ -320,19 +320,19 @@ export async function getPostById(postId?: string) {
 }
 
 
-export async function updatePost (post: IUpdatePost) {
+export async function updatePost(post: IUpdatePost) {
     const hasNewFiles = post.newFiles && post.newFiles.length > 0;
     const { newFiles, removedFileIndices } = post;
 
-    try{
+    try {
         // Fetch the current user to validate ownership
         const currentUser = await getCurrentUser();
         if (!currentUser) {
             throw new Error("Unable to retrieve current user");
         }
 
-         // Fetch the existing post to validate the owner
-         const existingPost = await databases.getDocument(
+        // Fetch the existing post to validate the owner
+        const existingPost = await databases.getDocument(
             appwriteConfig.databaseId,
             appwriteConfig.propertyCollectionId,
             post.postId
@@ -354,27 +354,27 @@ export async function updatePost (post: IUpdatePost) {
 
         // Remove old files if needed
         if (removedFileIndices.length > 0) {
-        removedFileIndices.forEach(index => {
-            if (index < updatedImageUrls.length && index < updatedImageIds.length) {
-            updatedImageUrls.splice(index, 1);
-            updatedImageIds.splice(index, 1);
-            }
-        });
+            removedFileIndices.forEach(index => {
+                if (index < updatedImageUrls.length && index < updatedImageIds.length) {
+                    updatedImageUrls.splice(index, 1);
+                    updatedImageIds.splice(index, 1);
+                }
+            });
         }
-            // Upload new files
+        // Upload new files
         if (hasNewFiles) {
             for (const file of newFiles) {
-            const uploadedFile = await uploadFile(file);
-            if (!uploadedFile) throw new Error('File upload failed');
-    
-            const fileUrl = await getFilePreview(uploadedFile.$id);
-            if (!fileUrl) {
-                await deleteFile(uploadedFile.$id);
-                throw new Error('Failed to generate file URL');
-            }
-    
-            updatedImageUrls.push(fileUrl);
-            updatedImageIds.push(uploadedFile.$id);
+                const uploadedFile = await uploadFile(file);
+                if (!uploadedFile) throw new Error('File upload failed');
+
+                const fileUrl = await getFilePreview(uploadedFile.$id);
+                if (!fileUrl) {
+                    await deleteFile(uploadedFile.$id);
+                    throw new Error('Failed to generate file URL');
+                }
+
+                updatedImageUrls.push(fileUrl);
+                updatedImageIds.push(uploadedFile.$id);
             }
         }
 
@@ -403,7 +403,7 @@ export async function updatePost (post: IUpdatePost) {
             }
         )
 
-        if(!updatedPost) {
+        if (!updatedPost) {
             // if (hasFileToUpdate) {
             //     await deleteFile(image.imageId);
             // }
@@ -423,16 +423,16 @@ export async function updatePost (post: IUpdatePost) {
 }
 
 
-export async function deletePost (postId: string, imageId: string) {
-    if(!postId || !imageId) throw new Error("Cannot find post to delete.")
-        
-        try {
-            await databases.deleteDocument(
+export async function deletePost(postId: string, imageId: string) {
+    if (!postId || !imageId) throw new Error("Cannot find post to delete.")
+
+    try {
+        await databases.deleteDocument(
             appwriteConfig.databaseId,
             appwriteConfig.propertyCollectionId,
             postId,
         )
-        
+
         return { status: "ok" }
     } catch (error) {
         console.log(error)
@@ -440,10 +440,10 @@ export async function deletePost (postId: string, imageId: string) {
 }
 
 
-export async function getInfinitePosts({ pageParam }: {pageParam: number}) {
-    const queries : any[] = [Query.orderDesc("$updatedAt"), Query.limit(10)]
+export async function getInfinitePosts({ pageParam }: { pageParam: number }) {
+    const queries: any[] = [Query.orderDesc("$updatedAt"), Query.limit(10)]
 
-    if(pageParam) {
+    if (pageParam) {
         queries.push(Query.cursorAfter(pageParam.toString()))
     }
 
@@ -453,13 +453,13 @@ export async function getInfinitePosts({ pageParam }: {pageParam: number}) {
             appwriteConfig.propertyCollectionId,
             queries
         )
-        
-        if(!posts) throw new Error("No posts found")
-            
-            return posts
-        } catch (error) {
-            console.log(error)
-        }
+
+        if (!posts) throw new Error("No posts found")
+
+        return posts
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 export async function searchPosts(searchTerm: string) {
@@ -469,19 +469,19 @@ export async function searchPosts(searchTerm: string) {
             appwriteConfig.propertyCollectionId,
             [Query.search("title", searchTerm)]
         )
-        
-        if(!posts) throw new Error("No posts found")
 
-            return posts
-        } catch (error) {
-            console.log(error)
+        if (!posts) throw new Error("No posts found")
+
+        return posts
+    } catch (error) {
+        console.log(error)
     }
 }
 
 
 export async function getSaveById(saveId?: string) {
     if (!saveId) throw new Error("Save Id required")
-    
+
     try {
         const save = await databases.getDocument(
             appwriteConfig.databaseId,
@@ -491,7 +491,7 @@ export async function getSaveById(saveId?: string) {
         if (!save || Object.keys(save).length === 0) {
             throw new Error("Save not found.")
         }
-        
+
         return save
     } catch (error) {
         console.error("Error fetching save by ID:", error)
@@ -513,7 +513,7 @@ export async function getUserById(userId?: string) {
         if (!user || Object.keys(user).length === 0) {
             throw new Error("User not found.")
         }
-        
+
         return user
     } catch (error) {
         console.log(error)
@@ -522,25 +522,25 @@ export async function getUserById(userId?: string) {
 
 // PROFILE SECTION
 
-export async function updateProfile (user: IUpdateUser) {
+export async function updateProfile(user: IUpdateUser) {
     const hasFileToUpdate = user.file.length > 0
-    
-    try{
-        
+
+    try {
+
         let image = {
             imageUrl: user.imageUrl,
             imageId: user.imageId,
-        }        
+        }
 
-        if(hasFileToUpdate) {
+        if (hasFileToUpdate) {
             const uploadedFile = await uploadFile(user.file[0])
-            if(!uploadedFile) {
+            if (!uploadedFile) {
                 throw new Error('File upload failed')
             }
 
             // Get file URL
             const fileUrl = await getFilePreview(uploadedFile.$id)
-            if(!fileUrl) {
+            if (!fileUrl) {
                 await deleteFile(uploadedFile.$id)
                 throw new Error('Failed to generate file URL')
             }
@@ -571,7 +571,7 @@ export async function updateProfile (user: IUpdateUser) {
             }
         )
 
-        if(!updatedProfile) {
+        if (!updatedProfile) {
             if (hasFileToUpdate) {
                 await deleteFile(image.imageId);
             }
@@ -582,9 +582,9 @@ export async function updateProfile (user: IUpdateUser) {
         if (hasFileToUpdate && user.imageId && user.imageId !== image.imageId) {
             try {
                 await deleteFile(user.imageId);
-              } catch (error) {
+            } catch (error) {
                 console.error('Error deleting old image:', error);
-              }
+            }
         }
 
         return updatedProfile
@@ -597,7 +597,7 @@ export async function updateProfile (user: IUpdateUser) {
 
 export async function getSavesByIds(ids: string[]) {
     if (!ids || ids.length === 0) throw new Error("No IDs provided");
-    
+
     try {
         // Use the `equal` query to fetch documents with the provided IDs
         const result = await databases.listDocuments(
@@ -630,9 +630,9 @@ export async function createAvailability(avail: INewAvailability) {
             }
         )
 
-        if(!availabilities) throw new Error("availability did not register.")
+        if (!availabilities) throw new Error("availability did not register.")
 
-            return availabilities
+        return availabilities
     } catch (error) {
         console.log(error)
     }
@@ -647,9 +647,9 @@ export async function deleteAvailability(availabilityId: string) {
             availabilityId,
         )
 
-        if(!statusCode) throw new Error("Delete availabilities did not register.")
+        if (!statusCode) throw new Error("Delete availabilities did not register.")
 
-            return { status: "ok" }
+        return { status: "ok" }
     } catch (error) {
         console.log(error)
     }
@@ -664,7 +664,7 @@ export async function getAvailabilitiesByPropertyId(propertyId: string) {
             [
                 Query.equal("property", propertyId),
                 Query.equal("status", "available")
-            
+
             ]
         );
 
@@ -698,9 +698,9 @@ export async function createBooking(booking: INewBooking) {
             }
         )
 
-        if(!bookingSlot) throw new Error("booking did not register.")
+        if (!bookingSlot) throw new Error("booking did not register.")
 
-            return bookingSlot
+        return bookingSlot
     } catch (error) {
         console.log(error)
     }
@@ -715,9 +715,9 @@ export async function deleteBooking(bookingId: string) {
             bookingId,
         )
 
-        if(!statusCode) throw new Error("Delete booking did not register.")
+        if (!statusCode) throw new Error("Delete booking did not register.")
 
-            return { status: "ok" }
+        return { status: "ok" }
     } catch (error) {
         console.log(error)
     }
@@ -748,7 +748,7 @@ export async function initiateChat(senderId: string, receiverId: string) {
             {
                 participants: [senderId, receiverId],
                 chatters: [senderId, receiverId],
-                lastMessageId: '',
+                lastMessage: '',
                 lastUpdated: new Date().toISOString()
             }
         );
@@ -842,7 +842,7 @@ export async function getUserChats(userId: string) {
         [Query.equal("user", userId)]
     )
 
-    if(!userChats) throw new Error("Failed to get user chats.")
+    if (!userChats) throw new Error("Failed to get user chats.")
 
     return userChats
 }
@@ -871,7 +871,7 @@ export async function getUnseenMessagesCounts(chatIds: string[], userId: string)
 }
 
 export async function createMessage(message: INewMessage, chatId: string, seenBy: string[], lastMessageSender: string) {
-    
+
     try {
         const newMessage = await databases.createDocument(
             appwriteConfig.databaseId,
@@ -888,8 +888,8 @@ export async function createMessage(message: INewMessage, chatId: string, seenBy
 
         const lastMessage = message.body
         await updateLastChatMessage(chatId, lastMessage, lastMessageSender)
-        
-        if(!newMessage) {
+
+        if (!newMessage) {
             throw new Error('Failed to send message')
         }
 
@@ -899,7 +899,7 @@ export async function createMessage(message: INewMessage, chatId: string, seenBy
         console.error("Error sending a message:", error)
         throw new Error("Error sending a message:")
     }
-    
+
 }
 
 export async function updateLastChatMessage(chatId: string, lastMessage: string, lastMessageSender: string) {
@@ -913,11 +913,11 @@ export async function updateLastChatMessage(chatId: string, lastMessage: string,
                 lastMessageSender: lastMessageSender,
             }
         )
-        
-        if(!updateLastMessage) throw new Error("Last message did not register.")
+
+        if (!updateLastMessage) throw new Error("Last message did not register.")
 
         return updateLastMessage
-        
+
     } catch (error) {
         throw new Error("Error updating a message:")
     }
@@ -942,57 +942,57 @@ export async function getChatMessages(chatId: string, limit = 20, offset = 0) {
     return chatsMessages.documents;
 }
 
-export async function deleteMessage(messageId: string){
+export async function deleteMessage(messageId: string) {
     try {
         const statusCode = await databases.deleteDocument(
-        appwriteConfig.databaseId,
-        appwriteConfig.messagesCollectionId,
-        messageId,
+            appwriteConfig.databaseId,
+            appwriteConfig.messagesCollectionId,
+            messageId,
         )
 
-        if(!statusCode) throw new Error("Delete message did not register.")
+        if (!statusCode) throw new Error("Delete message did not register.")
 
         return { status: "ok" }
 
     } catch (error) {
         console.error(error)
-        throw new Error ("Error deleting the message")
+        throw new Error("Error deleting the message")
     }
 }
 
-export async function getInfiniteMessages({ pageParam , chatId }: { pageParam?: string, chatId?: string }) {
+export async function getInfiniteMessages({ pageParam, chatId }: { pageParam?: string, chatId?: string }) {
     // console.log("pageParam",pageParam)
 
-    
+
     const queries: any[] = [
         Query.equal("chat", chatId),
-        Query.orderDesc("$updatedAt"), 
+        Query.orderDesc("$updatedAt"),
         Query.limit(10),
     ];
-  
+
     if (pageParam) {
-      queries.push(Query.cursorAfter(pageParam));
+        queries.push(Query.cursorAfter(pageParam));
     }
 
     // console.log("queries",queries)
-  
+
     try {
-      const messages = await databases.listDocuments(
-        appwriteConfig.databaseId,
-        appwriteConfig.messagesCollectionId,
-        queries
-      );
-  
-      if (!messages.documents) throw new Error("No messages found");
-      
-    //   console.log("DATAAAAAAA:", messages.documents)
-      return {
-        data: messages.documents,
-        nextPage: messages.documents.length > 0 ? messages.documents[messages.documents.length - 1].$id : null,
-      };
+        const messages = await databases.listDocuments(
+            appwriteConfig.databaseId,
+            appwriteConfig.messagesCollectionId,
+            queries
+        );
+
+        if (!messages.documents) throw new Error("No messages found");
+
+        //   console.log("DATAAAAAAA:", messages.documents)
+        return {
+            data: messages.documents,
+            nextPage: messages.documents.length > 0 ? messages.documents[messages.documents.length - 1].$id : null,
+        };
     } catch (error) {
-      console.log(error);
-      throw new Error("Error fetching messages");
+        console.log(error);
+        throw new Error("Error fetching messages");
     }
 }
 

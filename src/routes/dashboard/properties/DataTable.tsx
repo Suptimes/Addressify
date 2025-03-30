@@ -74,7 +74,7 @@ export function DataTable<TData, TValue>({
     },
   });
 
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const deletePostMutation = useDeletePost();
 
   const handleEditSelected = () => {
@@ -118,8 +118,8 @@ export function DataTable<TData, TValue>({
     <div>
       <div className="flex gap-5 items-center justify-between py-4">
         <div className="group flex-1 rounded-md flex items-center w-full max-w-sm bg-slate-100 hover:bg-slate-200 focus-within:ring-2 ring-violet-800]">
-          <img 
-            src="/icons/search.svg" 
+          <img
+            src="/icons/search.svg"
             alt="search titles"
             className="px-3"
           />
@@ -198,12 +198,12 @@ export function DataTable<TData, TValue>({
         <Alert variant="destructive">
           <ExclamationTriangleIcon className="h-4 w-4" />
           <AlertDescription>
-            Please select at least one post to delete.          
+            Please select at least one post to delete.
           </AlertDescription>
         </Alert>
       )}
 
-      <div className="rounded-md">
+      <div className="border border-1 border-solid border-slate-300">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -224,7 +224,9 @@ export function DataTable<TData, TValue>({
                 <React.Fragment key={row.id}>
                   <TableRow className="group hover:bg-slate-50" data-state={row.getIsSelected() && "selected"}>
                     {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
+                      <TableCell key={cell.id} className={
+                        (cell.column.id === "title" ? "max-w-[250px] truncate" : "") || (cell.column.id === "imageUrl" ? "w-[50px] truncate" : "")
+                      }>
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </TableCell>
                     ))}
