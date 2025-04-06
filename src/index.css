@@ -164,7 +164,7 @@ button {
 
   /* Dashboard Pages */
   .middlePage {
-    @apply absolute left-0 flex flex-1 w-[100vw] h-[calc(100svh-100px)] md:left-[270px] top-[60px] xs:w-[100vw] md:min-w-[500px] md:w-[calc(100vw-270px)] max-md:pb-[120px];
+    @apply absolute left-0 flex flex-1 w-[100vw] min-h-[calc(100svh-100px)] md:left-[270px] top-[60px] xs:w-[100vw] md:min-w-[500px] md:w-[calc(100vw-270px)] max-md:pb-[120px];
   }
 
   /* Explore */
